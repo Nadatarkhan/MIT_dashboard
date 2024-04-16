@@ -1,0 +1,32 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+}
+.visual {
+    border: 2px solid #000;
+    box-sizing: border-box;
+}
+.top-visual {
+    height: 66.6%; /* Two-thirds height */
+}
+.bottom-visual {
+    width: 100%;
+    height: 33.3%; /* One-third height */
+}
+.visual1 {
+    width: 66.6%; /* Two-thirds width */
+}
+.visual2 {
+    width: 33.3%; /* One-third width */
+}
+
+h1 {
+    text-align: center;
+    color: navy;
+}
