@@ -29,8 +29,25 @@ body, html {
 
 h1 {
     text-align: center;
-    color: navy;
+    color: black;
 }
-=======
 
->>>>>>> 2931c007086672e965126baa23bf8006654d6a77
+.icon-row {
+    display: flex;
+    justify-content: space-around; /* Distributes space evenly around items */
+    padding: 10px 0; /* Adds some padding above and below the icons */
+}
+
+.icon-row img {
+    width: 50px; /* Set the width of the icons */
+    height: 50px; /* Set the height of the icons */
+    object-fit: contain; /* Ensures images are scaled properly without distortion */
+}
+
+.graph-container {
+    margin-top: 20px; /* Adds space between icons and graph */
+    height: 200px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Placeholder color */
+}
+
+
