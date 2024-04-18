@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Layout</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Include D3.js if your line.js depends on it -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="line.js" defer></script> <!-- Ensure line.js is loaded after the document -->
 </head>
 <body>
 <h1>Dashboard</h1>
@@ -23,10 +26,9 @@
             <img src="icons/9.png" alt="Icon 9">
             <img src="icons/10.png" alt="Icon 10">
         </div>
-        <!-- Graph Container -->
-        <div class="graph-container">
-            <!-- Your graph will be inserted here, possibly with a script or an img tag -->
-            Graph goes here
+        <!-- Graph Container - Adjusted to hold the D3 line chart -->
+        <div class="graph-container" id="lineChart">
+            <!-- Line chart from line.js will be inserted here -->
         </div>
     </div>
     <div class="visual visual2 top-visual">Visual 2</div>
@@ -35,5 +37,9 @@
         <img src="images/diagram.png" alt="Diagram" style="width: 100%;">
     </div>
 </div>
+<script>
+    // Initialize or configure any additional scripts if needed
+</script>
 </body>
 </html>
+
