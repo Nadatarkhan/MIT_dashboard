@@ -4,38 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Layout</title>
-    <style>
-        html, body {
-            height: 100%; /* Full height of the viewport */
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevents scrolling */
-        }
-        .container {
-            display: flex; /* Flexbox for the layout */
-            flex-direction: column; /* Children are stacked vertically */
-            height: 100%;
-        }
-        .visual {
-            flex: 1; /* Distributes space equally by default */
-            overflow: hidden; /* Prevents content from spilling over */
-            padding: 10px;
-            box-sizing: border-box; /* Padding and border included in the height */
-        }
-        .visual1 {
-            flex: 2; /* Takes twice the space compared to each of the others */
-            background-color: #f8f9fa; /* Light grey background */
-        }
-        .visual2, .visual3 {
-            flex: 1; /* Each takes equal but lesser space than visual1 */
-            background-color: #e9ecef; /* Slightly darker grey background */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Hello</h1>
+<h1>Dashboard</h1>
 <div class="container">
-    <div class="visual visual1">
+    <div class="visual visual1 top-visual">
         <!-- Icon Row -->
         <div class="icon-row">
             <img src="icons/1.png" alt="Icon 1">
@@ -51,13 +25,13 @@
         </div>
         <!-- Graph Container -->
         <div class="graph-container">
+            <!-- Your graph will be inserted here, possibly with a script or an img tag -->
             Graph goes here
         </div>
     </div>
-    <div class="visual visual2">
-        Visual 2 Content
-    </div>
-    <div class="visual visual3">
+    <div class="visual visual2 top-visual">Visual 2</div>
+    <div class="visual bottom-visual">
+        <!-- Visual 3 Container -->
         <img src="images/diagram.png" alt="Diagram" style="width: 100%;">
     </div>
 </div>
