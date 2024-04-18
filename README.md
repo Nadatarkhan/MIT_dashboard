@@ -1,4 +1,4 @@
-# MIT_decarbonization dasboard
+# MIT_decarbonization dashboard
 Exploring Decarbonization pathways for the MIT campus 
 
 
