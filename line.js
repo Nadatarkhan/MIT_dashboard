@@ -25,28 +25,29 @@ const svg = d3.select("#lineChart")
 
 // Get the data
 d3.csv("data/example_data_wide.csv").then(function(data) {
-    // Format the data
-    const years = data.columns.slice(2).map(d => parseYear(d.split("Emissions ")[1]));
-    const strategies = data.map(d => {
+    // Extract the years from the first row (epw_year)
+    const years = data.columns.slice(1).map(year => parseYear(year));
+
+    // Map the data to an array of objects for each year
+    let emissionsData = data.map(d => {
         return years.map(year => {
             return {
                 year: year,
-                emission: +d[year.getFullYear().toString()],
-                strategy: d.epw_year // I'm using the 'epw_year' field as strategy label for now
+                emission: +d[year.getFullYear().toString()]
             };
         });
     }).flat();
 
     // Scale the range of the data
     x.domain(d3.extent(years));
-    y.domain([0, d3.max(strategies, d => d.emission)]);
+    y.domain([0, d3.max(emissionsData, d => d.emission)]);
 
-    // Draw the line for each strategy
-    data.forEach((strategyData, i) => {
+    // Draw the line for each set of emissions data
+    data.forEach((d, i) => {
         svg.append("path")
-            .datum(strategies.filter(d => d.strategy === strategyData.epw_year))
+            .datum(emissionsData.filter(dd => dd.year.getFullYear() === years[i].getFullYear()))
             .attr("fill", "none")
-            .attr("stroke", d3.schemeCategory10[i % 10]) // cycling through 10 colors
+            .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
             .attr("d", valueline);
     });
