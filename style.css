@@ -14,25 +14,40 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 0.72; /* Adjust to your needs, represents the portion of the container's height */
+    flex: 0.72; /* Adjust the flex proportion to control the height of the top container */
 }
 
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: hidden; /* You can set it to 'visible' if you want to see the overflowing content */
 }
 
 .visual1 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    flex: 2; /* Adjust to your needs, this controls the width in relation to visual2 */
+    flex: 2; /* Controls the width relative to visual2 */
+    flex-direction: column; /* Stack children vertically */
 }
 
 .visual2 {
     flex: 1;
+}
+
+.icon-row {
+    display: flex;
+    justify-content: space-between; /* Adjust to 'space-around' if you want space at the edges as well */
+    padding: 10px 0; /* Provides padding above and below the icons */
+    width: 100%; /* Icons row will take the full width of the visual1 container */
+}
+
+.icon-row img {
+    width: auto; /* Adjust width to fit icons as necessary */
+    height: 50px; /* Fixed height for icons */
+}
+
+.graph-container {
+    flex-grow: 1; /* Takes up the remaining space in the .visual1 container after icons */
+    width: 100%; /* Graph takes the full width of the container */
+    overflow: visible; /* Set to 'hidden' if you do not want the graph to overflow */
 }
 
 .bottom-visual {
@@ -59,29 +74,7 @@ h1 {
     color: black;
 }
 
-.icon-row {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-}
-
-.icon-row img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-}
-
-.graph-container {
-    width: calc(100% - 40px); /* Subtracting the left and right margins */
-    height: calc(100% - 40px); /* Subtracting the top and bottom margins */
-    margin: 20px;
-    overflow: visible; /* This can be 'hidden' if you want to clip the overflow */
-}
-
 #lineChart svg {
-    display: block;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Updated to prevent overflow */
 }
-
