@@ -33,7 +33,7 @@ body, html {
 
 .bottom-visual {
     flex: 3;  /* Allows more space relative to other flex items */
-    min-height: 300px; /* Minimum height to ensure content is not cut off */
+    min-height: 500px; /* Minimum height to ensure content is not cut off */
     overflow: visible; /* Allows contents to overflow the container's bounds if needed */
     padding: 10px;
 }
