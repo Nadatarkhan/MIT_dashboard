@@ -14,7 +14,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 0.9; /* Lower value to decrease the vertical space allocated */
+    flex: 1; /* Lower value to decrease the vertical space allocated */
 }
 
 .visual {
@@ -32,7 +32,7 @@ body, html {
 }
 
 .bottom-visual {
-    flex: 2; /* Increase to compensate and use more vertical space */
+    flex: 1; /* Increase to compensate and use more vertical space */
 }
 
 .bottom-visual img {
