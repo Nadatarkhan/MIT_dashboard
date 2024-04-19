@@ -66,6 +66,5 @@ h1 {
     margin-top: 20px; /* Provides space above the chart */
     margin-left: 20px; /* Provides additional space on the left */
     height: auto; /* Adjusted to auto to accommodate content dynamically */
-    background-color: #f0f0f0; /* Placeholder color */
     overflow: visible; /* Allows the graph to expand if needed */
 }
