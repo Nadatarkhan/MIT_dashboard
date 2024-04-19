@@ -24,7 +24,7 @@ body, html {
 }
 
 .visual1, .visual2 {
-    height: 300px; /* Uncomment and adjust if a fixed height is required */
+    height: 350px; /* Uncomment and adjust if a fixed height is required */
 }
 
 .visual1 {
@@ -37,20 +37,20 @@ body, html {
 
 .bottom-visual {
     flex: 2;  /* Allows more space relative to other flex items */
-    min-height: 400px; /* Ensures it doesn't shrink below this height */
+    min-height: 300px; /* Ensures it doesn't shrink below this height */
     overflow: visible; /* Allows contents to overflow the container's bounds if needed */
     padding: 10px; /* Padding inside the bottom visual */
 }
 
 .bottom-visual img {
-    width: 60%;  /* Adjusts the image width to fit within the container */
+    width: 55%;  /* Adjusts the image width to fit within the container */
     height: auto; /* Maintains the aspect ratio of the image */
     display: block; /* Block display to allow margin auto to center the image */
     margin: 0 auto; /* Center the image horizontally within the container */
 }
 
 .scaled-image {
-    width: 60%; /* Scale the image to 70% of its original width */
+    width: 55%; /* Scale the image to 70% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
