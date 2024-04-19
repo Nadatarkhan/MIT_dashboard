@@ -41,7 +41,7 @@ body, html {
 
 /* Scale the image inside visual3 */
 .scaled-image {
-    width: 60%; /* Scale the image to 60% of its original width */
+    width: 40%; /* Scale the image to 60% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
@@ -63,7 +63,7 @@ h1 {
 }
 
 .graph-container {
-    margin-top: 20px; /* Adds space between icons and graph */
-    height: 200px; /* Adjust height as needed */
+    margin-top: 20px; /* Provides space above the chart */
     background-color: #f0f0f0; /* Placeholder color */
 }
+
