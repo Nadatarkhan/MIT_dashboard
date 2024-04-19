@@ -14,6 +14,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
+    flex: 0.5; /* Lower value to decrease the vertical space allocated */
 }
 
 .visual {
@@ -22,22 +23,16 @@ body, html {
     overflow: hidden; /* Prevents content from spilling over */
 }
 
-.visual1, .visual2 {
-    /* You can set a max-height here if you want them to be smaller than the container allows */
-    max-height: 200px; /* Example max-height, adjust as needed */
-    height: 100%; /* This will make them fill the .top-container */
-}
-
 .visual1 {
-    flex: 2; /* Visual1 takes twice the width of Visual2 */
+    flex: 2; /* Maintains that it takes twice the space of .visual2 horizontally */
 }
 
 .visual2 {
-    flex: 1; /* Visual2 takes the remaining width */
+    flex: 1;
 }
 
 .bottom-visual {
-    flex: 1; /* The rest of the vertical space is for the bottom visual */
+    flex: 2; /* Increase to compensate and use more vertical space */
 }
 
 .bottom-visual img {
@@ -72,6 +67,6 @@ h1 {
 .graph-container {
     margin-top: 20px; /* Provides space above the chart */
     margin-left: 20px; /* Provides additional space on the left */
-    /* The height of .graph-container will depend on the content */
+    height: auto; /* Adjusted to auto to accommodate content dynamically */
     overflow: visible; /* Allows the graph to expand if needed */
 }
