@@ -43,14 +43,14 @@ body, html {
 }
 
 .bottom-visual img {
-    width: 50%;  /* Adjusts the image width to fit within the container */
+    width: 60%;  /* Adjusts the image width to fit within the container */
     height: auto; /* Maintains the aspect ratio of the image */
     display: block; /* Block display to allow margin auto to center the image */
     margin: 0 auto; /* Center the image horizontally within the container */
 }
 
 .scaled-image {
-    width: 50%; /* Scale the image to 70% of its original width */
+    width: 60%; /* Scale the image to 70% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
