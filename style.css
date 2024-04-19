@@ -24,7 +24,7 @@ body, html {
 }
 
 .visual1, .visual2 {
-    /*height: 100px; */ /* Uncomment and adjust if a fixed height is required */
+    height: 150px; /* Uncomment and adjust if a fixed height is required */
 }
 
 .visual1 {
