@@ -24,7 +24,7 @@ body, html {
 }
 
 .visual1 {
-    flex: 2; /* Takes twice the space of .visual2 */
+    flex: 2; /* Takes twice the space of .visual2, more space for the graph */
 }
 
 .visual2 {
@@ -41,7 +41,7 @@ body, html {
 
 /* Scale the image inside visual3 */
 .scaled-image {
-    width: 40%; /* Scale the image to 60% of its original width */
+    width: 60%; /* Scale the image to 60% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
@@ -64,8 +64,8 @@ h1 {
 
 .graph-container {
     margin-top: 20px; /* Provides space above the chart */
-    margin-left: 20px; /* Provides space above the chart */
-    height: 100px; /* Adjust height as needed */
+    margin-left: 20px; /* Provides additional space on the left */
+    height: auto; /* Adjusted to auto to accommodate content dynamically */
     background-color: #f0f0f0; /* Placeholder color */
+    overflow: visible; /* Allows the graph to expand if needed */
 }
-
