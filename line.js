@@ -1,7 +1,5 @@
-
-
 // Set the dimensions of the canvas / graph
-const margin = { top: 30, right: 20, bottom: 70, left: 50 },
+const margin = { top: 30, right: 20, bottom: 70, left: 70 },  // Increased left margin from 50 to 70
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
