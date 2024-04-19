@@ -32,11 +32,11 @@ body, html {
 }
 
 /* Styles for the bottom visual */
-.bottom-visual {
-    flex: 0.5; /* Adjust this to change the relative height of the bottom visual */
-    display: flex;
-    justify-content: center; /* Center the image horizontally */
-    align-items: center; /* Center the image vertically */
+.bottom-visual img {
+    width: 60%;  /* Adjusts the image width */
+    height: auto; /* Keeps the aspect ratio */
+    display: block; /* Centers the image */
+    margin: 0 auto;
 }
 
 /* Scale the image inside visual3 */
