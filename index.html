@@ -12,26 +12,28 @@
 <body>
 <h1>Dashboard</h1>
 <div class="container">
-    <div class="visual visual1 top-visual">
-        <!-- Icon Row -->
-        <div class="icon-row">
-            <img src="icons/1.png" alt="Icon 1">
-            <img src="icons/2.png" alt="Icon 2">
-            <img src="icons/3.png" alt="Icon 3">
-            <img src="icons/4.png" alt="Icon 4">
-            <img src="icons/5.png" alt="Icon 5">
-            <img src="icons/6.png" alt="Icon 6">
-            <img src="icons/7.png" alt="Icon 7">
-            <img src="icons/8.png" alt="Icon 8">
-            <img src="icons/9.png" alt="Icon 9">
-            <img src="icons/10.png" alt="Icon 10">
+    <div class="top-container"> <!-- New container for the top visuals -->
+        <div class="visual visual1">
+            <!-- Icon Row -->
+            <div class="icon-row">
+                <img src="icons/1.png" alt="Icon 1">
+                <img src="icons/2.png" alt="Icon 2">
+                <img src="icons/3.png" alt="Icon 3">
+                <img src="icons/4.png" alt="Icon 4">
+                <img src="icons/5.png" alt="Icon 5">
+                <img src="icons/6.png" alt="Icon 6">
+                <img src="icons/7.png" alt="Icon 7">
+                <img src="icons/8.png" alt="Icon 8">
+                <img src="icons/9.png" alt="Icon 9">
+                <img src="icons/10.png" alt="Icon 10">
+            </div>
+            <!-- Graph Container - Adjusted to hold the D3 line chart -->
+            <div class="graph-container" id="lineChart">
+                <!-- Line chart from line.js will be inserted here -->
+            </div>
         </div>
-        <!-- Graph Container - Adjusted to hold the D3 line chart -->
-        <div class="graph-container" id="lineChart">
-            <!-- Line chart from line.js will be inserted here -->
-        </div>
-    </div>
-    <div class="visual visual2 top-visual">Visual 2</div>
+        <div class="visual visual2">Visual 2</div>
+    </div> <!-- End of top-container -->
     <div class="visual bottom-visual">
         <!-- Visual 3 Container -->
         <img src="images/diagram.png" alt="Diagram" class="scaled-image">
@@ -42,4 +44,5 @@
 </script>
 </body>
 </html>
+
 

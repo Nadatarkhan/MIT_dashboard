@@ -11,40 +11,38 @@ body, html {
     height: 100%;
 }
 
+/* Container for the top visuals to make them side by side */
+.top-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-}
-
-/* Remove height percentages from .top-visual and .bottom-visual classes */
-
-.visual1, .visual2 {
-    flex: 1; /* Adjusts the proportion of .visual1 and .visual2 */
-}
-
-.bottom-visual {
-    flex: 1; /* Retains the container at full size */
-    /* Remove the transform and transform-origin properties from here */
-}
-
-.bottom-visual img {
-    width: 60%;  /* Scales the image width down to 60% */
-    height: auto; /* Maintains the aspect ratio of the image */
-    display: block; /* Ensures the image is centered */
-    margin: 0 auto; /* Centers the image within the container */
+    overflow: hidden; /* Prevents content from spilling over */
 }
 
 .visual1 {
-    flex-grow: 2; /* Take twice the space of .visual2 */
+    flex: 2; /* Takes twice the space of .visual2 */
 }
 
 .visual2 {
-    flex-grow: 1; /* Maintains the current size relative to Visual 1 */
+    flex: 1;
 }
 
-.visual3 {
-    transform: scale(0.2);
-    transform-origin: top; /* Ensures scaling down happens downwards from the top */
+/* Styles for the bottom visual */
+.bottom-visual {
+    flex: 1; /* Adjust this to change the relative height of the bottom visual */
+    display: flex;
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+}
+
+/* Scale the image inside visual3 */
+.scaled-image {
+    width: 60%; /* Scale the image to 60% of its original width */
+    height: auto; /* Maintain the aspect ratio */
 }
 
 h1 {
@@ -68,9 +66,4 @@ h1 {
     margin-top: 20px; /* Adds space between icons and graph */
     height: 200px; /* Adjust height as needed */
     background-color: #f0f0f0; /* Placeholder color */
-}
-
-.bottom-visual img {
-    width: 100%;  /* Makes the image responsive, adjusting to the width of its container */
-    height: auto; /* Maintains the aspect ratio of the image */
 }
