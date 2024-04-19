@@ -28,26 +28,23 @@ d3.csv("data/example_data_wide.csv").then(function(data) {
     // Extract the years from the first row (epw_year)
     const years = data.columns.slice(1).map(year => parseYear(year));
 
-    // Map the data to an array of objects for each year
-    let emissionsData = data.map(d => {
-        return years.map(year => {
-            return {
-                year: year,
-                emission: +d[year.getFullYear().toString()]
-            };
-        });
-    }).flat();
-
     // Scale the range of the data
     x.domain(d3.extent(years));
-    y.domain([0, d3.max(emissionsData, d => d.emission)]);
+    y.domain([0, d3.max(data, row => d3.max(years, year => +row[year.getFullYear().toString()]))]);
 
-    // Draw the line for each set of emissions data
-    data.forEach((d, i) => {
+    // Draw the line for each strategy
+    data.forEach((row, index) => {
+        const emissions = years.map(year => {
+            return {
+                year: year,
+                emission: +row[year.getFullYear().toString()]
+            };
+        });
+
         svg.append("path")
-            .datum(emissionsData.filter(dd => dd.year.getFullYear() === years[i].getFullYear()))
+            .datum(emissions)
             .attr("fill", "none")
-            .attr("stroke", "steelblue")
+            .attr("stroke", d3.schemeCategory10[index % 10]) // Use color scheme to differentiate lines
             .attr("stroke-width", 1.5)
             .attr("d", valueline);
     });
@@ -61,3 +58,4 @@ d3.csv("data/example_data_wide.csv").then(function(data) {
     svg.append("g")
         .call(d3.axisLeft(y));
 });
+
