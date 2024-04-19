@@ -14,7 +14,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 1; /* Adjust this value to change the relative size of the top container */
+    flex: 0.5; /* Adjust this value to change the relative size of the top container */
 }
 
 .visual {
