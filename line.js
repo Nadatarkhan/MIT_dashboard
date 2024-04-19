@@ -1,16 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const container = document.querySelector('.visual1');
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
+    // Select the container for visual 1 and get its dimensions
+    const visual1Container = document.querySelector('.visual1');
+
+    // Get the computed styles of the container to account for any padding or border
+    const styles = window.getComputedStyle(visual1Container);
+
+    // Calculate the actual available width and height by subtracting paddings and borders
+    const containerWidth = visual1Container.clientWidth - (parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight));
+    const containerHeight = visual1Container.clientHeight - (parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom));
 
     const margin = { top: 20, right: 20, bottom: 30, left: 50 },
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
-    const svg = d3.select("#lineChart")
+    const svg = d3.select(visual1Container)
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", containerWidth)
+        .attr("height", containerHeight)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
