@@ -59,3 +59,20 @@ d3.csv("data/example_data_wide.csv").then(function(data) {
         .call(d3.axisLeft(y));
 });
 
+/*Debug
+ */
+// Inside your line.js, add console logs to debug:
+d3.csv("data/example_data_wide.csv").then(function(data) {
+    console.log(data);  // Check what the data looks like
+    const years = data.columns.slice(1).map(year => parseYear(year));
+    console.log(years);  // Ensure years are parsed correctly
+
+    // After setting domains:
+    console.log(x.domain(), y.domain());  // Check the computed domains
+
+    // Before appending paths:
+    console.log(emissions);  // Check the emissions data structure
+}).catch(function(error) {
+    console.error("Error loading or parsing data:", error);
+});
+
