@@ -8,13 +8,13 @@ body, html {
 .container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 80%;
 }
 
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 1; /* Lower value to decrease the vertical space allocated */
+    flex: 0.8; /* Lower value to decrease the vertical space allocated */
 }
 
 .visual {
