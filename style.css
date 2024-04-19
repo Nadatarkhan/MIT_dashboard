@@ -32,7 +32,11 @@ body, html {
 }
 
 .bottom-visual {
-    flex: 1; /* Increase to compensate and use more vertical space */
+    flex: 2; /* Increase to compensate and use more vertical space */
+}
+
+.bottom-visual {
+    padding: 10px;  /* Ensure padding is not too large */
 }
 
 .bottom-visual img {
