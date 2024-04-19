@@ -28,11 +28,11 @@ body, html {
 }
 
 .visual1 {
-    flex: 2;  // Visual1 takes twice the space of Visual2 within the top-container
-display: flex;  // Enable flex layout within visual1 to manage children alignment
-align-items: center;  // Vertically center content within visual1
-justify-content: center;  // Horizontally center content within visual1
-overflow: hidden;  // Prevent overflow if SVG is still slightly larger
+    flex: 2;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .visual2 {
