@@ -24,7 +24,7 @@ body, html {
 }
 
 .visual1 {
-    flex: 2; /* Takes twice the space of .visual2 */
+    flex: 3; /* Takes twice the space of .visual2 */
 }
 
 .visual2 {
