@@ -64,6 +64,8 @@ h1 {
 
 .graph-container {
     margin-top: 20px; /* Provides space above the chart */
+    margin-left: 20px; /* Provides space above the chart */
+    height: 100px; /* Adjust height as needed */
     background-color: #f0f0f0; /* Placeholder color */
 }
 
