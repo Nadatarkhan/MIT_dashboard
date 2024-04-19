@@ -33,7 +33,7 @@ body, html {
 
 /* Styles for the bottom visual */
 .bottom-visual {
-    flex: 1; /* Adjust this to change the relative height of the bottom visual */
+    flex: 0.5; /* Adjust this to change the relative height of the bottom visual */
     display: flex;
     justify-content: center; /* Center the image horizontally */
     align-items: center; /* Center the image vertically */
