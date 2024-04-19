@@ -15,6 +15,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
+    flex: 3; /* Increased flex value to allocate more height to the top container */
 }
 
 .visual {
@@ -32,6 +33,10 @@ body, html {
 }
 
 /* Styles for the bottom visual */
+.bottom-visual {
+    flex: 1; /* Adjusted down to give more space to top-container */
+}
+
 .bottom-visual img {
     width: 60%;  /* Adjusts the image width */
     height: auto; /* Keeps the aspect ratio */
