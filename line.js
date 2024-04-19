@@ -1,5 +1,5 @@
 // Set the dimensions of the canvas / graph
-const margin = { top: 30, right: 20, bottom: 70, left: 70 },  // Increased left margin from 50 to 70
+const margin = { top: 30, right: 20, bottom: 70, left: 70 },
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -25,40 +25,28 @@ const svg = d3.select("#lineChart")
 
 // Get the data
 d3.csv("data/example_data_wide.csv").then(function(data) {
-    // Convert years from columns to an array of data
-    let dataset = [];
-    data.forEach(function(d, i) {
-        Object.keys(d).forEach(function(key) {
-            if (key.includes("Emissions")) {
-                let year = parseYear(key.split("Emissions ")[1]);
-                dataset.push({
-                    year: year,
-                    emission: +d[key],
-                    strategy: "Strategy " + (i + 1) // Assuming each line is a different strategy
-                });
-            }
+    // Format the data
+    const years = data.columns.slice(2).map(d => parseYear(d.split("Emissions ")[1]));
+    const strategies = data.map(d => {
+        return years.map(year => {
+            return {
+                year: year,
+                emission: +d[year.getFullYear().toString()],
+                strategy: d.epw_year // I'm using the 'epw_year' field as strategy label for now
+            };
         });
-    });
+    }).flat();
 
     // Scale the range of the data
-    x.domain(d3.extent(dataset, d => d.year));
-    y.domain([0, d3.max(dataset, d => d.emission)]);
-
-    // Group the data: I assume each group represents a strategy
-    const sumstat = d3.group(dataset, d => d.strategy);
-
-    // Color palette: one color for each group
-    const res = sumstat.keys(); // list of group names
-    const color = d3.scaleOrdinal()
-        .domain(res)
-        .range(d3.schemeCategory10);
+    x.domain(d3.extent(years));
+    y.domain([0, d3.max(strategies, d => d.emission)]);
 
     // Draw the line for each strategy
-    sumstat.forEach(function(value, key) {
+    data.forEach((strategyData, i) => {
         svg.append("path")
-            .datum(value)
+            .datum(strategies.filter(d => d.strategy === strategyData.epw_year))
             .attr("fill", "none")
-            .attr("stroke", color(key))
+            .attr("stroke", d3.schemeCategory10[i % 10]) // cycling through 10 colors
             .attr("stroke-width", 1.5)
             .attr("d", valueline);
     });
@@ -66,7 +54,7 @@ d3.csv("data/example_data_wide.csv").then(function(data) {
     // Add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)));
+        .call(d3.axisBottom(x));
 
     // Add the Y Axis
     svg.append("g")
