@@ -14,25 +14,18 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 0.5; /* Lower value to decrease the vertical space allocated */
+    /* Removed the flex property to not control the height */
+}
+
+.visual1, .visual2 {
+    height: 100px; /* Set a specific height for both visualizations */
+    /* Removed flex-grow settings since we are now controlling the height directly */
 }
 
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
     overflow: hidden; /* Prevents content from spilling over */
-}
-
-.visual1, .visual2 {
-    height: 100px; /* Adjust this value to the desired height */
-}
-
-.visual1 {
-    flex: 2; /* Maintains that it takes twice the space of .visual2 horizontally */
-}
-
-.visual2 {
-    flex: 1;
 }
 
 .bottom-visual {
