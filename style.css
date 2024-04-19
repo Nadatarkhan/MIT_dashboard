@@ -23,10 +23,16 @@ body, html {
 }
 
 .bottom-visual {
-    flex: 0.6; /* Adjusts .bottom-visual to take up 60% of the space that it normally would */
-    transform-origin: top; /* Align the transform to the top of the element */
+    flex: 1; /* Retains the container at full size */
+    /* Remove the transform and transform-origin properties from here */
 }
 
+.bottom-visual img {
+    width: 60%;  /* Scales the image width down to 60% */
+    height: auto; /* Maintains the aspect ratio of the image */
+    display: block; /* Ensures the image is centered */
+    margin: 0 auto; /* Centers the image within the container */
+}
 
 .visual1 {
     flex-grow: 2; /* Take twice the space of .visual2 */
