@@ -14,7 +14,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 0.5; /* Lower value to decrease the vertical space allocated */
+    flex: 0.9; /* Lower value to decrease the vertical space allocated */
 }
 
 .visual {
@@ -43,7 +43,7 @@ body, html {
 }
 
 .scaled-image {
-    width: 60%; /* Scale the image to 60% of its original width */
+    width: 50%; /* Scale the image to 60% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
