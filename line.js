@@ -1,79 +1,59 @@
-// Set the dimensions of the canvas / graph
-const margin = { top: 30, right: 20, bottom: 70, left: 70 },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+document.addEventListener('DOMContentLoaded', function() {
+    // Select the container and get its dimensions
+    const container = document.querySelector('.visual1');
+    const width = container.clientWidth;  // Use the width of the container
+    const height = container.clientHeight;  // Use the height of the container
 
-// Parse the year / time
-const parseYear = d3.timeParse("%Y");
+    const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        svgWidth = width - margin.left - margin.right,
+        svgHeight = height - margin.top - margin.bottom;
 
-// Set the ranges
-const x = d3.scaleTime().range([0, width]);
-const y = d3.scaleLinear().range([height, 0]);
+    const x = d3.scaleTime().range([0, svgWidth]);
+    const y = d3.scaleLinear().range([svgHeight, 0]);
 
-// Define the line
-const valueline = d3.line()
-    .x(d => x(d.year))
-    .y(d => y(d.emission));
+    const valueline = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.emission));
 
-// Adds the svg canvas
-const svg = d3.select("#lineChart")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const svg = d3.select("#lineChart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Load the data from a CSV file
-d3.csv("data/example_data_wide.csv").then(function(data) {
-    // Log the raw data to the console for debugging
-    console.log(data);
+    d3.csv("data/example_data_wide.csv").then(function(data) {
+        const parseYear = d3.timeParse("%Y");
+        const years = data.columns.slice(1).map(col => parseYear(col.replace('Emissions ', '')));
 
-    // Extract the years from the first row (assuming they're in the format "Emissions YYYY")
-    const years = data.columns.slice(1).map(col => parseYear(col.replace('Emissions ', '')));
-    console.log(years);  // Log the parsed years to ensure they are correct
+        x.domain(d3.extent(years));
+        y.domain([0, d3.max(data, row => d3.max(years, year => +row[year.getFullYear().toString()]))]);
 
-    // Check if all years are valid
-    if (years.some(year => year === null)) {
-        console.error("Some years failed to parse:", years);
-        return; // Stop execution if years aren't parsed correctly
-    }
+        data.forEach((row, index) => {
+            const emissions = years.map(year => {
+                return {
+                    year: year,
+                    emission: +row[year.getFullYear().toString()]
+                };
+            });
 
-    // Set the domain for the x-axis
-    x.domain(d3.extent(years));
-    // Set the domain for the y-axis
-    y.domain([0, d3.max(data, row => {
-        return d3.max(years, year => {
-            const yearStr = year.getFullYear().toString();
-            return +row[yearStr];  // Convert emission values to numbers
-        });
-    })]);
-
-    // Draw the line for each set of emissions data
-    data.forEach((row, index) => {
-        const emissions = years.map(year => {
-            return {
-                year: year,
-                emission: +row[year.getFullYear().toString()]
-            };
+            svg.append("path")
+                .datum(emissions)
+                .attr("fill", "none")
+                .attr("stroke", d3.schemeCategory10[index % 10])
+                .attr("stroke-width", 1.5)
+                .attr("d", valueline);
         });
 
-        svg.append("path")
-            .datum(emissions)
-            .attr("fill", "none")
-            .attr("stroke", d3.schemeCategory10[index % 10]) // Use color scheme to differentiate lines
-            .attr("stroke-width", 1.5)
-            .attr("d", valueline);
+        // Add the X Axis
+        svg.append("g")
+            .attr("transform", `translate(0,${svgHeight})`)
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    }).catch(function(error) {
+        console.error("Error loading or processing data:", error);
     });
-
-    // Add the X Axis
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-
-    // Add the Y Axis
-    svg.append("g")
-        .call(d3.axisLeft(y));
-}).catch(function(error) {
-    console.error("Error loading or processing data:", error);
 });
-

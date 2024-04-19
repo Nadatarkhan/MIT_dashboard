@@ -28,8 +28,13 @@ body, html {
 }
 
 .visual1 {
-    flex: 2; /* Visual1 takes twice the space of Visual2 within the top-container */
+    flex: 2;  // Assuming it needs to be twice as large as visual2
+    display: flex;  // To ensure it can contain the SVG correctly
+    align-items: center;  // Center the SVG vertically
+    justify-content: center;  // Center the SVG horizontally
+    overflow: hidden;  // Prevent overflow if SVG is still slightly larger
 }
+
 
 .visual2 {
     flex: 1; /* Smaller part of the top-container */
