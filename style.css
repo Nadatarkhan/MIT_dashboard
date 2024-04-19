@@ -11,11 +11,10 @@ body, html {
     height: 100%;
 }
 
-/* Container for the top visuals to make them side by side */
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 2; /* Decreased from 3 to allocate less relative height */
+    flex: 1; /* Lower value to decrease the vertical space allocated */
 }
 
 .visual {
@@ -25,16 +24,15 @@ body, html {
 }
 
 .visual1 {
-    flex: 1; /* Adjusted down from 2 to reduce the space allocated to visual1 */
+    flex: 2; /* Maintains that it takes twice the space of .visual2 horizontally */
 }
 
 .visual2 {
-    flex: 1; /* Remains unchanged, or you can adjust this too depending on the design */
+    flex: 1;
 }
 
-/* Styles for the bottom visual */
 .bottom-visual {
-    flex: 2; /* Adjusted up from 1 to compensate and balance the layout */
+    flex: 2; /* Increase to compensate and use more vertical space */
 }
 
 .bottom-visual img {
@@ -44,7 +42,6 @@ body, html {
     margin: 0 auto;
 }
 
-/* Scale the image inside visual3 */
 .scaled-image {
     width: 60%; /* Scale the image to 60% of its original width */
     height: auto; /* Maintain the aspect ratio */
