@@ -70,3 +70,9 @@ h1 {
     height: auto; /* Adjusted to auto to accommodate content dynamically */
     overflow: visible; /* Allows the graph to expand if needed */
 }
+
+#lineChart svg {
+    display: block;  // Ensures SVG is not display:none
+overflow: visible;  // Ensures nothing is clipped
+}
+
