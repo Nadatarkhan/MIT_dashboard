@@ -36,14 +36,14 @@ body, html {
 }
 
 .bottom-visual img {
-    width: 60%;  /* Adjusts the image width */
+    width: 40%;  /* Adjusts the image width */
     height: auto; /* Keeps the aspect ratio */
     display: block; /* Centers the image */
     margin: 0 auto;
 }
 
 .scaled-image {
-    width: 50%; /* Scale the image to 60% of its original width */
+    width: 40%;
     height: auto; /* Maintain the aspect ratio */
 }
 
