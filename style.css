@@ -24,11 +24,11 @@ body, html {
 }
 
 .visual1, .visual2 {
-    height: 410px; /* Fixed height for visual containers */
+    height: 400px; /* Fixed height for visual containers */
 }
 
 .visual1 {
-    flex: 2;  
+    flex: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -77,7 +77,7 @@ h1 {
 
 .graph-container {
     margin: 20px; /* Adjust margin to ensure it fits well within visual1 */
-    height: 370px; /* Adjust height to ensure it fits within visual1 minus margin */
+    height: 350px; /* Adjust height to ensure it fits within visual1 minus margin */
     overflow: hidden; /* Change to hidden to prevent any overflow visibility */
 }
 
