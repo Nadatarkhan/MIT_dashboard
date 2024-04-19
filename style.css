@@ -24,17 +24,16 @@ body, html {
 }
 
 .visual1, .visual2 {
-    height: 410px; /* Uncomment and adjust if a fixed height is required */
+    height: 410px; /* Fixed height for visual containers */
 }
 
 .visual1 {
-    flex: 2;  // Assuming it needs to be twice as large as visual2
-    display: flex;  // To ensure it can contain the SVG correctly
-    align-items: center;  // Center the SVG vertically
-    justify-content: center;  // Center the SVG horizontally
-    overflow: hidden;  // Prevent overflow if SVG is still slightly larger
+    flex: 2;  // Visual1 takes twice the space of Visual2 within the top-container
+display: flex;  // Enable flex layout within visual1 to manage children alignment
+align-items: center;  // Vertically center content within visual1
+justify-content: center;  // Horizontally center content within visual1
+overflow: hidden;  // Prevent overflow if SVG is still slightly larger
 }
-
 
 .visual2 {
     flex: 1; /* Smaller part of the top-container */
@@ -55,7 +54,7 @@ body, html {
 }
 
 .scaled-image {
-    width: 60%; /* Scale the image to 70% of its original width */
+    width: 60%; /* Scale the image to 60% of its original width */
     height: auto; /* Maintain the aspect ratio */
 }
 
@@ -77,13 +76,14 @@ h1 {
 }
 
 .graph-container {
-    margin-top: 20px; /* Space above the graph container */
-    margin-left: 20px; /* Space to the left of the graph container */
-    height: auto; /* Height adjusts to content dynamically */
-    overflow: visible; /* Ensures that any overflowing content is visible */
+    margin: 20px; /* Adjust margin to ensure it fits well within visual1 */
+    height: 370px; /* Adjust height to ensure it fits within visual1 minus margin */
+    overflow: hidden; /* Change to hidden to prevent any overflow visibility */
 }
 
 #lineChart svg {
     display: block;  /* Ensures SVG is visible and not display:none */
-    overflow: visible;  /* Ensures that parts of the SVG are not clipped */
+    width: 100%; /* Ensure the SVG uses all available space */
+    height: 100%; /* Ensure the SVG uses all available height */
+    overflow: hidden;  /* Adjust overflow to prevent clipping at the edges */
 }
