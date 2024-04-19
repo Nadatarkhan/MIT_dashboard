@@ -26,15 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load and process the data
     d3.csv("data/example_data_wide.csv").then(function(data) {
         // Assuming the 'Emissions' columns are named with just the year (e.g., "2025", "2026", ...)
-        const yearColumns = data.columns.slice(11, 37); // Adjust the start and end indices as necessary
+        const yearColumns = data.columns.slice(11).filter(col => col.includes("Emissions")); // Adjust if the indices are different
         const parseYear = d3.timeParse("%Y");
 
         // Process the data to extract emission values for each year
         let emissionsData = data.map(row => {
-            return yearColumns.map(column => ({
-                year: parseYear(column),
-                emission: +row[column] // Convert string to number
-            }));
+            return yearColumns.map(column => {
+                const year = column.split("Emissions")[1].trim(); // Split the header to get the year part
+                return {
+                    year: parseYear(year),
+                    emission: +row[column] // Convert string to number
+                };
+            });
         }).flat(); // Flatten the array of arrays into a single array
 
         // Set the domain for the scales
@@ -51,15 +54,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Draw the line for each strategy
         data.forEach((row, index) => {
-            const strategyEmissions = yearColumns.map(column => ({
-                year: parseYear(column),
-                emission: +row[column]
-            }));
+            const strategyEmissions = yearColumns.map(column => {
+                const year = column.split("Emissions")[1].trim(); // Split the header to get the year part
+                return {
+                    year: parseYear(year),
+                    emission: +row[column]
+                };
+            });
 
             svg.append("path")
                 .data([strategyEmissions])
                 .attr("class", "line")
-                .style("stroke", index % 10) // Choose a color scheme here
+                .style("stroke", d3.schemeCategory10[index % 10]) // Use color scheme to differentiate lines
                 .attr("d", valueline);
         });
     }).catch(error => {
