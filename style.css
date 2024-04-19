@@ -15,7 +15,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 3; /* Increased flex value to allocate more height to the top container */
+    flex: 2; /* Increased flex value to allocate more height to the top container */
 }
 
 .visual {
