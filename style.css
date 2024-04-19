@@ -14,22 +14,27 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    /* Removed the flex property to not control the height */
-}
-
-.visual1, .visual2 {
-    height: 100px; /* Set a specific height for both visualizations */
-    /* Removed flex-grow settings since we are now controlling the height directly */
 }
 
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: hidden; /* Prevents content from spilling over */
+}
+
+.visual1, .visual2 {
+    height: 100px; /* Specific height for visualizations */
+}
+
+.visual1 {
+    flex: 2; /* Visual1 takes twice the width of Visual2 */
+}
+
+.visual2 {
+    flex: 1; /* Visual2 takes the remaining width */
 }
 
 .bottom-visual {
-    flex: 2; /* Increase to compensate and use more vertical space */
+    flex: 1; /* The rest of the vertical space is for the bottom visual */
 }
 
 .bottom-visual img {
@@ -40,8 +45,8 @@ body, html {
 }
 
 .scaled-image {
-    width: 60%; /* Scale the image to 60% of its original width */
-    height: auto; /* Maintain the aspect ratio */
+    width: 60%; /* Scales the image to 60% of its original width */
+    height: auto; /* Maintains aspect ratio */
 }
 
 h1 {
@@ -52,18 +57,18 @@ h1 {
 .icon-row {
     display: flex;
     justify-content: space-around; /* Distributes space evenly around items */
-    padding: 10px 0; /* Adds some padding above and below the icons */
+    padding: 10px 0; /* Adds padding above and below icons */
 }
 
 .icon-row img {
-    width: 50px; /* Set the width of the icons */
-    height: 50px; /* Set the height of the icons */
-    object-fit: contain; /* Ensures images are scaled properly without distortion */
+    width: 50px; /* Width of icons */
+    height: 50px; /* Height of icons */
+    object-fit: contain; /* Ensures images are scaled without distortion */
 }
 
 .graph-container {
-    margin-top: 20px; /* Provides space above the chart */
-    margin-left: 20px; /* Provides additional space on the left */
+    margin-top: 20px;
+    margin-left: 20px;
     height: auto; /* Adjusted to auto to accommodate content dynamically */
     overflow: visible; /* Allows the graph to expand if needed */
 }
