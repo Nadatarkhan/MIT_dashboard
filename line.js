@@ -23,16 +23,32 @@ const svg = d3.select("#lineChart")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// Get the data
+// Load the data from a CSV file
 d3.csv("data/example_data_wide.csv").then(function(data) {
-    // Extract the years from the first row (epw_year)
-    const years = data.columns.slice(1).map(year => parseYear(year));
+    // Log the raw data to the console for debugging
+    console.log(data);
 
-    // Scale the range of the data
+    // Extract the years from the first row (assuming they're in the format "Emissions YYYY")
+    const years = data.columns.slice(1).map(col => parseYear(col.replace('Emissions ', '')));
+    console.log(years);  // Log the parsed years to ensure they are correct
+
+    // Check if all years are valid
+    if (years.some(year => year === null)) {
+        console.error("Some years failed to parse:", years);
+        return; // Stop execution if years aren't parsed correctly
+    }
+
+    // Set the domain for the x-axis
     x.domain(d3.extent(years));
-    y.domain([0, d3.max(data, row => d3.max(years, year => +row[year.getFullYear().toString()]))]);
+    // Set the domain for the y-axis
+    y.domain([0, d3.max(data, row => {
+        return d3.max(years, year => {
+            const yearStr = year.getFullYear().toString();
+            return +row[yearStr];  // Convert emission values to numbers
+        });
+    })]);
 
-    // Draw the line for each strategy
+    // Draw the line for each set of emissions data
     data.forEach((row, index) => {
         const emissions = years.map(year => {
             return {
@@ -57,22 +73,7 @@ d3.csv("data/example_data_wide.csv").then(function(data) {
     // Add the Y Axis
     svg.append("g")
         .call(d3.axisLeft(y));
-});
-
-/*Debug
- */
-// Inside your line.js, add console logs to debug:
-d3.csv("data/example_data_wide.csv").then(function(data) {
-    console.log(data);  // Check what the data looks like
-    const years = data.columns.slice(1).map(year => parseYear(year));
-    console.log(years);  // Ensure years are parsed correctly
-
-    // After setting domains:
-    console.log(x.domain(), y.domain());  // Check the computed domains
-
-    // Before appending paths:
-    console.log(emissions);  // Check the emissions data structure
 }).catch(function(error) {
-    console.error("Error loading or parsing data:", error);
+    console.error("Error loading or processing data:", error);
 });
 
