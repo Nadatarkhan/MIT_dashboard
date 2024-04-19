@@ -34,7 +34,7 @@ body, html {
 
 /* Styles for the bottom visual */
 .bottom-visual {
-    flex: 1; /* Adjusted down to give more space to top-container */
+    flex: 2; /* Adjusted down to give more space to top-container */
 }
 
 .bottom-visual img {
