@@ -80,12 +80,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log('Selected variable:', selectedVariable);
 
-                // Check if there are any invalid values in emissionsData
-                const invalidValues = emissionsData.filter(d => isNaN(d[selectedVariable]));
-                console.log('Invalid values:', invalidValues);
-
                 // Update domain for y-scale
-                const maxY = d3.max(emissionsData, d => d[selectedVariable]);
+                let maxY;
+                if (selectedVariable === "Emissions") {
+                    maxY = d3.max(emissionsData, d => d.emission);
+                } else if (selectedVariable === "Cost") {
+                    maxY = d3.max(emissionsData, d => d.cost);
+                } else {
+                    console.error("Invalid selected variable:", selectedVariable);
+                    return;
+                }
+
                 console.log('Max Y value:', maxY);
                 y.domain([0, maxY]);
 
@@ -105,9 +110,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => y(d[selectedVariable]))
+                        .y(d => {
+                            if (selectedVariable === "Emissions") {
+                                return y(d.emission);
+                            } else if (selectedVariable === "Cost") {
+                                return y(d.cost);
+                            }
+                        })
                     );
             }
+
 
 
             // Add buttons
