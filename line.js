@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log('Selected variable:', selectedVariable);
 
+                // Check if there are any invalid values in emissionsData
+                const invalidValues = emissionsData.filter(d => isNaN(d[selectedVariable]));
+                console.log('Invalid values:', invalidValues);
+
                 // Update domain for y-scale
                 const maxY = d3.max(emissionsData, d => d[selectedVariable]);
                 console.log('Max Y value:', maxY);
@@ -104,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .y(d => y(d[selectedVariable]))
                     );
             }
+
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
