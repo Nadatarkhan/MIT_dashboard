@@ -127,14 +127,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("div")
                 .attr("class", "button-container");
 
+            const buttonData = ["Emissions", "Cost", "CO2/$"]; // Button data
             const buttons = buttonContainer.selectAll("button")
-                .data(["Emissions", "Cost", "CO2/$"])
+                .data(buttonData)
                 .enter()
                 .append("button")
                 .text(d => d)
-                .on("click", function(d) {
-                    updatePlot(d);
+                .on("click", function() { // Removed the argument
+                    updatePlot(d3.select(this).text()); // Pass the text of the button
                 });
+
 
             // Initial plot
             updatePlot(selectedVariable);
