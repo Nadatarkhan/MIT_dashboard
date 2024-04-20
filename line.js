@@ -5,16 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 50, left: 80 }, // Adjusted left margin for y-axis label
+        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
         // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
-            .attr("class", "chart-svg")
-            .attr("width", containerWidth)
-            .attr("height", containerHeight)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -47,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Y domain:', y.domain());
 
             // Add the X Axis
-            const xAxis = svg.append("g")
+            svg.append("g")
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(x))
                 .append("text") // X-axis label
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .text("Years");
 
             // Add the Y Axis
-            const yAxis = svg.append("g")
+            svg.append("g")
                 .call(d3.axisLeft(y))
                 .append("text") // Y-axis label
                 .attr("class", "y-axis-label")
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("y", -60) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Emissions");
+                .text(selectedVariable);
 
             // Function to update plot based on selected variable
             function updatePlot(variable) {
@@ -77,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
 
                 // Update Y axis label
-                yAxis.text(selectedVariable);
+                svg.selectAll(".y-axis-label")
+                    .text(selectedVariable);
 
                 // Redraw the line
                 svg.selectAll(".line").remove();
@@ -94,9 +94,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Add buttons
-            const buttons = d3.select(".visual2")
+            const buttons = d3.select(container)
+                .append("div")
+                .attr("class", "button-container")
                 .selectAll("button")
-                .data(["Emissions", "Cost", "CO2/$"])
+                .data(["CO2/T", "$/T", "CO2/$"])
                 .enter()
                 .append("button")
                 .text(d => d)
@@ -114,3 +116,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
