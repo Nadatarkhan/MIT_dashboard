@@ -70,10 +70,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Function to update plot based on selected variable
             function updatePlot(variable) {
+                console.log("Selected variable:", variable);
+
                 selectedVariable = variable;
 
                 // Update domain for y-scale
-                y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
+                const maxY = d3.max(emissionsData, d => d[selectedVariable]);
+                console.log("Max Y value:", maxY);
+                y.domain([0, maxY]);
+
+                console.log("Y domain after update:", y.domain());
 
                 // Update Y axis label
                 svg.selectAll(".y-axis-label")
@@ -92,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .y(d => y(d[selectedVariable]))
                     );
             }
+
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
