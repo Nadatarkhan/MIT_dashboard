@@ -80,49 +80,86 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log('Selected variable:', selectedVariable);
 
-                // Update domain for y-scale
-                let maxY;
                 if (selectedVariable === "Emissions") {
-                    maxY = d3.max(emissionsData, d => d.emission);
+                    // Update domain for y-scale
+                    const maxY = d3.max(emissionsData, d => d.emission);
+                    console.log('Max Y value:', maxY);
+                    y.domain([0, maxY]);
+
+                    // Update Y axis label
+                    svg.selectAll(".y-axis-label")
+                        .text(selectedVariable);
+
+                    // Redraw the line
+                    svg.selectAll(".line").remove();
+                    svg.append("path")
+                        .datum(emissionsData)
+                        .attr("class", "line")
+                        .attr("fill", "none")
+                        .attr("stroke", "steelblue")
+                        .attr("stroke-width", 1.5)
+                        .attr("d", d3.line()
+                            .x(d => x(d.year))
+                            .y(d => y(d.emission))
+                        );
                 } else if (selectedVariable === "Cost") {
-                    maxY = d3.max(emissionsData, d => d.cost);
+                    // Update domain for y-scale
+                    const maxY = d3.max(emissionsData, d => d.cost);
+                    console.log('Max Y value:', maxY);
+                    y.domain([0, maxY]);
+
+                    // Update Y axis label
+                    svg.selectAll(".y-axis-label")
+                        .text(selectedVariable);
+
+                    // Redraw the line
+                    svg.selectAll(".line").remove();
+                    svg.append("path")
+                        .datum(emissionsData)
+                        .attr("class", "line")
+                        .attr("fill", "none")
+                        .attr("stroke", "steelblue")
+                        .attr("stroke-width", 1.5)
+                        .attr("d", d3.line()
+                            .x(d => x(d.year))
+                            .y(d => y(d.cost))
+                        );
                 } else if (selectedVariable === "Emissions-Cost") {
-                    maxY = d3.max(emissionsData, d => Math.max(d.emission, d.cost));
+                    // Update domain for x-scale and y-scale
+                    const maxX = d3.max(emissionsData, d => d.cost);
+                    const maxY = d3.max(emissionsData, d => d.emission);
+                    console.log('Max X value:', maxX);
+                    console.log('Max Y value:', maxY);
+                    x.domain([0, maxX]);
+                    y.domain([0, maxY]);
+
+                    // Update X and Y axis labels
+                    svg.selectAll(".x-axis-label")
+                        .text("Cost");
+                    svg.selectAll(".y-axis-label")
+                        .text("Emissions");
+
+                    // Redraw the line
+                    svg.selectAll(".line").remove();
+                    svg.append("path")
+                        .datum(emissionsData)
+                        .attr("class", "line")
+                        .attr("fill", "none")
+                        .attr("stroke", "steelblue")
+                        .attr("stroke-width", 1.5)
+                        .attr("d", d3.line()
+                            .x(d => x(d.cost))
+                            .y(d => y(d.emission))
+                        );
                 } else {
                     console.error("Invalid selected variable:", selectedVariable);
                     return;
                 }
 
-                console.log('Max Y value:', maxY);
-                y.domain([0, maxY]);
-
-                console.log('Y domain after update:', y.domain());
-
-                // Update Y axis label
-                svg.selectAll(".y-axis-label")
-                    .text(selectedVariable);
-
-                // Redraw the line
-                svg.selectAll(".line").remove();
-                svg.append("path")
-                    .datum(emissionsData)
-                    .attr("class", "line")
-                    .attr("fill", "none")
-                    .attr("stroke", "steelblue")
-                    .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => {
-                            if (selectedVariable === "Emissions") {
-                                return y(d.emission);
-                            } else if (selectedVariable === "Cost") {
-                                return y(d.cost);
-                            } else if (selectedVariable === "Emissions-Cost") {
-                                return y(Math.max(d.emission, d.cost));
-                            }
-                        })
-                    );
+                console.log('X domain:', x.domain());
+                console.log('Y domain:', y.domain());
             }
+
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
