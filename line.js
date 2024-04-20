@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .call(d3.axisBottom(x))
                 .append("text") // X-axis label
                 .attr("class", "x-axis-label")
-                .attr("x", width / 2)
+                .attr("x", width / 10)
                 .attr("y", 35) // Adjusted for padding
                 .style("text-anchor", "middle")
                 .text("Years");
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("text") // Y-axis label
                 .attr("class", "y-axis-label")
                 .attr("transform", "rotate(-90)")
-                .attr("y", -60) // Adjusted for padding
+                .attr("y", -20) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Emissions");
