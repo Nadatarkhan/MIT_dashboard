@@ -72,14 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
             function updatePlot(variable) {
                 selectedVariable = variable;
 
-                // Log selected variable
-                console.log('Selected variable:', selectedVariable);
-
                 // Update domain for y-scale
                 y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
-
-                // Log Y domain after update
-                console.log('Y domain after update:', y.domain());
 
                 // Update Y axis label
                 svg.selectAll(".y-axis-label")
@@ -93,14 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("fill", "none")
                     .attr("stroke", "steelblue")
                     .attr("stroke-width", 1.5)
-                    .attr("d", function(d) {
-                        console.log('Data for line generation:', d);
-                        return d3.line()
-                            .x(d => x(d.year))
-                            .y(d => y(d[selectedVariable]))(d);
-                    });
+                    .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d[selectedVariable]))
+                    );
             }
-
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
@@ -113,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("button")
                 .text(d => d)
                 .on("click", function(d) {
+                    // Pass the value of d, which represents the selected variable
                     updatePlot(d);
                 });
 
@@ -126,5 +118,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
-
