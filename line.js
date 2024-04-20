@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("class", "chart-svg")
+            .attr("width", containerWidth)
+            .attr("height", containerHeight)
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -80,4 +81,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
