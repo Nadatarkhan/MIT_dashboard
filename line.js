@@ -1,3 +1,28 @@
+// Define the updatePlot function globally
+function updatePlot(variable, emissionsData, svg, x, y) {
+    selectedVariable = variable;
+
+    // Update domain for y-scale
+    y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
+
+    // Update Y axis label
+    svg.selectAll(".y-axis-label")
+        .text(selectedVariable);
+
+    // Redraw the line
+    svg.selectAll(".line").remove();
+    svg.append("path")
+        .datum(emissionsData)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(d => x(d.year))
+            .y(d => y(d[selectedVariable]))
+        );
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
@@ -68,47 +93,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 .style("text-anchor", "middle")
                 .text(selectedVariable);
 
-            // Function to update plot based on selected variable
-            function updatePlot(variable) {
-                selectedVariable = variable;
-
-                // Update domain for y-scale
-                y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
-
-                // Update Y axis label
-                svg.selectAll(".y-axis-label")
-                    .text(selectedVariable);
-
-                // Redraw the line
-                svg.selectAll(".line").remove();
-                svg.append("path")
-                    .datum(emissionsData)
-                    .attr("class", "line")
-                    .attr("fill", "none")
-                    .attr("stroke", "steelblue")
-                    .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => y(d[selectedVariable]))
-                    );
-            }
-
             // Add buttons
             const buttonContainer = d3.select(container) // Append to the same container
                 .append("div")
                 .attr("class", "button-container");
 
-            const buttons = buttonContainer.selectAll("button")
-                .data(["Emissions", "Cost", "CO2/$"])
-                .enter()
-                .append("button")
-                .text(d => d)
-                .on("click", function(d) {
-                    updatePlot(d);
-                });
+            // Check if button container exists before appending
+            if (!buttonContainer.empty()) {
+                const buttons = buttonContainer.selectAll("button")
+                    .data(["Emissions", "Cost", "CO2/$"])
+                    .enter()
+                    .append("button")
+                    .text(d => d)
+                    .on("click", function(d) {
+                        updatePlot(d, emissionsData, svg, x, y); // Pass necessary parameters to updatePlot function
+                    });
+            }
 
             // Initial plot
-            updatePlot(selectedVariable);
+            updatePlot(selectedVariable, emissionsData, svg, x, y);
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -117,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
 
 
