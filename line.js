@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = {top: 20, right: 20, bottom: 30, left: 50},
+        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -27,12 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Load and process the data
         d3.csv("data/example_data_wide.csv").then(function(data) {
             // Find the year range in the columns
-            const years = data.columns.slice(11, 37); // Adjust the indices based on your CSV structure
+            const yearColumns = data.columns.slice(11); // Adjust the indices based on your CSV structure
             const parseYear = d3.timeParse("%Y");
+
+            // Log the column headers for debugging
+            console.log('Year Columns:', yearColumns);
 
             // Map the data to an array of objects for each year for each scenario
             let emissionsData = data.map((d, i) => {
-                return years.map(year => {
+                return yearColumns.map(year => {
                     return {
                         year: parseYear(year),
                         emission: +d[year],
@@ -40,6 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                 });
             }).flat();
+
+            // Log the emissions data for debugging
+            console.log('Emissions Data:', emissionsData);
 
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
@@ -56,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Group data by scenario
             let sumstat = d3.group(emissionsData, d => d.scenario);
 
+            // Log the grouped data by scenario for debugging
+            console.log('Grouped Data by Scenario:', sumstat);
+
             // color palette
             const color = d3.scaleOrdinal()
                 .domain(sumstat.keys())
@@ -63,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Draw the line for each strategy
             sumstat.forEach(function(value, key) {
+                console.log(`Drawing line for scenario ${key}`, value);
                 svg.append("path")
                     .datum(value)
                     .attr("fill", "none")
