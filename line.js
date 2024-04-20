@@ -1,85 +1,67 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const container = document.querySelector('.visual1');
-    if (container) {
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+// Parse the year / time
+const parseYear = d3.timeParse("%Y");
 
-        // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 60 },
-            width = containerWidth - margin.left - margin.right,
-            height = containerHeight - margin.top - margin.bottom;
+// Set the dimensions of the canvas / graph
+const margin = { top: 30, right: 20, bottom: 30, left: 50 },
+    width = 600 - margin.left - margin.right, // Adjust the width if needed
+    height = 270 - margin.top - margin.bottom; // Adjust the height if needed
 
-        // Append the SVG canvas to the container
-        const svg = d3.select(container)
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+// Set the ranges
+const x = d3.scaleTime().range([0, width]);
+const y = d3.scaleLinear().range([height, 0]);
 
-        // Define the scales and the line
-        const x = d3.scaleTime().range([0, width]);
-        const y = d3.scaleLinear().range([height, 0]);
-        const valueline = d3.line()
-            .x(d => x(d.year))
-            .y(d => y(d.emission));
+// Define the line
+const valueline = d3.line()
+    .x(d => x(d.year))
+    .y(d => y(d.emission));
 
-        // Load and process the data
-        d3.csv("data/example_data_wide.csv").then(function(data) {
-            console.log("Raw data:", data); // Log raw data for debugging
+// Adds the SVG canvas
+const svg = d3.select("#lineChart")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            // Assuming the 'Emissions' columns are named with just the year (e.g., "2025", "2026", ...)
-            const yearColumns = data.columns.slice(11).filter(col => col.includes("Emissions")); // Adjust if the indices are different
-            const parseYear = d3.timeParse("%Y");
+// Get the data
+d3.csv("data/example_data_wide.csv").then(function(data) {
+    // Extract the year columns from the data header
+    const yearColumns = data.columns.slice(11); // Assuming emission years start at the 12th column
+    const years = yearColumns.map(col => parseYear(col)); // Parse each year string into a Date object
 
-            // Process the data to extract emission values for each year
-            let emissionsData = data.map(row => {
-                return yearColumns.map(column => {
-                    const year = column.split("Emissions")[1].trim(); // Split the header to get the year part
-                    return {
-                        year: parseYear(year),
-                        emission: +row[column] // Convert string to number
-                    };
-                });
-            }).flat(); // Flatten the array of arrays into a single array
+    // Map the data to create a data structure suitable for plotting
+    let plotData = data.map(strategy => {
+        return yearColumns.map(column => ({
+            year: parseYear(column),
+            emission: +strategy[column] // Convert emission values to numbers
+        }));
+    });
 
-            console.log("Formatted data:", emissionsData); // Log formatted data for debugging
+    // Flatten the array of arrays into a single array for plotting
+    plotData = plotData.flat();
 
-            // Set the domain for the scales
-            x.domain(d3.extent(emissionsData, d => d.year));
-            y.domain([0, d3.max(emissionsData, d => d.emission)]);
+    // Scale the range of the data
+    x.domain(d3.extent(years));
+    y.domain([0, d3.max(plotData, d => d.emission)]);
 
-            // Add the X Axis
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
+    // Add the X Axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
 
-            // Add the Y Axis
-            svg.append("g").call(d3.axisLeft(y));
+    // Add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
 
-            // Draw the line for each strategy
-            data.forEach((row, index) => {
-                const strategyEmissions = yearColumns.map(column => {
-                    const year = column.split("Emissions")[1].trim(); // Split the header to get the year part
-                    return {
-                        year: parseYear(year),
-                        emission: +row[column]
-                    };
-                });
-
-                console.log(`Strategy ${index + 1} emissions data:`, strategyEmissions); // Log strategy emissions data
-
-                svg.append("path")
-                    .data([strategyEmissions])
-                    .attr("class", "line")
-                    .style("stroke", d3.schemeCategory10[index % 10]) // Use color scheme to differentiate lines
-                    .attr("d", valueline);
-            });
-        }).catch(error => {
-            console.error("Error loading or processing data:", error);
-        });
-    } else {
-        console.error("Container not found");
-    }
+    // Loop through each strategy to plot
+    data.forEach((strategy, index) => {
+        svg.append("path")
+            .datum(plotData.filter(d => +strategy['2025'] === d.emission))
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", valueline);
+    });
+}).catch(error => {
+    console.error("Error processing CSV data: ", error);
 });
-
