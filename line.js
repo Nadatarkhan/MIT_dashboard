@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+        const margin = { top: 20, right: 30, bottom: 30, left: 80 }, // Increased left margin
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -53,7 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 .call(d3.axisBottom(x));
 
             // Add the Y Axis
-            svg.append("g").call(d3.axisLeft(y));
+            svg.append("g")
+                .call(d3.axisLeft(y))
+                .append("text")
+                .attr("fill", "#000")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "-4.5em") // Adjusted for padding
+                .attr("text-anchor", "end")
+                .text("Emissions");
 
             // Group data by scenario
             let sumstat = d3.group(emissionsData, d => d.scenario);
@@ -72,8 +80,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("fill", "none")
                     .attr("stroke", color(key))
                     .attr("stroke-width", 1.5)
-                    .attr("d", valueline);
+                    .attr("d", valueline)
+                    .on("mouseover", function() {
+                        tooltip.style("opacity", 1);
+                    })
+                    .on("mousemove", function(d) {
+                        tooltip.html(`Scenario: ${key}`)
+                            .style("left", (d3.event.pageX + 10) + "px")
+                            .style("top", (d3.event.pageY - 20) + "px");
+                    })
+                    .on("mouseout", function() {
+                        tooltip.style("opacity", 0);
+                    });
             });
+
+            // Tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
@@ -81,6 +106,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
-
 
