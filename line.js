@@ -106,20 +106,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.selectAll(".line").remove();
 
                 // Group data by scenario
-                const nestedData = d3.nest()
-                    .key(d => d.scenario)
-                    .entries(emissionsData);
+                const scenarioGroups = {};
+                emissionsData.forEach(d => {
+                    if (!scenarioGroups[d.scenario]) {
+                        scenarioGroups[d.scenario] = [];
+                    }
+                    scenarioGroups[d.scenario].push(d);
+                });
 
                 // Define color scale
                 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
                 // Draw lines for each scenario
-                nestedData.forEach(scenario => {
+                Object.values(scenarioGroups).forEach(scenario => {
                     svg.append("path")
-                        .datum(scenario.values)
+                        .datum(scenario)
                         .attr("class", "line")
                         .attr("fill", "none")
-                        .attr("stroke", color(scenario.key))
+                        .attr("stroke", color(scenario[0].scenario))
                         .attr("stroke-width", 1.5)
                         .attr("d", d3.line()
                             .x(d => x(d.year))
