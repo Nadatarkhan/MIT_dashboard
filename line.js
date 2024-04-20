@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .y(d => y(d.emission));
 
         // Load and process the data
-        d3.csv("your_data.csv").then(function(data) {
+        d3.csv("data/example_data.csv").then(function(data) {
             console.log('Data loaded:', data);
 
             // Map the data to an array of objects
@@ -81,5 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
 
