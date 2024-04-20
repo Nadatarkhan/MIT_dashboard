@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 50, left: 50 }, // Adjusted left margin for y-axis label
+        const margin = { top: 20, right: 30, bottom: 50, left: 80 }, // Adjusted left margin for y-axis label
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "y-axis-label")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -height / 2) // Adjusted for padding
-                .attr("y", -40) // Adjusted for padding
+                .attr("y", -60) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Emissions");
@@ -112,5 +112,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
-
