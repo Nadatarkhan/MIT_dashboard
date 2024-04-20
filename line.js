@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Add buttons
-            const buttonContainer = d3.select(container)
+            const buttonContainer = d3.select(container.parentNode) // Append to parent container
                 .append("div")
                 .attr("class", "button-container");
 
@@ -117,4 +117,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
