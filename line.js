@@ -99,8 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Y domain after update:', y.domain());
 
                 // Update Y axis label
+                console.log('Updating Y axis label with:', selectedVariable);
+                console.log('Selected y-axis labels:', svg.selectAll(".y-axis-label"));
                 svg.selectAll(".y-axis-label")
                     .text(selectedVariable);
+
 
                 // Remove existing lines
                 svg.selectAll(".line").remove();
