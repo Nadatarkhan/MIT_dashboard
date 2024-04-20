@@ -32,7 +32,11 @@
                 <!-- Line chart from line.js will be inserted here -->
             </div>
             <!-- Button Container -->
-            <div class="button-container"></div>
+            <div class="button-container">
+                <button onclick="updatePlot('Emissions')">CO2/T</button>
+                <button onclick="updatePlot('Cost')">$/T</button>
+                <button onclick="updatePlot('CO2/$')">CO2/$</button>
+            </div>
         </div>
         <div class="visual visual2">Visual 2</div>
     </div> <!-- End of top-container -->
@@ -46,3 +50,4 @@
 </script>
 </body>
 </html>
+
