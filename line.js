@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     maxY = d3.max(emissionsData, d => d.emission);
                 } else if (selectedVariable === "Cost") {
                     maxY = d3.max(emissionsData, d => d.cost);
+                } else if (selectedVariable === "Emissions-Cost") {
+                    maxY = d3.max(emissionsData, d => Math.max(d.emission, d.cost));
                 } else {
                     console.error("Invalid selected variable:", selectedVariable);
                     return;
@@ -115,19 +117,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                 return y(d.emission);
                             } else if (selectedVariable === "Cost") {
                                 return y(d.cost);
+                            } else if (selectedVariable === "Emissions-Cost") {
+                                return y(Math.max(d.emission, d.cost));
                             }
                         })
                     );
             }
-
-
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
                 .append("div")
                 .attr("class", "button-container");
 
-            const buttonData = ["Emissions", "Cost", "CO2/$"]; // Button data
+            const buttonData = ["Emissions", "Cost", "Emissions-Cost"]; // Button data
             const buttons = buttonContainer.selectAll("button")
                 .data(buttonData)
                 .enter()
@@ -148,3 +150,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
