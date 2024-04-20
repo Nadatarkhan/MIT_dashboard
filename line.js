@@ -23,9 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        const valueline = d3.line()
-            .x(d => x(d.year))
-            .y(d => y(d.emission));
+        let selectedVariable = "Emissions";
 
         // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
@@ -35,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
+                cost: +d.Cost,
                 scenario: +d.Scenario
             }));
 
@@ -42,68 +41,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
-            y.domain([0, d3.max(emissionsData, d => d.emission)]);
+            y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
 
             console.log('X domain:', x.domain());
             console.log('Y domain:', y.domain());
 
             // Add the X Axis
-            svg.append("g")
+            const xAxis = svg.append("g")
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(x))
                 .append("text") // X-axis label
                 .attr("class", "x-axis-label")
                 .attr("x", width / 2)
-                .attr("y", 5) // Adjusted for padding
+                .attr("y", 40) // Adjusted for padding
                 .style("text-anchor", "middle")
                 .text("Years");
 
             // Add the Y Axis
-            svg.append("g")
+            const yAxis = svg.append("g")
                 .call(d3.axisLeft(y))
                 .append("text") // Y-axis label
                 .attr("class", "y-axis-label")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -height / 2) // Adjusted for padding
-                .attr("y", -5) // Adjusted for padding
+                .attr("y", -60) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Emissions");
 
-            // Group data by scenario
-            let sumstat = d3.group(emissionsData, d => d.scenario);
-            console.log('Grouped data by scenario:', sumstat);
+            // Function to update plot based on selected variable
+            function updatePlot(variable) {
+                selectedVariable = variable;
 
-            // color palette
-            const color = d3.scaleOrdinal()
-                .domain(sumstat.keys())
-                .range(d3.schemeCategory10);
+                // Update domain for y-scale
+                y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
 
-            // Draw the line for each scenario
-            sumstat.forEach(function(value, key) {
-                console.log(`Drawing line for scenario ${key}`, value);
+                // Update Y axis label
+                yAxis.text(selectedVariable);
+
+                // Redraw the line
+                svg.selectAll(".line").remove();
                 svg.append("path")
-                    .datum(value)
+                    .datum(emissionsData)
+                    .attr("class", "line")
                     .attr("fill", "none")
-                    .attr("stroke", color(key))
+                    .attr("stroke", "steelblue")
                     .attr("stroke-width", 1.5)
-                    .attr("d", valueline)
-                    .on("mouseover", function(event, d) {
-                        tooltip.style("opacity", 1);
-                        const [xCoord, yCoord] = d3.pointer(event);
-                        tooltip.html(`Scenario: ${key}`)
-                            .style("left", (xCoord + 10) + "px")
-                            .style("top", (yCoord - 20) + "px");
-                    })
-                    .on("mouseout", function() {
-                        tooltip.style("opacity", 0);
-                    });
-            });
+                    .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d[selectedVariable]))
+                    );
+            }
 
-            // Tooltip
-            const tooltip = d3.select(container).append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+            // Add buttons
+            const buttons = d3.select(".visual2")
+                .selectAll("button")
+                .data(["Emissions", "Cost", "CO2/$"])
+                .enter()
+                .append("button")
+                .text(d => d)
+                .on("click", function(d) {
+                    updatePlot(d);
+                });
+
+            // Initial plot
+            updatePlot(selectedVariable);
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
