@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 60 },
+        const margin = {top: 20, right: 30, bottom: 30, left: 60},
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -26,34 +26,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Load and process the data
         d3.csv("data/example_data_wide.csv").then(function(data) {
-            console.log("Raw data:", data); // Log raw data for debugging
+            // Debugging: log raw data
+            console.log("Raw data:", data);
 
-            // Print out the column names for debugging
-            console.log("Column names:", data.columns);
-
-            // Identify the 'Emissions' columns based on the header names
-            const emissionsHeaders = data.columns.filter(col => col.startsWith("Emissions"));
-            console.log("Emissions headers:", emissionsHeaders);
-
-            // Assume that the actual year headers follow immediately after the strategies
-            const yearHeaders = data.columns.slice(data.columns.indexOf(emissionsHeaders[0]));
-            console.log("Year headers:", yearHeaders);
-
-            const parseYear = d3.timeParse("%Y");
+            // Remove the non-year columns from the data array
+            const yearColumns = data.columns.slice(12); // Assuming year columns start at index 12
+            console.log("Year columns:", yearColumns);
 
             // Process the data to extract emission values for each year
-            let emissionsData = data.map(row => {
-                return yearHeaders.map(header => {
-                    // We remove the 'Emissions' prefix and parse the year
-                    const yearString = header.replace("Emissions", "").trim();
-                    return {
-                        year: parseYear(yearString),
-                        emission: +row[header] // Convert string to number
-                    };
+            let emissionsData = [];
+            data.forEach(function(d) {
+                yearColumns.forEach(function(year) {
+                    emissionsData.push({
+                        year: d3.timeParse("%Y")(year),
+                        emission: +d[year]
+                    });
                 });
-            }).flat();
+            });
 
-            // Log the processed emissions data for debugging
+            // Debugging: log processed emissions data
             console.log("Emissions data:", emissionsData);
 
             // Set the domain for the scales
@@ -69,22 +60,16 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g").call(d3.axisLeft(y));
 
             // Draw the line for each strategy
-            data.forEach((row, index) => {
-                const emissionsForStrategy = yearHeaders.map(header => {
-                    const yearString = header.replace("Emissions", "").trim();
-                    return {
-                        year: parseYear(yearString),
-                        emission: +row[header]
-                    };
-                });
-
+            data.forEach((d, i) => {
                 svg.append("path")
-                    .datum(emissionsForStrategy)
-                    .attr("class", "line")
-                    .style("stroke", d3.schemeCategory10[index % 10])
+                    .datum(emissionsData.filter(e => e.scenario === `Scenario ${i+1}`))
+                    .attr("fill", "none")
+                    .attr("stroke", "steelblue")
+                    .attr("stroke-width", 1.5)
                     .attr("d", valueline);
             });
-        }).catch(error => {
+
+        }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
     } else {
