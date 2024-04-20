@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .data(buttonData)
                 .enter()
                 .append("button")
+                .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() { // Removed the argument
                     updatePlot(d3.select(this).text()); // Pass the text of the button

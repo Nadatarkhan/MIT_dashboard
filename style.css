@@ -96,5 +96,38 @@ h1 {
     font-size: 12px; /* Adjust font size if needed */
 }
 
+.pheasant-demure-button {
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.solid {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.light {
+    border: 2px solid #ccc;
+}
+
+.hover:hover {
+    background-color: #ccc;
+    color: #fff;
+}
+
+.blink {
+    animation: blink-animation 1s infinite;
+}
+
+@keyframes blink-animation {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
 
 
