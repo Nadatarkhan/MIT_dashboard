@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
+        console.log('Container dimensions:', containerWidth, containerHeight);
+
         // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
@@ -25,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .y(d => y(d.emission));
 
         // Load and process the data
-        d3.csv("example_data.csv").then(function(data) {
+        d3.csv("your_data.csv").then(function(data) {
+            console.log('Data loaded:', data);
+
             // Map the data to an array of objects
             let emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
@@ -33,9 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenario: +d.Scenario
             }));
 
+            console.log('Formatted data:', emissionsData);
+
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
             y.domain([0, d3.max(emissionsData, d => d.emission)]);
+
+            console.log('X domain:', x.domain());
+            console.log('Y domain:', y.domain());
 
             // Add the X Axis
             svg.append("g")
@@ -47,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Group data by scenario
             let sumstat = d3.group(emissionsData, d => d.scenario);
+            console.log('Grouped data by scenario:', sumstat);
 
             // color palette
             const color = d3.scaleOrdinal()
@@ -55,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Draw the line for each scenario
             sumstat.forEach(function(value, key) {
+                console.log(`Drawing line for scenario ${key}`, value);
                 svg.append("path")
                     .datum(value)
                     .attr("fill", "none")
@@ -69,3 +80,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
