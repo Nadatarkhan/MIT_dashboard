@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
-                scenario: +d.Scenario
+                scenario: d.Scenario
             }));
 
             console.log('Formatted data:', emissionsData);
@@ -102,26 +102,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.selectAll(".y-axis-label")
                     .text(selectedVariable);
 
-                // Redraw the line
+                // Remove existing lines
                 svg.selectAll(".line").remove();
-                svg.append("path")
-                    .datum(emissionsData)
-                    .attr("class", "line")
-                    .attr("fill", "none")
-                    .attr("stroke", "steelblue")
-                    .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => {
-                            if (selectedVariable === "Emissions") {
-                                return y(d.emission);
-                            } else if (selectedVariable === "Cost") {
-                                return y(d.cost);
-                            } else if (selectedVariable === "Emissions-Cost") {
-                                return y(Math.max(d.emission, d.cost));
-                            }
-                        })
-                    );
+
+                // Group data by scenario
+                const nestedData = d3.nest()
+                    .key(d => d.scenario)
+                    .entries(emissionsData);
+
+                // Define color scale
+                const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+                // Draw lines for each scenario
+                nestedData.forEach(scenario => {
+                    svg.append("path")
+                        .datum(scenario.values)
+                        .attr("class", "line")
+                        .attr("fill", "none")
+                        .attr("stroke", color(scenario.key))
+                        .attr("stroke-width", 1.5)
+                        .attr("d", d3.line()
+                            .x(d => x(d.year))
+                            .y(d => {
+                                if (selectedVariable === "Emissions") {
+                                    return y(d.emission);
+                                } else if (selectedVariable === "Cost") {
+                                    return y(d.cost);
+                                } else if (selectedVariable === "Emissions-Cost") {
+                                    return y(Math.max(d.emission, d.cost));
+                                }
+                            })
+                        );
+                });
             }
 
             // Add buttons
@@ -150,4 +162,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
