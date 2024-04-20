@@ -72,14 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
             function updatePlot(variable) {
                 selectedVariable = variable;
 
-                // Log emissionsData before domain update
-                console.log('Emissions data before domain update:', emissionsData);
+                // Log selected variable
+                console.log('Selected variable:', selectedVariable);
 
                 // Update domain for y-scale
                 y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
 
-                // Log emissionsData after domain update
-                console.log('Emissions data after domain update:', emissionsData);
+                // Log Y domain after update
+                console.log('Y domain after update:', y.domain());
 
                 // Update Y axis label
                 svg.selectAll(".y-axis-label")
@@ -93,11 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("fill", "none")
                     .attr("stroke", "steelblue")
                     .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => y(d[selectedVariable]))
-                    );
+                    .attr("d", function(d) {
+                        console.log('Data for line generation:', d);
+                        return d3.line()
+                            .x(d => x(d.year))
+                            .y(d => y(d[selectedVariable]))(d);
+                    });
             }
+
 
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
