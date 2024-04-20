@@ -38,9 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log('Formatted data:', emissionsData);
 
+            // Check if there are any invalid values in emissionsData
+            const invalidValues = emissionsData.filter(d => isNaN(d[selectedVariable]));
+            console.log('Invalid values:', invalidValues);
+
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
-            y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
+            const maxY = d3.max(emissionsData, d => d[selectedVariable]);
+            console.log('Max Y value:', maxY);
+            y.domain([0, maxY]);
 
             console.log('X domain:', x.domain());
             console.log('Y domain:', y.domain());
@@ -70,16 +76,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Function to update plot based on selected variable
             function updatePlot(variable) {
-                console.log("Selected variable:", variable);
-
                 selectedVariable = variable;
+
+                console.log('Selected variable:', selectedVariable);
 
                 // Update domain for y-scale
                 const maxY = d3.max(emissionsData, d => d[selectedVariable]);
-                console.log("Max Y value:", maxY);
+                console.log('Max Y value:', maxY);
                 y.domain([0, maxY]);
 
-                console.log("Y domain after update:", y.domain());
+                console.log('Y domain after update:', y.domain());
 
                 // Update Y axis label
                 svg.selectAll(".y-axis-label")
@@ -99,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     );
             }
 
-
             // Add buttons
             const buttonContainer = d3.select(container) // Append to container
                 .append("div")
@@ -111,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("button")
                 .text(d => d)
                 .on("click", function(d) {
-                    // Pass the value of d, which represents the selected variable
                     updatePlot(d);
                 });
 
