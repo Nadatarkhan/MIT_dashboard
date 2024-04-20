@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = {top: 20, right: 30, bottom: 30, left: 60},
+        const margin = {top: 20, right: 20, bottom: 30, left: 50},
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -26,26 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Load and process the data
         d3.csv("data/example_data_wide.csv").then(function(data) {
-            // Debugging: log raw data
-            console.log("Raw data:", data);
+            // Find the year range in the columns
+            const years = data.columns.slice(11, 37); // Adjust the indices based on your CSV structure
+            const parseYear = d3.timeParse("%Y");
 
-            // Remove the non-year columns from the data array
-            const yearColumns = data.columns.slice(12); // Assuming year columns start at index 12
-            console.log("Year columns:", yearColumns);
-
-            // Process the data to extract emission values for each year
-            let emissionsData = [];
-            data.forEach(function(d) {
-                yearColumns.forEach(function(year) {
-                    emissionsData.push({
-                        year: d3.timeParse("%Y")(year),
-                        emission: +d[year]
-                    });
+            // Map the data to an array of objects for each year for each scenario
+            let emissionsData = data.map((d, i) => {
+                return years.map(year => {
+                    return {
+                        year: parseYear(year),
+                        emission: +d[year],
+                        scenario: i + 1 // Assuming the first scenario starts at 1
+                    };
                 });
-            });
-
-            // Debugging: log processed emissions data
-            console.log("Emissions data:", emissionsData);
+            }).flat();
 
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
@@ -59,16 +53,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add the Y Axis
             svg.append("g").call(d3.axisLeft(y));
 
+            // Group data by scenario
+            let sumstat = d3.group(emissionsData, d => d.scenario);
+
+            // color palette
+            const color = d3.scaleOrdinal()
+                .domain(sumstat.keys())
+                .range(d3.schemeCategory10);
+
             // Draw the line for each strategy
-            data.forEach((d, i) => {
+            sumstat.forEach(function(value, key) {
                 svg.append("path")
-                    .datum(emissionsData.filter(e => e.scenario === `Scenario ${i+1}`))
+                    .datum(value)
                     .attr("fill", "none")
-                    .attr("stroke", "steelblue")
+                    .attr("stroke", color(key))
                     .attr("stroke-width", 1.5)
                     .attr("d", valueline);
             });
-
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
