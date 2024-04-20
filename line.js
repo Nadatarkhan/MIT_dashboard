@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Map the data to an array of objects
             let emissionsData = data.map(d => ({
-                year: d3.timeParse("%Y")(d.epw_year), // Parse date format
-                emission: parseFloat(d.Emissions), // Convert to numeric type
-                cost: parseFloat(d.Cost), // Convert to numeric type
-                scenario: +d.Scenario // Convert to numeric type
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                cost: +d.Cost,
+                scenario: +d.Scenario
             }));
 
-            console.log('Formatted data:', emissionsData); // Log data structure
+            console.log('Formatted data:', emissionsData);
 
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
@@ -72,8 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
             function updatePlot(variable) {
                 selectedVariable = variable;
 
+                // Log emissionsData before domain update
+                console.log('Emissions data before domain update:', emissionsData);
+
                 // Update domain for y-scale
                 y.domain([0, d3.max(emissionsData, d => d[selectedVariable])]);
+
+                // Log emissionsData after domain update
+                console.log('Emissions data after domain update:', emissionsData);
 
                 // Update Y axis label
                 svg.selectAll(".y-axis-label")
