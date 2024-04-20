@@ -25,27 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .y(d => y(d.emission));
 
         // Load and process the data
-        d3.csv("data/example_data_wide.csv").then(function(data) {
-            // Find the year range in the columns
-            const yearColumns = data.columns.slice(11); // Adjust the indices based on your CSV structure
-            const parseYear = d3.timeParse("%Y");
-
-            // Log the column headers for debugging
-            console.log('Year Columns:', yearColumns);
-
-            // Map the data to an array of objects for each year for each scenario
-            let emissionsData = data.map((d, i) => {
-                return yearColumns.map(year => {
-                    return {
-                        year: parseYear(year),
-                        emission: +d[year],
-                        scenario: i + 1 // Assuming the first scenario starts at 1
-                    };
-                });
-            }).flat();
-
-            // Log the emissions data for debugging
-            console.log('Emissions Data:', emissionsData);
+        d3.csv("example_data.csv").then(function(data) {
+            // Map the data to an array of objects
+            let emissionsData = data.map(d => ({
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                scenario: +d.Scenario
+            }));
 
             // Set the domain for the scales
             x.domain(d3.extent(emissionsData, d => d.year));
@@ -62,17 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Group data by scenario
             let sumstat = d3.group(emissionsData, d => d.scenario);
 
-            // Log the grouped data by scenario for debugging
-            console.log('Grouped Data by Scenario:', sumstat);
-
             // color palette
             const color = d3.scaleOrdinal()
                 .domain(sumstat.keys())
                 .range(d3.schemeCategory10);
 
-            // Draw the line for each strategy
+            // Draw the line for each scenario
             sumstat.forEach(function(value, key) {
-                console.log(`Drawing line for scenario ${key}`, value);
                 svg.append("path")
                     .datum(value)
                     .attr("fill", "none")
@@ -87,4 +69,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
