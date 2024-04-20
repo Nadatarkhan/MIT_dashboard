@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("text") // X-axis label
                 .attr("class", "x-axis-label")
                 .attr("x", width / 2)
-                .attr("y", 10) // Adjusted for padding
+                .attr("y", 5) // Adjusted for padding
                 .style("text-anchor", "middle")
                 .text("Years");
 
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "y-axis-label")
                 .attr("transform", "rotate(-90)")
                 .attr("x", -height / 2) // Adjusted for padding
-                .attr("y", -10) // Adjusted for padding
+                .attr("y", -5) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Emissions");
