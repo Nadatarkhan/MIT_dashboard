@@ -87,3 +87,12 @@ h1 {
     padding: 5px;
     opacity: 0;
 }
+
+.y-axis-label {
+    font-size: 12px; /* Adjust font size if needed */
+}
+
+.x-axis-label {
+    font-size: 12px; /* Adjust font size if needed */
+}
+
