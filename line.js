@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .call(d3.axisBottom(x))
                 .append("text") // X-axis label
                 .attr("class", "x-axis-label")
-                .attr("x", width / 10)
+                .attr("x", width / 2)
                 .attr("y", 35) // Adjusted for padding
                 .style("text-anchor", "middle")
                 .text("Years");
@@ -64,7 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("text") // Y-axis label
                 .attr("class", "y-axis-label")
                 .attr("transform", "rotate(-90)")
-                .attr("y", -20) // Adjusted for padding
+                .attr("x", -height / 2) // Adjusted for padding
+                .attr("y", -60) // Adjusted for padding
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Emissions");
@@ -87,13 +88,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke", color(key))
                     .attr("stroke-width", 1.5)
                     .attr("d", valueline)
-                    .on("mouseover", function() {
+                    .on("mouseover", function(event, d) {
                         tooltip.style("opacity", 1);
-                    })
-                    .on("mousemove", function(d) {
+                        const [xCoord, yCoord] = d3.pointer(event);
                         tooltip.html(`Scenario: ${key}`)
-                            .style("left", (d3.event.pageX + 10) + "px")
-                            .style("top", (d3.event.pageY - 20) + "px");
+                            .style("left", (xCoord + 10) + "px")
+                            .style("top", (yCoord - 20) + "px");
                     })
                     .on("mouseout", function() {
                         tooltip.style("opacity", 0);
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Tooltip
-            const tooltip = d3.select("body").append("div")
+            const tooltip = d3.select(container).append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
