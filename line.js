@@ -94,11 +94,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Add buttons
-            const buttons = d3.select(container)
+            const buttonContainer = d3.select(container)
                 .append("div")
-                .attr("class", "button-container")
-                .selectAll("button")
-                .data(["CO2/T", "$/T", "CO2/$"])
+                .attr("class", "button-container");
+
+            const buttons = buttonContainer.selectAll("button")
+                .data(["Emissions", "Cost", "CO2/$"])
                 .enter()
                 .append("button")
                 .text(d => d)
@@ -116,4 +117,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
