@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const iconRow = document.querySelector('.icon-row');
-    const icons = iconRow.querySelectorAll('img');
+    const iconContainers = document.querySelectorAll('.icon-container');
 
     // Function to create circles
-    function createCircles(iconIndex) {
+    function createCircles(container) {
         // Create a container for circles
         const circleContainer = document.createElement('div');
         circleContainer.classList.add('circle-container');
@@ -21,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Insert the circle container under the clicked icon
-        icons[iconIndex].parentNode.appendChild(circleContainer);
+        container.appendChild(circleContainer);
     }
 
     // Function to remove circles
@@ -30,14 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
         circleContainers.forEach(container => container.remove());
     }
 
-    // Add click event listeners to each icon
-    icons.forEach((icon, index) => {
-        icon.addEventListener('click', () => {
+    // Add click event listeners to each icon container
+    iconContainers.forEach(container => {
+        container.addEventListener('click', () => {
             // Remove existing circles
             removeCircles();
             // Create circles under the clicked icon
-            createCircles(index);
+            createCircles(container);
         });
     });
 });
-
