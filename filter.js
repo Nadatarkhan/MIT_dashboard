@@ -92,15 +92,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                 // Append slider to container
-                d3.select(metricContainer)
+                const sliderContainer = d3.select(metricContainer)
                     .append('div')
                     .attr('class', 'slider-container')
+                    .style('width', width + 'px')
                     .append('svg')
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', 40)
                     .append('g')
                     .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
                     .call(slider);
+
+                // Style slider
+                sliderContainer.selectAll('.tick line').remove();
+                sliderContainer.selectAll('.domain').remove();
+                sliderContainer.selectAll('.handle')
+                    .attr('fill', '#007bff')
+                    .attr('stroke', '#007bff')
+                    .attr('rx', 5)
+                    .attr('ry', 5);
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
