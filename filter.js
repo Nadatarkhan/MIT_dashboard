@@ -79,28 +79,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     .text("Frequency");
 
                 // Add range slider
-                const slider = d3.sliderHorizontal()
-                    .min(d3.min(metricData))
-                    .max(d3.max(metricData))
-                    .width(width)
-                    .on('onchange', val => {
-                        const [minValue, maxValue] = val;
-                        svg.selectAll("rect")
-                            .attr("opacity", d => {
-                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
-                            });
-                    });
+                const sliderContainer = metricContainer.appendChild(document.createElement('div'));
+                sliderContainer.classList.add('slider-container');
+                sliderContainer.innerHTML = `<input type="range" class="slider" min="0" max="100" value="0" step="1">`;
+                const slider = sliderContainer.querySelector('.slider');
 
-                // Append slider to container
-                d3.select(metricContainer)
-                    .append('div')
-                    .attr('class', 'slider-container')
-                    .append('svg')
-                    .attr('width', width + margin.left + margin.right)
-                    .attr('height', 40)
-                    .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
-                    .call(slider);
+                // Update chart based on slider value
+                slider.addEventListener('input', function() {
+                    const sliderValue = +this.value;
+                    const threshold = d3.extent(metricData)[1] * sliderValue / 100;
+                    svg.selectAll("rect")
+                        .attr("opacity", d => x(d.x1) <= threshold ? 1 : 0);
+                });
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
