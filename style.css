@@ -118,25 +118,26 @@ h1 {
     color: #fff;
 }
 
-/* Styles for the slider */
-.slider-container {
+/* Styles for the brushing bar */
+.brush-bar-container {
     margin-top: 20px;
+    padding: 0 20px;
 }
 
-.slider-container .slider-axis {
+.brush-bar-container .brush-axis {
     font-size: 14px;
 }
 
-.slider-container .slider-axis-title {
+.brush-bar-container .brush-axis-title {
     font-size: 16px;
     font-weight: bold;
 }
 
-.slider-container .slider-handle {
-    fill: #007bff; /* Slider handle color */
+.brush-bar-container .brush-handle {
+    fill: #007bff; /* Brush handle color */
 }
 
-.slider-container .slider-track {
+.brush-bar-container .brush-track {
     fill: #ccc; /* Track color */
 }
 
@@ -145,13 +146,13 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Slider styles */
-.slider-container {
+/* Brushing bar styles */
+.brush-bar-container {
     margin-top: 10px;
     padding: 0 20px;
 }
 
-.slider-container input.slider {
+.brush-bar-container input.brush-bar {
     width: 100%;
 }
 
@@ -164,10 +165,6 @@ h1 {
 
 .axis-label {
     font-size: 12px;
-}
-
-.slider-container {
-    margin-top: 10px;
 }
 
 
