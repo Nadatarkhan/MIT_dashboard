@@ -83,22 +83,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
                     .width(width)
+                    .default([d3.min(metricData), d3.max(metricData)]) // Set default range
+                    .fill('#007bff') // Color of the slider track
                     .on('onchange', val => {
-                        console.log("Slider value:", val);
                         svg.selectAll("rect")
                             .attr("opacity", d => {
-                                console.log("Bin range:", d.x0, "-", d.x1);
-                                if (val !== undefined && val.length === 2) {
-                                    console.log("Slider range:", val[0], "-", val[1]);
-                                    const binMin = d.x0;
-                                    const binMax = d.x1;
-                                    return (binMax >= val[0] && binMin <= val[1]) ? 1 : 0;
-                                } else {
-                                    return 1; // Keep all bars visible if slider values are undefined or not iterable
-                                }
+                                const [minValue, maxValue] = val;
+                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
                             });
                     });
-
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
@@ -128,3 +121,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
