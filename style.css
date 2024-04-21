@@ -34,10 +34,34 @@ body, html {
 
 .icon-row {
     display: flex;
-    justify-content: space-between; /* Adjust to 'space-around' if you want space at the edges as well */
-    padding: 10px 0; /* Provides padding above and below the icons */
-    width: 100%; /* Icons row will take the full width of the visual1 container */
+    justify-content: space-between;
+    padding: 10px 0;
 }
+
+.icon {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+}
+
+.circles-container {
+    display: none;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.circle {
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    text-align: center;
+}
+
 
 .icon-row img {
     width: auto; /* Adjust width to fit icons as necessary */
