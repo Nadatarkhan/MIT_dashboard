@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain(d3.extent(innovationData))
                 .range([0, width]);
 
-            console.log("x scale:", x);
-
             // Create a histogram function
             const histogram = d3.histogram()
                 .value(function(d) { return d; })
@@ -60,17 +58,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("height", function(d) { return height - y(d.length); })
                 .style("fill", "#69b3a2");
 
-            // Add the distribution curve (grey in color)
-            const line = d3.line()
-                .x(function(d) { return x(d.x0) + (x(d.x1) - x(d.x0)) / 2; })
-                .y(function(d) { return y(d.length); });
+            // Compute the distribution average across the bars
+            const density = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40))(innovationData);
 
+            // Add the distribution curve (grey in color)
             svg.append("path")
-                .datum(bins)
+                .datum(density)
                 .attr("fill", "none")
                 .attr("stroke", "#ccc") // Grey color
                 .attr("stroke-width", 2)
-                .attr("d", line);
+                .attr("d", d3.line()
+                    .curve(d3.curveBasis)
+                    .x(function(d) { return x(d[0]); })
+                    .y(function(d) { return y(d[1]); })
+                );
 
             // Add the x Axis
             svg.append("g")
@@ -133,3 +134,18 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
+// Function to compute density
+function kernelDensityEstimator(kernel, X) {
+    return function(V) {
+        return X.map(function(x) {
+            return [x, d3.mean(V, function(v) { return kernel(x - v); })];
+        });
+    };
+}
+
+function kernelEpanechnikov(k) {
+    return function(v) {
+        return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
+    };
+}
