@@ -79,22 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     .text("Frequency");
 
                 // Add range slider
-                d3.select(metricContainer)
+                const sliderContainer = d3.select(metricContainer)
                     .append("div")
                     .attr("class", "slider-container")
-                    .append("input")
-                    .attr("type", "range")
-                    .attr("min", 0)
-                    .attr("max", 100)
-                    .attr("value", 100)
-                    .attr("step", 1)
-                    .on("input", function() {
-                        const currentValue = +this.value;
-                        svg.selectAll("rect")
-                            .data(bins)
-                            .attr("transform", d => `translate(${x(d.x0) * currentValue / 100},${y(d.length)})`)
-                            .attr("width", d => (x(d.x1) - x(d.x0) - 1) * currentValue / 100);
-                    });
+                    .style("width", `${width}px`);
+
+                // Initialize the range slider
+                sliderContainer.call(d3.slider().axis(true).value([0, 100]).on("slide", function(evt, value) {
+                    // Update the chart based on slider values
+                    const [minValue, maxValue] = value;
+                    svg.selectAll("rect")
+                        .attr("opacity", d => {
+                            return (x(d.x0) >= x(minValue) && x(d.x1) <= x(maxValue)) ? 1 : 0;
+                        });
+                }));
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
