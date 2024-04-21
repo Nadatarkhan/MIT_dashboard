@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add the y Axis
                 svg.append("g")
+                    .attr("class", "y-axis")
                     .call(d3.axisLeft(y));
 
                 // Add axis titles
