@@ -5,47 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decarbonization Pathways</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Icon Fonts: Optional -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <!-- Pheasant Buttons -->
-    <!-- Pheasant Demure Buttons Reset: Optional -->
-    <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-reset.css" type="text/css" media="all" />
-    <!-- Pheasant Demure Buttons Layout: Optional -->
-    <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-layout.css" type="text/css" media="all" />
-    <!-- Pheasant Demure Buttons: Required -->
-    <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons.css" type="text/css" media="all" />
+    <!-- Include noUiSlider CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css">
     <!-- Include D3.js if your line.js depends on it -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Include d3-simple-slider library -->
-    <script src="https://unpkg.com/d3-simple-slider"></script>
-    <script src="line.js" defer></script> <!-- Ensure line.js is loaded after the document -->
-    <script src="filter.js" defer></script> <!-- Include filter.js for visual 2 -->
+    <!-- Include noUiSlider JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+    <!-- Include line.js for line chart -->
+    <script src="line.js" defer></script>
+    <!-- Include filter.js for filter functionalities -->
+    <script src="filter.js" defer></script>
 </head>
 <body>
 <h1>Dashboard_MIT_</h1>
 <div class="container">
-    <div class="top-container"> <!-- New container for the top visuals -->
+    <div class="top-container">
         <div class="visual visual1">
             <!-- Icon Row -->
             <div class="icon-row">
-                <img src="icons/1.png" alt="Icon 1">
-                <img src="icons/2.png" alt="Icon 2">
-                <img src="icons/3.png" alt="Icon 3">
-                <img src="icons/4.png" alt="Icon 4">
-                <img src="icons/5.png" alt="Icon 5">
-                <img src="icons/6.png" alt="Icon 6">
-                <img src="icons/7.png" alt="Icon 7">
-                <img src="icons/8.png" alt="Icon 8">
-                <img src="icons/9.png" alt="Icon 9">
-                <img src="icons/10.png" alt="Icon 10">
+                <!-- Add your icons here -->
             </div>
-            <!-- Graph Container - Adjusted to hold the D3 line chart -->
+            <!-- Graph Container -->
             <div class="graph-container" id="lineChart">
                 <!-- Line chart from line.js will be inserted here -->
             </div>
+            <!-- Add a range slider for the first metric -->
+            <div class="slider-container">
+                <div id="slider1" class="slider"></div>
+            </div>
         </div>
-        <div class="visual visual2" id="innovation_plot"></div> <!-- Include the div for innovation plot -->
-    </div> <!-- End of top-container -->
+        <div class="visual visual2" id="innovation_plot"></div>
+        <!-- Add a range slider for the second metric -->
+        <div class="slider-container">
+            <div id="slider2" class="slider"></div>
+        </div>
+    </div>
     <div class="visual bottom-visual">
         <!-- Visual 3 Container -->
         <img src="images/diagram.png" alt="Diagram" class="scaled-image">

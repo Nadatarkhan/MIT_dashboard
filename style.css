@@ -118,16 +118,6 @@ h1 {
     color: #fff;
 }
 
-/* Slider styles */
-.slider-container {
-    margin-top: 10px;
-    padding: 0 20px;
-}
-
-.slider-container input.slider {
-    width: 100%;
-}
-
 /* Axis label styles */
 .x-axis-label, .y-axis-label {
     font-size: 14px;
@@ -139,6 +129,16 @@ h1 {
     font-size: 12px;
 }
 
+
+/* New styles for sliders */
+.slider-container {
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+.slider {
+    width: 100%;
+}
 
 
 
