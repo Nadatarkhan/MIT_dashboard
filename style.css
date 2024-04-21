@@ -140,6 +140,29 @@ h1 {
     fill: #ccc; /* Track color */
 }
 
+/* New styles for metric containers */
+.metric-container {
+    margin-bottom: 20px;
+}
+
+/* Slider styles */
+.slider-container {
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+.slider-container input.slider {
+    width: 100%;
+}
+
+/* Axis label styles */
+.x-axis-label, .y-axis-label {
+    font-size: 14px;
+    font-weight: bold;
+    fill: #333; /* Adjust color as needed */
+}
+
+
 
 
 
