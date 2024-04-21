@@ -90,16 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 console.log("Bin range:", d.x0, "-", d.x1);
                                 if (val !== undefined && val.length === 2) {
                                     console.log("Slider range:", val[0], "-", val[1]);
-                                    const binMin = x(d.x0);
-                                    const binMax = x(d.x1);
-                                    const sliderMin = x(val[0]);
-                                    const sliderMax = x(val[1]);
-                                    return (binMax >= sliderMin && binMin <= sliderMax) ? 1 : 0;
+                                    const binMin = d.x0;
+                                    const binMax = d.x1;
+                                    return (binMax >= val[0] && binMin <= val[1]) ? 1 : 0;
                                 } else {
                                     return 1; // Keep all bars visible if slider values are undefined or not iterable
                                 }
                             });
                     });
+
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
