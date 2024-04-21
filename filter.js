@@ -26,36 +26,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log("Innovation data:", innovationData);
 
-            // Set up the x and y scales
+            // Set up the x scale
             const x = d3.scaleLinear()
                 .domain(d3.extent(innovationData))
                 .range([0, width]);
-            const y = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, 0.01]); // Adjust the domain as needed
 
             console.log("x scale:", x);
-            console.log("y scale:", y);
 
-            // Compute kernel density estimation
-            const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
-            const density = kde(innovationData);
+            // Create a histogram function
+            const histogram = d3.histogram()
+                .value(function(d) { return d; })
+                .domain(x.domain())
+                .thresholds(x.ticks(40)); // Adjust the number of bins as needed
 
-            console.log("Density data:", density);
+            // Generate the histogram bins
+            const bins = histogram(innovationData);
 
-            // Plot the area
-            svg.append("path")
-                .datum(density)
-                .attr("fill", "#69b3a2")
-                .attr("opacity", ".8")
-                .attr("stroke", "#000")
-                .attr("stroke-width", 1)
-                .attr("stroke-linejoin", "round")
-                .attr("d", d3.line()
-                    .curve(d3.curveBasis)
-                    .x(function(d) { return x(d[0]); })
-                    .y(function(d) { return y(d[1]); })
-                );
+            console.log("Histogram bins:", bins);
+
+            // Set up the y scale based on the maximum bin count
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(bins, function(d) { return d.length; })])
+                .range([height, 0]);
+
+            // Append rectangles for the histogram bars
+            svg.selectAll("rect")
+                .data(bins)
+                .enter()
+                .append("rect")
+                .attr("x", function(d) { return x(d.x0); })
+                .attr("y", function(d) { return y(d.length); })
+                .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
+                .attr("height", function(d) { return height - y(d.length); })
+                .style("fill", "#69b3a2");
 
             // Add the x Axis
             svg.append("g")
@@ -72,18 +75,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
-// Function to compute density
-function kernelDensityEstimator(kernel, X) {
-    return function(V) {
-        return X.map(function(x) {
-            return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-        });
-    };
-}
-
-function kernelEpanechnikov(k) {
-    return function(v) {
-        return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-    };
-}
