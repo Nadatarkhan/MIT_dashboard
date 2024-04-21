@@ -118,41 +118,13 @@ h1 {
     color: #fff;
 }
 
-/* Styles for the brushing bar */
-.brush-bar-container {
-    margin-top: 20px;
-    padding: 0 20px;
-}
-
-.brush-bar-container .brush-axis {
-    font-size: 14px;
-}
-
-.brush-bar-container .brush-axis-title {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.brush-bar-container .brush-handle {
-    fill: #007bff; /* Brush handle color */
-}
-
-.brush-bar-container .brush-track {
-    fill: #ccc; /* Track color */
-}
-
-/* New styles for metric containers */
-.metric-container {
-    margin-bottom: 20px;
-}
-
-/* Brushing bar styles */
-.brush-bar-container {
+/* Slider styles */
+.slider-container {
     margin-top: 10px;
     padding: 0 20px;
 }
 
-.brush-bar-container input.brush-bar {
+.slider-container input.slider {
     width: 100%;
 }
 

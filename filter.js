@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .domain(x.domain())
                     .thresholds(x.ticks(40));
 
-                let bins = histogram(metricData);
+                const bins = histogram(metricData);
 
                 // Compute y scale domain based on the maximum bin count
                 y.domain([0, d3.max(bins, d => d.length)]);
@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add the y Axis
                 svg.append("g")
-                    .attr("class", "y-axis")
                     .call(d3.axisLeft(y));
 
                 // Add axis titles
@@ -79,45 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("y", -40)
                     .text("Frequency");
 
-                // Add brushing bar
-                const brush = d3.brushX()
-                    .extent([[0, 0], [width, height]])
-                    .on("brush", brushed)
-                    .on("end", brushended);
+                // Add slider
+                const sliderContainer = metricContainer.appendChild(document.createElement('div'));
+                sliderContainer.classList.add('slider-container');
+                sliderContainer.innerHTML = `<input type="range" class="slider" min="0" max="100" value="0,100" step="1">`;
+                const slider = sliderContainer.querySelector('.slider');
 
-                svg.append("g")
-                    .attr("class", "brush")
-                    .call(brush)
-                    .call(brush.move, x.range());
-
-                function brushed() {
-                    if (!d3.event.selection) return; // Ignore empty selections.
-                    const extent = d3.event.selection.map(x.invert, x);
-                    const filteredData = metricData.filter(d => extent[0] <= d && d <= extent[1]);
-
-                    bins = histogram(filteredData);
-                    y.domain([0, d3.max(bins, d => d.length)]);
-
+                // Update chart based on slider value
+                slider.addEventListener('input', function() {
+                    const [minValue, maxValue] = this.value.split(',').map(Number);
                     svg.selectAll("rect")
-                        .data(bins)
-                        .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
-                        .attr("width", d => x(d.x1) - x(d.x0) - 1)
-                        .attr("height", d => height - y(d.length));
-                    svg.select(".y-axis").call(d3.axisLeft(y));
-                }
-
-                function brushended() {
-                    if (!d3.event.selection) return; // Ignore empty selections.
-                    if (!d3.event.sourceEvent) return; // Only transition after input.
-                    if (!d3.event.selection) return; // Ignore empty selections.
-                    const extent = d3.event.selection.map(x.invert, x);
-                    const filteredData = metricData.filter(d => extent[0] <= d && d <= extent[1]);
-
-                    bins = histogram(filteredData);
-                    y.domain([0, d3.max(bins, d => d.length)]);
-
-                    svg.transition().duration(500).select(".brush").call(brush.move, x.range().map(d => x.invert(d)));
-                }
+                        .attr("opacity", d => {
+                            return (x(d.x0) >= x(minValue) && x(d.x1) <= x(maxValue)) ? 1 : 0;
+                        });
+                });
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
