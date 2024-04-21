@@ -16,8 +16,6 @@
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons.css" type="text/css" media="all" />
     <!-- Include D3.js if your line.js depends on it -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Include d3-simple-slider library -->
-    <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="line.js" defer></script> <!-- Ensure line.js is loaded after the document -->
     <script src="filter.js" defer></script> <!-- Include filter.js for visual 2 -->
 </head>
@@ -44,9 +42,7 @@
                 <!-- Line chart from line.js will be inserted here -->
             </div>
         </div>
-        <div class="visual visual2" id="innovation_plot">
-            <!-- Innovation plot containers will be dynamically added here -->
-        </div>
+        <div class="visual visual2" id="innovation_plot"></div> <!-- Include the div for innovation plot -->
     </div> <!-- End of top-container -->
     <div class="visual bottom-visual">
         <!-- Visual 3 Container -->
@@ -58,4 +54,3 @@
 </script>
 </body>
 </html>
-
