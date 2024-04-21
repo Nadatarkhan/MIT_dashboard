@@ -162,6 +162,14 @@ h1 {
     fill: #333; /* Adjust color as needed */
 }
 
+.axis-label {
+    font-size: 12px;
+}
+
+.slider-container {
+    margin-top: 10px;
+}
+
 
 
 
