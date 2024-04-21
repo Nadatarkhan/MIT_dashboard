@@ -87,7 +87,7 @@ h1 {
     padding: 5px;
     opacity: 1; /* Adjust initial opacity */
     pointer-events: none; /* Prevent tooltip from interfering with mouse events */
-    font-size: 5px; /* Adjust the font size as needed */
+    font-size: 10px; /* Adjust the font size as needed */
 }
 
 
