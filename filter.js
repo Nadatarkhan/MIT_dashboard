@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
             metrics.forEach((metric, index) => {
                 const metricData = data.map(d => parseFloat(d[metric]));
 
+                // Calculate mean and standard deviation
+                const mean = d3.mean(metricData);
+                const stdDev = d3.deviation(metricData);
+
                 // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
@@ -53,6 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("height", d => height - y(d.length))
                     .style("fill", "#69b3a2");
 
+                // Add bell curve
+                const curveData = d3.range(d3.min(metricData), d3.max(metricData), (d3.max(metricData) - d3.min(metricData)) / 100);
+                const curve = d3.curveBasis(curveData);
+                const curveLine = d3.line()
+                    .x(d => x(d))
+                    .y(d => y(d3.normal(mean, stdDev)(d)))
+                    .curve(curve);
+
+                svg.append("path")
+                    .datum(curveData)
+                    .attr("fill", "none")
+                    .attr("stroke", "#ccc") // Grey color
+                    .attr("stroke-width", 2)
+                    .attr("d", curveLine);
+
                 // Add the x Axis
                 svg.append("g")
                     .attr("transform", `translate(0,${height})`)
@@ -83,15 +102,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
                     .width(width)
-                    .default([d3.min(metricData), d3.max(metricData)]) // Set default range
-                    .fill('#007bff') // Color of the slider track
                     .on('onchange', val => {
+                        console.log("Slider value:", val);
                         svg.selectAll("rect")
                             .attr("opacity", d => {
-                                const [minValue, maxValue] = val;
-                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
+                                console.log("Bin range:", d.x0, "-", d.x1);
+                                if (val !== undefined && val.length === 2) {
+                                    console.log("Slider range:", val[0], "-", val[1]);
+                                    const binMin = d.x0;
+                                    const binMax = d.x1;
+                                    return (binMax >= val[0] && binMin <= val[1]) ? 1 : 0;
+                                } else {
+                                    return 1; // Keep all bars visible if slider values are undefined or not iterable
+                                }
                             });
                     });
+
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
