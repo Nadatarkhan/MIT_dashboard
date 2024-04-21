@@ -51,7 +51,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
-                    .style("fill", "#69b3a2");
+                    .style("fill", "#69b3a2")
+                    .on("mouseover", function(d) {
+                        const tooltip = d3.select("body").append("div")
+                            .attr("class", "tooltip")
+                            .style("opacity", 0);
+
+                        tooltip.html(`<strong>Range:</strong> ${d.x0.toFixed(2)} - ${d.x1.toFixed(2)}<br><strong>Frequency:</strong> ${d.length}`)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", 0.9);
+                    })
+                    .on("mouseout", function(d) {
+                        d3.select(".tooltip").remove();
+                    });
 
                 // Add the x Axis
                 svg.append("g")
