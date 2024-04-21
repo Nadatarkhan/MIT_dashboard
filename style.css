@@ -147,7 +147,9 @@ h1 {
 .slider-container .slider-axis-label {
     font-size: 12px;
     fill: #333; /* Adjust color as needed */
+    transform: translateY(10px); /* Adjust the translateY value to move the labels up or down */
 }
+
 
 
 
