@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     .max(d3.max(metricData))
                     .width(width)
                     .on('onchange', val => {
-                        console.log("Slider values:", val);
-                        const [minValue, maxValue] = val;
+                        console.log("Slider value:", val);
                         svg.selectAll("rect")
                             .attr("opacity", d => {
                                 console.log("Bin range:", d.x0, "-", d.x1);
-                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
+                                return (d.x0 >= val[0] && d.x1 <= val[1]) ? 1 : 0;
                             });
                     });
+
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
