@@ -81,17 +81,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add slider
                 const sliderContainer = metricContainer.appendChild(document.createElement('div'));
                 sliderContainer.classList.add('slider-container');
-                sliderContainer.innerHTML = `<input type="range" class="slider" min="0" max="100" value="0,100" step="1">`;
-                const slider = sliderContainer.querySelector('.slider');
-
-                // Update chart based on slider value
-                slider.addEventListener('input', function() {
-                    const [minValue, maxValue] = this.value.split(',').map(Number);
+                sliderContainer.innerHTML = `
+                    <input type="range" class="slider" min="0" max="100" value="0,100" step="1" id="slider${index}">
+                    <span class="slider-value" id="slider${index}textmin">0</span>
+                    <span class="slider-value" id="slider${index}textmax">100</span>
+                `;
+                d3.select(`#slider${index}`).call(d3.slider().axis(true).value([0, 100]).on("slide", function(evt, value) {
+                    d3.select(`#slider${index}textmin`).text(value[0]);
+                    d3.select(`#slider${index}textmax`).text(value[1]);
+                    // Update chart based on slider value
+                    const [minValue, maxValue] = value.map(Number);
                     svg.selectAll("rect")
                         .attr("opacity", d => {
                             return (x(d.x0) >= x(minValue) && x(d.x1) <= x(maxValue)) ? 1 : 0;
                         });
-                });
+                }));
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
