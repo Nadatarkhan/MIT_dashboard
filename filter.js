@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .domain(x.domain())
                     .thresholds(x.ticks(40));
 
-                const bins = histogram(metricData);
+                let bins = histogram(metricData);
 
                 // Compute y scale domain based on the maximum bin count
                 y.domain([0, d3.max(bins, d => d.length)]);
@@ -87,10 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update chart based on slider value
                 slider.addEventListener('input', function() {
                     const currentValue = +this.value;
+                    bins = histogram(metricData.filter(d => d >= x.invert(width * (100 - currentValue) / 100)));
+                    y.domain([0, d3.max(bins, d => d.length)]);
                     svg.selectAll("rect")
                         .data(bins)
-                        .attr("transform", d => `translate(${x(d.x0) * currentValue / 100},${y(d.length)})`)
-                        .attr("width", d => (x(d.x1) - x(d.x0) - 1) * currentValue / 100);
+                        .transition()
+                        .duration(500)
+                        .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
+                        .attr("width", d => x(d.x1) - x(d.x0) - 1)
+                        .attr("height", d => height - y(d.length));
+                    svg.select(".y-axis").transition().duration(500).call(d3.axisLeft(y));
                 });
             });
         }).catch(function(error) {
