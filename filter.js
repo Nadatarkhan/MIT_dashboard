@@ -79,20 +79,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     .text("Frequency");
 
                 // Add range slider
-                const sliderContainer = d3.select(metricContainer)
-                    .append("div")
-                    .attr("class", "slider-container")
-                    .style("width", `${width}px`);
+                const slider = d3.sliderHorizontal()
+                    .min(d3.min(metricData))
+                    .max(d3.max(metricData))
+                    .width(width)
+                    .on('onchange', val => {
+                        const [minValue, maxValue] = val;
+                        svg.selectAll("rect")
+                            .attr("opacity", d => {
+                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
+                            });
+                    });
 
-                // Initialize the range slider
-                sliderContainer.call(d3.slider().axis(true).value([0, 100]).on("slide", function(evt, value) {
-                    // Update the chart based on slider values
-                    const [minValue, maxValue] = value;
-                    svg.selectAll("rect")
-                        .attr("opacity", d => {
-                            return (x(d.x0) >= x(minValue) && x(d.x1) <= x(maxValue)) ? 1 : 0;
-                        });
-                }));
+                // Append slider to container
+                d3.select(metricContainer)
+                    .append('div')
+                    .attr('class', 'slider-container')
+                    .append('svg')
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', 40)
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
+                    .call(slider);
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);

@@ -118,30 +118,36 @@ h1 {
     color: #fff;
 }
 
-/* Axis label styles */
-.x-axis-label, .y-axis-label {
+/* Styles for the range slider */
+.slider-container {
+    margin-top: 20px;
+}
+
+.slider-container .slider-axis {
     font-size: 14px;
+}
+
+.slider-container .slider-axis-title {
+    font-size: 16px;
     font-weight: bold;
+}
+
+.slider-container .slider-handle {
+    fill: #007bff; /* Slider handle color */
+}
+
+.slider-container .slider-track {
+    fill: #ccc; /* Track color */
+}
+
+.slider-container .slider-selection {
+    fill: #007bff; /* Selection color */
+}
+
+.slider-container .slider-axis-label {
+    font-size: 12px;
     fill: #333; /* Adjust color as needed */
 }
-
-.axis-label {
-    font-size: 12px;
-}
-
-
-/* New styles for sliders */
-.slider-container {
-    margin-top: 10px;
-    padding: 0 20px;
-}
-
-.slider {
-    width: 100%;
-}
-
-
-
 
 
 
