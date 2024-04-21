@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr("class", "tooltip")
                             .style("opacity", 0);
 
+                        console.log("Bin:", d);
+                        console.log("Bin range:", d.x0, "-", d.x1);
+
                         tooltip.html(`<strong>Range:</strong> ${d.x0.toFixed(2)} - ${d.x1.toFixed(2)}<br><strong>Frequency:</strong> ${d.length}`)
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
