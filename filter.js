@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log("Slider value:", val);
                         svg.selectAll("rect")
                             .attr("opacity", d => {
+                                console.log("Bin range:", d.x0, "-", d.x1);
+                                console.log("Slider range:", val[0], "-", val[1]);
                                 const binMin = x(d.x0);
                                 const binMax = x(d.x1);
                                 const sliderMin = x(val[0]);
