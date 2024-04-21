@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .enter().append("rect")
                     .attr("x", 1)
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
-                    .attr("width", d => x(d.x1) - x(d.x0) - 1)
+                    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
                     .style("fill", "#69b3a2");
 
@@ -90,13 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
                                 console.log("Bin range:", d.x0, "-", d.x1);
                                 if (val !== undefined && val.length === 2) {
                                     console.log("Slider range:", val[0], "-", val[1]);
-                                    return (d.x1 >= val[0] && d.x0 <= val[1]) ? 1 : 0;
+                                    const binMin = x(d.x0);
+                                    const binMax = x(d.x1);
+                                    const sliderMin = x(val[0]);
+                                    const sliderMax = x(val[1]);
+                                    return (binMax >= sliderMin && binMin <= sliderMax) ? 1 : 0;
                                 } else {
                                     return 1; // Keep all bars visible if slider values are undefined or not iterable
                                 }
                             });
                     });
-
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
