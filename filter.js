@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
+        console.log("Container found:", container);
+
         const margin = { top: 30, right: 30, bottom: 30, left: 50 },
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
@@ -13,10 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
+        console.log("SVG created:", svg);
+
         // Load the data
         d3.csv("data/example_data.csv").then(function(data) {
+            console.log("Data loaded:", data);
+
             // Extract innovation values
             const innovationData = data.map(d => parseFloat(d.Innovation));
+
+            console.log("Innovation data:", innovationData);
 
             // Set up the x and y scales
             const x = d3.scaleLinear()
@@ -26,9 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 .range([height, 0])
                 .domain([0, 0.01]); // Adjust the domain as needed
 
+            console.log("x scale:", x);
+            console.log("y scale:", y);
+
             // Compute kernel density estimation
             const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
             const density = kde(innovationData);
+
+            console.log("Density data:", density);
 
             // Plot the area
             svg.append("path")
