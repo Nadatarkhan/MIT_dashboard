@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
+    const container = document.getElementById('innovation_plot'); // Get the container for the innovation plot
     if (container) {
         console.log("Container found:", container);
 
-        const margin = { top: 30, right: 30, bottom: 30, left: 50 },
-            width = 460 - margin.left - margin.right,
+        const margin = { top: 50, right: 30, bottom: 70, left: 50 },
+            width = 600 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
         // Append the SVG canvas to the container
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const histogram = d3.histogram()
                 .value(function(d) { return d; })
                 .domain(x.domain())
-                .thresholds(x.ticks(40)); // Adjust the number of bins as needed
+                .thresholds(x.ticks(20)); // Adjust the number of bins as needed
 
             // Generate the histogram bins
             const bins = histogram(innovationData);
@@ -54,20 +54,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 .data(bins)
                 .enter()
                 .append("rect")
-                .attr("x", function(d) { return x(d.x0); })
+                .attr("x", function(d) { return x(d.x0) + 1; }) // Adjusted to make bars closer
                 .attr("y", function(d) { return y(d.length); })
-                .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
+                .attr("width", function(d) { return x(d.x1) - x(d.x0) - 2; }) // Adjusted to make bars wider
                 .attr("height", function(d) { return height - y(d.length); })
                 .style("fill", "#69b3a2");
+
+            // Add the distribution curve (grey in color)
+            const line = d3.line()
+                .x(function(d) { return x(d.x0) + (x(d.x1) - x(d.x0)) / 2; })
+                .y(function(d) { return y(d.length); });
+
+            svg.append("path")
+                .datum(bins)
+                .attr("fill", "none")
+                .attr("stroke", "#ccc") // Grey color
+                .attr("stroke-width", 2)
+                .attr("d", line);
 
             // Add the x Axis
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
+                .call(d3.axisBottom(x))
+                .append("text")
+                .attr("class", "x-axis-label")
+                .attr("x", width / 2)
+                .attr("y", 40)
+                .style("text-anchor", "middle")
+                .text("Innovation");
 
             // Add the y Axis
             svg.append("g")
-                .call(d3.axisLeft(y));
+                .call(d3.axisLeft(y))
+                .append("text")
+                .attr("class", "y-axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -40)
+                .attr("x", -height / 2)
+                .attr("dy", "0.71em")
+                .style("text-anchor", "middle")
+                .text("Frequency");
+
+            // Add a slider at the top of the plot to filter innovation value ranges
+            const slider = d3.sliderHorizontal()
+                .min(d3.min(innovationData))
+                .max(d3.max(innovationData))
+                .width(width)
+                .tickFormat(d3.format(".2f"))
+                .default([d3.min(innovationData), d3.max(innovationData)])
+                .displayValue(false)
+                .on('onchange', val => {
+                    console.log("Slider value:", val);
+                    // Filter data based on slider value
+                    const filteredData = innovationData.filter(d => d >= val[0] && d <= val[1]);
+                    console.log("Filtered data:", filteredData);
+                    // Update histogram based on filtered data
+                    const updatedBins = histogram(filteredData);
+                    console.log("Updated bins:", updatedBins);
+                    // Update histogram bars
+                    svg.selectAll("rect")
+                        .data(updatedBins)
+                        .transition()
+                        .duration(500)
+                        .attr("x", function(d) { return x(d.x0) + 1; })
+                        .attr("y", function(d) { return y(d.length); })
+                        .attr("width", function(d) { return x(d.x1) - x(d.x0) - 2; })
+                        .attr("height", function(d) { return height - y(d.length); });
+                });
+
+            svg.append("g")
+                .attr("transform", "translate(0, 10)")
+                .call(slider);
+
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
