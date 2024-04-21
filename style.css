@@ -80,7 +80,8 @@ h1 {
 }
 
 .tooltip {
-    position: absolute;
+    left: 0; /* Adjust this value as needed */
+    top: 0; /* Adjust this value as needed */
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
