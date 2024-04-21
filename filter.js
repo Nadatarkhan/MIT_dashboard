@@ -88,10 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         svg.selectAll("rect")
                             .attr("opacity", d => {
                                 console.log("Bin range:", d.x0, "-", d.x1);
-                                return (d.x0 >= val[0] && d.x1 <= val[1]) ? 1 : 0;
+                                return (d.x1 >= val[0] && d.x0 <= val[1]) ? 1 : 0;
                             });
                     });
-
+                
 
                 // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
