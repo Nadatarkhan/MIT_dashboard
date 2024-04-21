@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         console.log("Container found:", container);
 
-        const margin = { top: 50, right: 30, bottom: 70, left: 50 },
+        const margin = { top: 50, right: 30, bottom: 100, left: 50 },
             width = 600 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
             svg.append("g")
-                .attr("transform", "translate(0, 10)")
+                .attr("transform", `translate(0, ${height + 20})`)
                 .call(slider);
 
         }).catch(function(error) {
@@ -135,17 +135,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Function to compute density
-function kernelDensityEstimator(kernel, X) {
-    return function(V) {
-        return X.map(function(x) {
-            return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-        });
-    };
-}
-
-function kernelEpanechnikov(k) {
-    return function(v) {
-        return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-    };
-}
