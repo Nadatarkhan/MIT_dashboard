@@ -1,68 +1,76 @@
-// set the dimensions and margins of the graph
-var margin = {top: 30, right: 30, bottom: 30, left: 50},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
+    if (container) {
+        const margin = { top: 30, right: 30, bottom: 30, left: 50 },
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#innovation_plot")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        // Append the SVG canvas to the container
+        const svg = d3.select(container)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Load the data
-d3.csv("data/example_data.csv", function(data) {
+        // Load the data
+        d3.csv("data/example_data.csv").then(function(data) {
+            // Extract innovation values
+            const innovationData = data.map(d => parseFloat(d.Innovation));
 
-    // X axis: scale and draw:
-    var x = d3.scaleLinear()
-        .domain([0, 1000])   // This is what is written on the Axis: from 0 to 1000
-        .range([0, width]); // This is where the axis is placed: from 0 to the width
+            // Set up the x and y scales
+            const x = d3.scaleLinear()
+                .domain(d3.extent(innovationData))
+                .range([0, width]);
+            const y = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, 0.01]); // Adjust the domain as needed
 
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+            // Compute kernel density estimation
+            const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
+            const density = kde(innovationData);
 
-    // Y axis: initialization
-    var y = d3.scaleLinear()
-        .range([height, 0]);
+            // Plot the area
+            svg.append("path")
+                .datum(density)
+                .attr("fill", "#69b3a2")
+                .attr("opacity", ".8")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 1)
+                .attr("stroke-linejoin", "round")
+                .attr("d", d3.line()
+                    .curve(d3.curveBasis)
+                    .x(function(d) { return x(d[0]); })
+                    .y(function(d) { return y(d[1]); })
+                );
 
-    // A function that builds the graph for a specific value of bin
-    function update(nBin) {
+            // Add the x Axis
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
 
-        // set the parameters for the histogram
-        var histogram = d3.histogram()
-            .value(function(d) { return d.Innovation; })   // I need to give the vector of value
-            .domain(x.domain())  // then the domain of the graphic
-            .thresholds(x.ticks(nBin)); // then the numbers of bins
-
-        // And apply this function to data to get the bins
-        var bins = histogram(data);
-
-        // Y axis: update now that we know the domain
-        y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-
-        // append the bar rectangles to the svg element
-        svg.selectAll("rect")
-            .data(bins)
-            .enter()
-            .append("rect")
-            .attr("x", 1)
-            .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-            .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-            .attr("height", function(d) { return height - y(d.length); })
-            .style("fill", "#69b3a2");
-
+            // Add the y Axis
+            svg.append("g")
+                .call(d3.axisLeft(y));
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
+    } else {
+        console.error("Container not found");
     }
-
-    // Initialize with 20 bins
-    update(20);
-
-    // Listen to the slider?
-    d3.select("#innovation_slider").on("change", function() {
-        var selectedValue = this.value;
-        update(selectedValue);
-    });
-
 });
 
+// Function to compute density
+function kernelDensityEstimator(kernel, X) {
+    return function(V) {
+        return X.map(function(x) {
+            return [x, d3.mean(V, function(v) { return kernel(x - v); })];
+        });
+    };
+}
+
+function kernelEpanechnikov(k) {
+    return function(v) {
+        return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
+    };
+}
