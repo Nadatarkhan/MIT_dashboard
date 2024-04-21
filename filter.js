@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("y", -40)
                     .text("Frequency");
 
-                // Add range slider
+                // Add slider
                 const sliderContainer = metricContainer.appendChild(document.createElement('div'));
                 sliderContainer.classList.add('slider-container');
                 sliderContainer.innerHTML = `<input type="range" class="slider" min="0" max="100" value="0" step="1">`;
@@ -87,9 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update chart based on slider value
                 slider.addEventListener('input', function() {
                     const sliderValue = +this.value;
-                    const threshold = d3.extent(metricData)[1] * sliderValue / 100;
                     svg.selectAll("rect")
-                        .attr("opacity", d => x(d.x1) <= threshold ? 1 : 0);
+                        .attr("opacity", d => (d.x1 - d.x0) >= sliderValue ? 1 : 0);
                 });
             });
         }).catch(function(error) {
