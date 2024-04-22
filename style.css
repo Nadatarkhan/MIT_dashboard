@@ -21,7 +21,7 @@ body, html {
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: visible; /* Allows content to show outside the borders */
+    overflow: hidden; /* Allows content to show outside the borders */
 }
 
 .visual1, .visual2 {
@@ -34,15 +34,11 @@ body, html {
 }
 
 .visual2 {
-    flex: 1;
-    padding: 20px;
-    overflow: hidden;  // Consider changing to 'visible' if the graph needs to extend outside the boundaries.
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    flex: 1; /* Takes less space than visual1 */
+    background-color: #f4f4f4; /* For visibility, change as needed */
+    padding-right: 30px; /* Adds padding to the right side */
 
+}
 
 /* Adjustments for responsive SVG and Canvas within visual containers */
 .visual svg, .visual canvas {
