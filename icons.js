@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCircles(container) {
         // Create a container for circles
         const circleContainer = document.createElement('div');
-        circleContainer.classList.add('circle-container');
+        circleContainer.classList.add('circles-container');  // Updated to match the CSS class name
 
         // Create three circles
         for (let i = 0; i < 3; i++) {
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to remove circles
     function removeCircles() {
-        const circleContainers = document.querySelectorAll('.circle-container');
+        const circleContainers = document.querySelectorAll('.circles-container');
         circleContainers.forEach(container => container.remove());
     }
 
