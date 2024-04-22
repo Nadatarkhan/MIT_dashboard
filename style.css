@@ -170,7 +170,7 @@ h1 {
 }
 
 .slider-container .slider-axis, .slider-axis-title {
-    font-size: 16px;
+    font-size: 5px;
     font-weight: bold;
 }
 
@@ -183,7 +183,7 @@ h1 {
 }
 
 .slider-container .slider-axis-label {
-    font-size: 12px;
+    font-size: 5px;
     fill: #333; /* Label color */
     transform: translateY(-10px); /* Adjust label position */
 }
