@@ -3,10 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to create circles with labels
     function createCircles(container) {
+        // Remove existing circles first
+        removeCircles();
+
+        // Create a container for the circles
         const circleContainer = document.createElement('div');
         circleContainer.classList.add('circles-container');
-        circleContainer.style.position = 'absolute';  // Ensures no shift in main icon placement
+        circleContainer.style.position = 'absolute';  // Ensure no shift in main icon placement
         circleContainer.style.left = '0';  // Aligns to the left of the icon-container
+        circleContainer.style.top = '100%'; // Position directly below the icon container
 
         // Array of labels for each circle
         const labels = [
@@ -49,9 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add click event listeners to each icon container
     iconContainers.forEach(container => {
-        container.addEventListener('click', () => {
-            removeCircles();  // Ensure existing circles are removed
-            createCircles(container);  // Add new circles with labels
+        container.addEventListener('click', function() {
+            // This ensures that clicking the same icon toggles the visibility of its circles
+            if (container.contains(container.querySelector('.circles-container'))) {
+                removeCircles();
+            } else {
+                createCircles(container);
+            }
         });
     });
 });
