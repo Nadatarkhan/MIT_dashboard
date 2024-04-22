@@ -175,7 +175,7 @@ h1 {
 }
 
 .slider-container .slider-handle, .slider-selection {
-    fill: #007bff; /* Slider handle and selection color */
+    fill: #646464; /* Slider handle and selection color */
 }
 
 .slider-container .slider-track {
