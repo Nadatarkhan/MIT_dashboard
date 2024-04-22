@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         tooltip.transition()
                             .duration(200)
-                            .style("opacity", 0.9);
+                            .style("opacity", 0.8);
                     })
                     .on("mouseout", function() {
                         d3.select(".tooltip").remove();
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("text-anchor", "middle")
                     .attr("transform", "rotate(-90)")
                     .attr("x", -height / 2)
-                    .attr("y", -40)
+                    .attr("y", -10)
                     .text("Frequency");
 
                 // Add range slider
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', 40)
                     .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 3 + ')')
+                    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
                     .call(slider);
 
                 // Style slider
