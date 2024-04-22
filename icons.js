@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < 3; i++) {
             const circle = document.createElement('div');
             circle.classList.add('circle');
-            circle.style.width = '50px'; // Increased size for visibility
-            circle.style.height = '50px'; // Increased size for visibility
-            circle.style.backgroundColor = 'red'; // Changed color for visibility
+            circle.style.width = '10px'; // Increased size for visibility
+            circle.style.height = '10px'; // Increased size for visibility
             circle.style.borderRadius = '50%';
             circle.style.marginBottom = '5px';
             circleContainer.appendChild(circle);
