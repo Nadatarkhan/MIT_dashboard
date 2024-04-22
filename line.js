@@ -75,7 +75,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => d[selectedVariable])
+                        .y(d => {
+                            if (selectedVariable === "Emissions") {
+                                return y(d.emission);
+                            } else if (selectedVariable === "Cost") {
+                                return y(d.cost);
+                            } else if (selectedVariable === "Emissions-Cost") {
+                                return y(Math.max(d.emission, d.cost));
+                            }
+                        })
                     );
             });
         }
@@ -89,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenario: d.Scenario,
                 grid: d.grid // This column must exist in your CSV
             }));
+            console.log(emissionsData); // Check the output here
 
             // Initial plot
             updatePlot(selectedVariable);
