@@ -15,34 +15,21 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 0.72; /* Adjust the flex proportion to control the height of the top container */
+    flex: 1; /* Ensuring that it fills the available space properly */
+    overflow: hidden; /* Adds overflow control at the container level */
 }
 
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: visible; /* Allows content to show outside the borders */
+    overflow: hidden; /* Ensures overflow does not affect layout */
+    padding: 0 20px; /* Uniform padding for all visual containers */
 }
 
 .visual1, .visual2 {
-    padding: 0 20px; /* Padding on sides for internal spacing */
-    overflow: hidden; /* Keeps its children contained */
-}
-
-.visual1 {
-    flex: 2; /* Takes up twice the space compared to visual2 */
-}
-
-.visual2 {
-    flex: 1; /* Takes less space than visual1 */
-    background-color: #f4f4f4; /* For visibility, change as needed */
-}
-
-/* Adjustments for responsive SVG and Canvas within visual containers */
-.visual svg, .visual canvas {
-    width: 100%; /* Ensures SVG/Canvas takes full available width */
-    height: auto; /* Adjusts height automatically to maintain aspect ratio */
-    display: block; /* Removes bottom space/gap */
+    flex: 1; /* Adjusted so both containers take equal space */
+    min-width: 0; /* Allows shrinking below content size without overflow */
+    background-color: #f4f4f4; /* Background color for visibility */
 }
 
 .icon-row {
@@ -87,6 +74,11 @@ body, html {
     height: 50px; /* Fixed height for icons, prevent resizing */
 }
 
+.graph-container {
+    flex-grow: 1; /* Takes up the remaining space in the visual container after icons */
+    width: 100%; /* Graph takes the full width of the container */
+}
+
 .bottom-visual {
     flex: 2;
     min-height: 200px;
@@ -111,8 +103,7 @@ h1 {
     color: black;
 }
 
-/* Graph and tooltip styles */
-#lineChart svg {
+#lineChart svg, .visual2 svg {
     width: 100%;
     height: 100%;
 }
@@ -132,7 +123,6 @@ h1 {
     font-size: 12px;
 }
 
-/* Button and slider styles */
 .pheasant-demure-button, .solid, .light {
     border: none;
     padding: 10px 20px;
