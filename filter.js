@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 30, right: 30, bottom: 30, left: 50 },
+        const margin = { top: 10, right: 30, bottom: 10, left: 20 },
             width = container.clientWidth - margin.left - margin.right,
-            height = 100 - margin.top - margin.bottom;
+            height = 40 - margin.top - margin.bottom;
 
         // Load the data
         d3.csv("data/example_data.csv").then(function(data) {
