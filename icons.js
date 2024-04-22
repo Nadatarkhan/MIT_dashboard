@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const circle = document.createElement('div');
             circle.classList.add('circle');
-            circle.style.width = '25px';
-            circle.style.height = '25px';
+            circle.style.width = '10px';
+            circle.style.height = '10px';
             circle.style.borderRadius = '50%';
             circle.style.backgroundColor = '#ccc';
 
