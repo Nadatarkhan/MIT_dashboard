@@ -189,78 +189,76 @@ h1 {
 }
 
 
-/* Toggle Bar Configuration */
+
+/*///////// TOGGLE BAR///////////////
+ */
+
 .toggle-wrapper {
     margin-top: 2px; /* Space between icons and toggle */
     margin-bottom: 5px; /* Space between toggle and graph */
+}
+
+.toggleContainer {
     position: relative;
-    width:40px;
-    height: 40px; /* Adjust height of the toggle bar here */
-    background-color: #343434;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: fit-content;
+    border: 3px solid #343434;
     border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    transform: scale(1); /* Set scaling to normal */
-    overflow: hidden; /* Ensure internal elements don't overflow */
-}
-
-.toggle-wrapper input[type="radio"] {
-    display: none; /* Hide the radio inputs */
-}
-
-.toggle-wrapper label {
-    color: white;
+    background: #343434;
     font-weight: bold;
-    cursor: pointer;
-    z-index: 1;
-    transition: color 0.3s ease-out;
-    flex-grow: 1;
-    text-align: center;
-}
-
-.toggle-wrapper input[type="radio"]:checked + label {
     color: #343434;
-    background-color: white;
-}
-
-
-#all + label {
-    left: 0;
-    background-color: #343434; /* Default non-selected color */
-}
-
-#decarbonized + label {
-    left: 33.3%;
-    background-color: #343434;
-}
-
-#notDecarbonized + label {
-    left: 66.6%;
-    background-color: #343434;
-}
-
-.toggle-wrapper input:checked + label {
-    background-color: white; /* Highlight color when selected */
-    color: #343434; /* Text color when selected */
-}
-
-/* Button Styles */
-.button-container {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.pheasant-demure-button {
-    padding: 10px 15px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
-    margin-right: 5px;
+    padding: 6px 0; /* Added padding for better touch area */
+    transform: scale(0.7); /* Apply scaling here */
+    transform-origin: center; /* Scale from the center */
 }
 
-.pheasant-demure-button:hover {
-    background-color: #0056b3;
+.toggleContainer::before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0%;
+    border-radius: 20px;
+    background: white;
+    transition: all 0.3s;
 }
+
+.toggleCheckbox:checked + .toggleContainer::before {
+    left: 50%;
+}
+
+.toggleContainer div {
+    padding: 6px;
+    text-align: center;
+    z-index: 1;
+    font-size: 12px;  /* Adjust font size here */
+    color: white;  /* Adjust text color here */
+    font-weight: bold;  /* Adjust text weight here */
+}
+
+.toggleCheckbox {
+    display: none;
+}
+
+.toggleCheckbox:checked + .toggleContainer div:first-child {
+    color: white;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox:checked + .toggleContainer div:last-child {
+    color: #343434;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox + .toggleContainer div:first-child {
+    color: #343434;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox + .toggleContainer div:last-child {
+    color: white;
+    transition: color 0.3s;
+}
+
