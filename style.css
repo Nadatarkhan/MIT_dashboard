@@ -280,7 +280,7 @@ h1 {
 
 #innovation_plot .metric-container {
     padding: 10px;
-    margin-bottom: 40px; // Ensures there is space between each plot and slider combination
+    margin-bottom: 10px; // Ensures there is space between each plot and slider combination
     display: flex;
     flex-direction: column; // Stacks the SVG and slider vertically
     align-items: center; // Centers the contents horizontally
