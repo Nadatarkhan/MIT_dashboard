@@ -85,8 +85,8 @@ body, html {
 }
 
 .bottom-visual {
-    flex: 2;
-    min-height: 200px;
+    flex: 2.5;
+    min-height: 300px;
     overflow: visible;
     padding: 10px;
 }
