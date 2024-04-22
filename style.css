@@ -189,33 +189,41 @@ h1 {
 }
 
 
-* Toggle Wrapper and Toggle Container for the Three-Way Toggle */
+/* Toggle Bar Configuration */
 .toggle-wrapper {
-    margin-top: 2px;
-    margin-bottom: 5px;
+    margin-top: 2px; /* Space between icons and toggle */
+    margin-bottom: 5px; /* Space between toggle and graph */
     position: relative;
-    width: 180px; /* Fixed width to contain the three options */
-    height: 34px;
+    width:40px;
+    height: 40px; /* Adjust height of the toggle bar here */
     background-color: #343434;
     border-radius: 20px;
-    overflow: hidden; /* Ensures no overflow of the slider or labels */
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    transform: scale(1); /* Set scaling to normal */
+    overflow: hidden; /* Ensure internal elements don't overflow */
 }
 
-.toggle-wrapper input {
-    display: none; /* Hide the radio buttons */
+.toggle-wrapper input[type="radio"] {
+    display: none; /* Hide the radio inputs */
 }
 
 .toggle-wrapper label {
-    position: absolute;
-    top: 6px; /* Vertical padding */
-    bottom: 6px;
-    width: 33.3%; /* Each label takes one-third of the toggle width */
-    line-height: 22px; /* Adjust based on height for vertical alignment */
     color: white;
-    text-align: center;
-    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
     cursor: pointer;
+    z-index: 1;
+    transition: color 0.3s ease-out;
+    flex-grow: 1;
+    text-align: center;
 }
+
+.toggle-wrapper input[type="radio"]:checked + label {
+    color: #343434;
+    background-color: white;
+}
+
 
 #all + label {
     left: 0;
