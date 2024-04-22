@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Define the margins and dimensions for the graph
+        // Define margins and dimensions for the SVG
         const margin = { top: 20, right: 30, bottom: 30, left: 50 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Append the SVG canvas to the container
+        // Append SVG to the container
         const svg = d3.select(container)
             .append("svg")
             .attr("width", containerWidth)
@@ -19,11 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Default to 'emission'
-        let gridFilter = "decarbonization"; // Default grid filter
+        let selectedVariable = "emission"; // Default variable
+        let gridFilter = "all"; // Default to show all
         let emissionsData;
 
-        // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
             emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
@@ -33,36 +32,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            updatePlot(selectedVariable); // Initial plot
+            updatePlot(selectedVariable);
 
-            // Buttons for changing variables
-            const buttonContainer = d3.select(container)
-                .append("div")
-                .attr("class", "button-container");
-
-            const buttonData = ["Emissions", "Cost"];
-            buttonContainer.selectAll("button")
-                .data(buttonData)
-                .enter()
-                .append("button")
-                .attr("class", "pheasant-demure-button solid light hover blink")
-                .text(d => d)
-                .on("click", function() {
-                    updatePlot(d3.select(this).text().toLowerCase() === "emissions" ? "emission" : "cost");
+            document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
+                input.addEventListener('change', function() {
+                    gridFilter = this.value;
+                    updatePlot(selectedVariable);
                 });
-
-        }).catch(function(error) {
-            console.error("Error loading or processing data:", error);
+            });
         });
 
         function updatePlot(variable) {
             selectedVariable = variable;
 
-            // Filter data based on the grid filter
-            const filteredData = emissionsData.filter(d => d.grid === gridFilter);
-            console.log("Filtered Data:", filteredData); // Debugging line
+            const filteredData = emissionsData.filter(d => {
+                if (gridFilter === "all") return true; // Show all data
+                return d.grid === gridFilter; // Filter by 'decarbonized' or 'notDecarbonized'
+            });
 
-            // Set domains for the scales
+            // Update the scales
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
@@ -72,9 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            svg.selectAll(".line").remove(); // Remove existing lines
+            svg.selectAll(".line").remove(); // Clear previous lines
 
-            // Correctly handling grouped data for lines
             const scenarioGroups = d3.group(filteredData, d => d.scenario);
             const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -89,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         .x(d => x(d.year))
                         .y(d => y(d[selectedVariable]))
                     );
-                console.log("Drawing line for:", key); // Debugging line
             });
         }
     } else {

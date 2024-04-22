@@ -189,10 +189,7 @@ h1 {
 }
 
 
-
-/*///////// TOGGLE BAR///////////////
- */
-
+/* Toggle Bar */
 .toggle-wrapper {
     margin-top: 2px; /* Space between icons and toggle */
     margin-bottom: 5px; /* Space between toggle and graph */
@@ -201,7 +198,7 @@ h1 {
 .toggleContainer {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* Adjusted for three items */
     width: fit-content;
     border: 3px solid #343434;
     border-radius: 20px;
@@ -217,47 +214,41 @@ h1 {
 .toggleContainer::before {
     content: '';
     position: absolute;
-    width: 50%;
+    width: 33.3%; /* Adjusted for three options */
     height: 100%;
-    left: 0%;
+    left: 0%; /* Default position for 'All' */
     border-radius: 20px;
     background: white;
     transition: all 0.3s;
 }
 
-.toggleCheckbox:checked + .toggleContainer::before {
-    left: 50%;
+.toggleCheckbox:checked + label {
+    color: white;
+    transition: color 0.3s;
 }
 
-.toggleContainer div {
-    padding: 6px;
+#all:checked ~ .toggleContainer::before {
+    left: 0%; /* Stay for 'All' */
+}
+
+#decarbonized:checked ~ .toggleContainer::before {
+    left: 33.3%; /* Move to 'Decarbonized' */
+}
+
+#notDecarbonized:checked ~ .toggleContainer::before {
+    left: 66.6%; /* Move to 'Not Decarbonized' */
+}
+
+.toggleLabel {
+    grid-column: span 1;
     text-align: center;
     z-index: 1;
-    font-size: 12px;  /* Adjust font size here */
+    font-size: 12px;
     color: white;  /* Adjust text color here */
-    font-weight: bold;  /* Adjust text weight here */
+    font-weight: bold;
+    padding: 6px; /* Ensures clickable area is sufficient */
 }
 
 .toggleCheckbox {
-    display: none;
-}
-
-.toggleCheckbox:checked + .toggleContainer div:first-child {
-    color: white;
-    transition: color 0.3s;
-}
-
-.toggleCheckbox:checked + .toggleContainer div:last-child {
-    color: #343434;
-    transition: color 0.3s;
-}
-
-.toggleCheckbox + .toggleContainer div:first-child {
-    color: #343434;
-    transition: color 0.3s;
-}
-
-.toggleCheckbox + .toggleContainer div:last-child {
-    color: white;
-    transition: color 0.3s;
+    display: none; /* Hide actual checkbox inputs */
 }

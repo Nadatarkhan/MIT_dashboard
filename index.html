@@ -45,11 +45,14 @@
             </div>
             <!-- Toggle button below the icons -->
             <div class="toggle-wrapper">
-                <input type="checkbox" id="toggle" class="toggleCheckbox" />
-                <label for="toggle" class="toggleContainer">
-                    <div>Decarbonized</div>
-                    <div>Not Decarbonized</div>
-                </label>
+                <input type="radio" id="all" name="gridFilter" value="all" checked>
+                <label for="all">All</label>
+
+                <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
+                <label for="decarbonized">Decarbonized</label>
+
+                <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
+                <label for="notDecarbonized">Not Decarbonized</label>
             </div>
             <!-- Graph Container - Adjusted to hold the D3 line chart -->
             <div class="graph-container" id="lineChart">
@@ -70,5 +73,6 @@
 </script>
 </body>
 </html>
+
 
 
