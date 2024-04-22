@@ -25,7 +25,7 @@ body, html {
 }
 
 .visual1, .visual2 {
-    padding: 0 20px; /* Padding on sides for internal spacing */
+    padding: 0 10px; /* Padding on sides for internal spacing */
     overflow: hidden; /* Keeps its children contained */
 }
 
@@ -36,7 +36,6 @@ body, html {
 .visual2 {
     flex: 1; /* Takes less space than visual1 */
     background-color: #f4f4f4; /* For visibility, change as needed */
-    padding-right: 30px; /* Adds padding to the right side */
 
 }
 
