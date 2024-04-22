@@ -194,8 +194,8 @@ h1 {
  */
 
 .toggle-wrapper {
-    margin-top: 10px; /* Space between icons and toggle */
-    margin-bottom: 20px; /* Space between toggle and graph */
+    margin-top: 2px; /* Space between icons and toggle */
+    margin-bottom: 5px; /* Space between toggle and graph */
 }
 
 .toggleContainer {
@@ -210,7 +210,7 @@ h1 {
     color: #343434;
     cursor: pointer;
     padding: 6px 0; /* Added padding for better touch area */
-    transform: scale(0.5); /* Apply scaling here */
+    transform: scale(0.7); /* Apply scaling here */
     transform-origin: center; /* Scale from the center */
 }
 
