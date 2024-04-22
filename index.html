@@ -8,11 +8,8 @@
     <!-- Icon Fonts: Optional -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- Pheasant Buttons -->
-    <!-- Pheasant Demure Buttons Reset: Optional -->
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-reset.css" type="text/css" media="all" />
-    <!-- Pheasant Demure Buttons Layout: Optional -->
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-layout.css" type="text/css" media="all" />
-    <!-- Pheasant Demure Buttons: Required -->
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons.css" type="text/css" media="all" />
     <!-- Include D3.js if your line.js depends on it -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -27,11 +24,15 @@
 <div class="container">
     <div class="top-container"> <!-- New container for the top visuals -->
         <div class="visual visual1">
+            <!-- Title and Subtitle above the icons -->
+            <div class="icon-description">
+                <h2>Technologies</h2>
+                <p>Click the icons to choose the implementation pathways</p>
+            </div>
             <!-- Icon Row -->
             <div class="icon-row">
                 <div class="icon-container" id="icon1">
                     <img src="icons/1.png" alt="Icon 1">
-                    <!-- Circles will be dynamically added here -->
                 </div>
                 <div class="icon-container" id="icon2">
                     <img src="icons/2.png" alt="Icon 2">
@@ -66,7 +67,9 @@
                 <!-- Line chart from line.js will be inserted here -->
             </div>
         </div>
-        <div class="visual visual2" id="innovation_plot"></div> <!-- Include the div for innovation plot -->
+        <div class="visual visual2" id="innovation_plot">
+            <!-- Placeholder for innovation plot visualizations -->
+        </div>
     </div> <!-- End of top-container -->
     <div class="visual bottom-visual">
         <!-- Visual 3 Container -->
@@ -78,3 +81,4 @@
 </script>
 </body>
 </html>
+
