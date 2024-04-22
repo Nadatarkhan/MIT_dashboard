@@ -271,10 +271,21 @@ h1 {
     transform-origin: center; /* Ensures scaling happens from the center */
 }
 
-#innovation_plot .metric-container {
-    padding: 10px; /* Adjust padding to ensure there's space around the scaled SVG */
+#innovation_plot .metric-container .slider-container {
+    width: 100%; // Ensures the slider takes the full width of the container
+    margin-top: 20px; // Adds space between the SVG and the slider
     display: flex;
-    justify-content: center; /* Center SVG in the container */
+    justify-content: center; // Centers the slider in the container
 }
+
+#innovation_plot .metric-container {
+    padding: 10px;
+    margin-bottom: 40px; // Ensures there is space between each plot and slider combination
+    display: flex;
+    flex-direction: column; // Stacks the SVG and slider vertically
+    align-items: center; // Centers the contents horizontally
+}
+
+
 
 
