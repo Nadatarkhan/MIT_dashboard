@@ -189,6 +189,7 @@ h1 {
 }
 
 
+
 /*///////// TOGGLE BAR///////////////
  */
 
@@ -227,8 +228,12 @@ h1 {
 }
 
 .toggleContainer div {
+    padding: 6px;
     text-align: center;
     z-index: 1;
+    font-size: 12px;  /* Adjust font size here */
+    color: white;  /* Adjust text color here */
+    font-weight: bold;  /* Adjust text weight here */
 }
 
 .toggleCheckbox {
