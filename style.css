@@ -14,7 +14,7 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 1 1 50%; /* Adjust the flex proportion to control the height of the top container */
+    flex: 1 1 30%; /* Adjust the flex proportion to control the height of the top container */
 }
 
 .visual {
@@ -102,7 +102,7 @@ body, html {
 }
 
 .bottom-visual {
-    flex: 2 1 50%;
+    flex: 3 1 70%;
     display: flex;
     justify-content: center;
     align-items: center;
