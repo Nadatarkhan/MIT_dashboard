@@ -161,6 +161,7 @@ h1 {
 
 .slider-container {
     margin-top: 5px;
+    padding-right: 20px; /* Add padding to the right side of the slider container */
 }
 
 .slider-container .slider-axis, .slider-axis-title {
@@ -180,13 +181,4 @@ h1 {
     font-size: 12px;
     fill: #333;
     transform: translateY(-20px);
-}
-
-/* Adjust range slider styles */
-.slider-container .slider-fill {
-    fill: #007bff;
-}
-
-.slider-container .slider-handle {
-    fill: #007bff;
 }
