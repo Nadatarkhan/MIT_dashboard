@@ -189,66 +189,70 @@ h1 {
 }
 
 
-/* Toggle Bar */
+* Toggle Wrapper and Toggle Container for the Three-Way Toggle */
 .toggle-wrapper {
-    margin-top: 2px; /* Space between icons and toggle */
-    margin-bottom: 5px; /* Space between toggle and graph */
-}
-
-.toggleContainer {
+    margin-top: 2px;
+    margin-bottom: 5px;
     position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Adjusted for three items */
-    width: fit-content;
-    border: 3px solid #343434;
+    width: 180px; /* Fixed width to contain the three options */
+    height: 34px;
+    background-color: #343434;
     border-radius: 20px;
-    background: #343434;
-    font-weight: bold;
-    color: #343434;
-    cursor: pointer;
-    padding: 6px 0; /* Added padding for better touch area */
-    transform: scale(0.7); /* Apply scaling here */
-    transform-origin: center; /* Scale from the center */
+    overflow: hidden; /* Ensures no overflow of the slider or labels */
 }
 
-.toggleContainer::before {
-    content: '';
+.toggle-wrapper input {
+    display: none; /* Hide the radio buttons */
+}
+
+.toggle-wrapper label {
     position: absolute;
-    width: 33.3%; /* Adjusted for three options */
-    height: 100%;
-    left: 0%; /* Default position for 'All' */
-    border-radius: 20px;
-    background: white;
-    transition: all 0.3s;
-}
-
-.toggleCheckbox:checked + label {
+    top: 6px; /* Vertical padding */
+    bottom: 6px;
+    width: 33.3%; /* Each label takes one-third of the toggle width */
+    line-height: 22px; /* Adjust based on height for vertical alignment */
     color: white;
-    transition: color 0.3s;
-}
-
-#all:checked ~ .toggleContainer::before {
-    left: 0%; /* Stay for 'All' */
-}
-
-#decarbonized:checked ~ .toggleContainer::before {
-    left: 33.3%; /* Move to 'Decarbonized' */
-}
-
-#notDecarbonized:checked ~ .toggleContainer::before {
-    left: 66.6%; /* Move to 'Not Decarbonized' */
-}
-
-.toggleLabel {
-    grid-column: span 1;
     text-align: center;
-    z-index: 1;
-    font-size: 12px;
-    color: white;  /* Adjust text color here */
-    font-weight: bold;
-    padding: 6px; /* Ensures clickable area is sufficient */
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
 }
 
-.toggleCheckbox {
-    display: none; /* Hide actual checkbox inputs */
+#all + label {
+    left: 0;
+    background-color: #343434; /* Default non-selected color */
+}
+
+#decarbonized + label {
+    left: 33.3%;
+    background-color: #343434;
+}
+
+#notDecarbonized + label {
+    left: 66.6%;
+    background-color: #343434;
+}
+
+.toggle-wrapper input:checked + label {
+    background-color: white; /* Highlight color when selected */
+    color: #343434; /* Text color when selected */
+}
+
+/* Button Styles */
+.button-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pheasant-demure-button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.pheasant-demure-button:hover {
+    background-color: #0056b3;
 }

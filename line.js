@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Define margins and dimensions for the SVG
+        // Define the margins and dimensions for the graph
         const margin = { top: 20, right: 30, bottom: 30, left: 50 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Append SVG to the container
+        // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
             .attr("width", containerWidth)
@@ -19,10 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Default variable
-        let gridFilter = "all"; // Default to show all
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all"; // Default grid filter
         let emissionsData;
 
+        // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
             emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
@@ -40,17 +41,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlot(selectedVariable);
                 });
             });
+
+            const buttonContainer = d3.select('.button-container');
+            buttonContainer.selectAll("button")
+                .data(["Emissions", "Cost"])
+                .enter()
+                .append("button")
+                .attr("class", "pheasant-demure-button solid light hover blink")
+                .text(d => d)
+                .on("click", function() {
+                    updatePlot(d3.select(this).text().toLowerCase() === "emissions" ? "emission" : "cost");
+                });
+
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
         });
 
         function updatePlot(variable) {
             selectedVariable = variable;
 
+            // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => {
-                if (gridFilter === "all") return true; // Show all data
-                return d.grid === gridFilter; // Filter by 'decarbonized' or 'notDecarbonized'
+                if (gridFilter === "all") return true;
+                return gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization";
             });
 
-            // Update the scales
+            // Set domains for the scales
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
@@ -60,22 +76,22 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            svg.selectAll(".line").remove(); // Clear previous lines
-
-            const scenarioGroups = d3.group(filteredData, d => d.scenario);
+            // Clear existing lines and redraw
+            svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d[selectedVariable]));
 
-            scenarioGroups.forEach((values, key) => {
+            const scenarioGroups = d3.groups(filteredData, d => d.scenario);
+            scenarioGroups.forEach(([key, values]) => {
                 svg.append("path")
                     .datum(values)
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
                     .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => y(d[selectedVariable]))
-                    );
+                    .attr("d", line);
             });
         }
     } else {
