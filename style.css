@@ -121,6 +121,7 @@ h1 {
 #lineChart svg {
     width: 100%;
     height: 100%;
+    margin-top: 50px;  /* Add top margin to push the SVG downwards */
 }
 
 .tooltip {
