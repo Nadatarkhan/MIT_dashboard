@@ -68,8 +68,8 @@ body, html {
 }
 
 .circle + span {
-    font-size: 40%; /* Reduced font size */
-    margin-left: 10px; /* Space between the circle and text */
+    font-size: 50%; /* Reduced font size */
+    margin-left: 5px; /* Space between the circle and text */
     white-space: nowrap; /* Prevents text wrapping */
 }
 
