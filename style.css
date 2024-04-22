@@ -1,4 +1,3 @@
-/* Global settings */
 body, html {
     height: 100%;
     margin: 0;
@@ -21,39 +20,25 @@ body, html {
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: hidden; /* Allows content to show outside the borders */
-}
-
-.visual1, .visual2 {
-    padding: 0 10px; /* Padding on sides for internal spacing */
-    overflow: hidden; /* Keeps its children contained */
+    overflow: visible; /* Changed to visible to allow contents to show outside the borders */
 }
 
 .visual1 {
     flex: 2; /* Takes up twice the space compared to visual2 */
+    flex-direction: column;
+    padding: 0 20px;
+    overflow: hidden; /* Keeps its children contained */
 }
 
 .visual2 {
     flex: 1; /* Takes less space than visual1 */
-    background-color: #f4f4f4; /* For visibility, change as needed */
-    padding-right: 30px; /* Adds padding to the right side */
-}
-
-/* Adjust padding for specific elements within .visual2 */
-#innovation_plot {
-    padding: 0 20px; /* Add padding to the innovation plot */
-}
-
-/* Adjustments for responsive SVG and Canvas within visual containers */
-.visual svg, .visual canvas {
-    width: 100%; /* Ensures SVG/Canvas takes full available width */
-    height: auto; /* Adjusts height automatically to maintain aspect ratio */
-    display: block; /* Removes bottom space/gap */
+    overflow: visible; /* Should show all contents, adjust if contents need to be contained */
+    background-color: #f4f4f4; /* Added for visibility, change as needed */
 }
 
 .icon-row {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around; /* Adjusted to maintain spacing between icons */
     padding: 10px 0;
 }
 
@@ -93,6 +78,12 @@ body, html {
     height: 50px; /* Fixed height for icons, prevent resizing */
 }
 
+.graph-container {
+    flex-grow: 1; /* Takes up the remaining space in the .visual1 container after icons */
+    width: 100%; /* Graph takes the full width of the container */
+    overflow: visible; /* Set to 'hidden' if you do not want the graph to overflow */
+}
+
 .bottom-visual {
     flex: 2;
     min-height: 200px;
@@ -117,11 +108,9 @@ h1 {
     color: black;
 }
 
-/* Graph and tooltip styles */
 #lineChart svg {
     width: 100%;
     height: 100%;
-    margin-top: 100px;  /* Add top margin to push the SVG downwards */
 }
 
 .tooltip {
@@ -130,16 +119,15 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
-    opacity: 1;
-    pointer-events: none;
-    font-size: 10px;
+    opacity: 1; /* Adjust initial opacity */
+    pointer-events: none; /* Prevent tooltip from interfering with mouse events */
+    font-size: 10px; /* Adjust the font size as needed */
 }
 
 .y-axis-label, .x-axis-label {
-    font-size: 12px;
+    font-size: 12px; /* Adjust font size if needed */
 }
 
-/* Button and slider styles */
 .pheasant-demure-button, .solid, .light {
     border: none;
     padding: 10px 20px;
@@ -159,9 +147,9 @@ h1 {
     color: #fff;
 }
 
+/* Styles for the range slider */
 .slider-container {
     margin-top: 5px;
-    padding-right: 20px; /* Add padding to the right side of the slider container */
 }
 
 .slider-container .slider-axis, .slider-axis-title {
@@ -170,15 +158,15 @@ h1 {
 }
 
 .slider-container .slider-handle, .slider-selection {
-    fill: #007bff;
+    fill: #007bff; /* Slider handle and selection color */
 }
 
 .slider-container .slider-track {
-    fill: #ccc;
+    fill: #ccc; /* Track color */
 }
 
 .slider-container .slider-axis-label {
     font-size: 12px;
-    fill: #333;
-    transform: translateY(-20px);
+    fill: #333; /* Label color */
+    transform: translateY(-10px); /* Adjust label position */
 }
