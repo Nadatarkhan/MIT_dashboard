@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 30, bottom: 50, left: 40 },
+        const margin = { top: 10, right: 30, bottom: 30, left: 40 },
             width = container.clientWidth - margin.left - margin.right,
             height = 70 - margin.top - margin.bottom;
 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .max(d3.max(metricData))
                     .width(width)
                     .default([d3.min(metricData), d3.max(metricData)]) // Set default range
-                    .fill('#545454') // Color of the slider track
+                    .fill('#6b6b6b') // Color of the slider track
                     .on('onchange', val => {
                         svg.selectAll("rect")
                             .attr("opacity", d => {
