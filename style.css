@@ -99,8 +99,6 @@ body, html {
     flex-grow: 1; /* Takes up the remaining space in the .visual1 container after icons */
     width: 100%; /* Graph takes the full width of the container */
     overflow: visible; /* Set to 'hidden' if you do not want the graph to overflow */
-    transform: scale(0.8);  /* Default to no scaling */
-    transform-origin: center;
 }
 
 .bottom-visual {
@@ -266,4 +264,17 @@ h1 {
     color: white;
     transition: color 0.3s;
 }
+
+
+#innovation_plot .metric-container svg {
+    transform: scale(0.8);  /* Adjust the scale factor as needed */
+    transform-origin: center; /* Ensures scaling happens from the center */
+}
+
+#innovation_plot .metric-container {
+    padding: 10px; /* Adjust padding to ensure there's space around the scaled SVG */
+    display: flex;
+    justify-content: center; /* Center SVG in the container */
+}
+
 
