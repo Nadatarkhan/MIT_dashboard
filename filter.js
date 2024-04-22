@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 30, bottom: 30, left: 40 },
+        const margin = { top: 10, right: 30, bottom: 50, left: 40 },
             width = container.clientWidth - margin.left - margin.right,
             height = 70 - margin.top - margin.bottom;
 
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("text-anchor", "middle")
                     .attr("transform", "rotate(-90)")
                     .attr("x", -height / 2)
-                    .attr("y", -10)
+                    .attr("y", -20)
                     .text("Frequency");
 
                 // Add range slider
