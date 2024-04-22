@@ -15,30 +15,28 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 1; /* Ensures the container takes the full height relative to its content */
-    overflow: hidden; /* Hides any overflow */
-}
-
-.visual1, .visual2 {
-    padding: 0 20px; /* Check if padding is causing issues */
-    overflow: hidden; /* Prevents content from overflowing its boundaries */
-}
-
-.visual1 {
-    flex: 2; /* Larger flex value means more space taken */
-}
-
-.visual2 {
-    flex: 1; /* Smaller flex value means less space taken */
-    background-color: #f4f4f4; /* Helps visualize the container */
+    flex: 0.72; /* Adjust the flex proportion to control the height of the top container */
 }
 
 .visual {
     border: 2px solid #000;
     box-sizing: border-box;
-    overflow: visible; /* Change this to hidden if contents overflow the borders */
+    overflow: visible; /* Allows content to show outside the borders */
 }
 
+.visual1, .visual2 {
+    padding: 0 20px; /* Padding on sides for internal spacing */
+    overflow: hidden; /* Keeps its children contained */
+}
+
+.visual1 {
+    flex: 2; /* Takes up twice the space compared to visual2 */
+}
+
+.visual2 {
+    flex: 1; /* Takes less space than visual1 */
+    background-color: #f4f4f4; /* For visibility, change as needed */
+}
 
 /* Adjustments for responsive SVG and Canvas within visual containers */
 .visual svg, .visual canvas {
