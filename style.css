@@ -49,22 +49,24 @@ body, html {
 .circles-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+    align-items: flex-start; /* Align circles to the left */
+    position: absolute; /* Positioning relative to the icon-container */
+    left: 100%; /* Position right next to the icon without shifting it */
+    top: 0; /* Aligns with the top of the icon-container */
 }
 
 .circle {
-    width: 8px; /* Adjust size of circles */
-    height: 8px; /* Adjust size of circles */
+    width: 25px;
+    height: 25px;
     background-color: #ccc;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 8px; /* Adjust font size */
-    text-align: center;
-    margin-top: 5px; /* Adjust spacing between circles */
 }
+
+.circle + span {
+    font-size: 70%; /* Decreases font size by 30% */
+    margin-left: 10px; /* Maintain spacing between circle and text */
+}
+
 
 
 .icon-row img {

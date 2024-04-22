@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCircles(container) {
         const circleContainer = document.createElement('div');
         circleContainer.classList.add('circles-container');
+        circleContainer.style.position = 'absolute';  // Ensures no shift in main icon placement
+        circleContainer.style.left = '0';  // Aligns to the left of the icon-container
 
         // Array of labels for each circle
         const labels = [
@@ -22,8 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const circle = document.createElement('div');
             circle.classList.add('circle');
-            circle.style.width = '12px';
-            circle.style.height = '12px';
+            circle.style.width = '25px';
+            circle.style.height = '25px';
             circle.style.borderRadius = '50%';
             circle.style.backgroundColor = '#ccc';
 
