@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            updatePlot("emission"); // Initial plot with 'emission'
+            updatePlot(selectedVariable); // Initial plot
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
@@ -48,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    let variable = d3.select(this).text().toLowerCase();
-                    updatePlot(variable === "emissions" ? "emission" : variable);
+                    updatePlot(d3.select(this).text().toLowerCase() === "emissions" ? "emission" : "cost");
                 });
 
         }).catch(function(error) {
@@ -57,10 +56,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function updatePlot(variable) {
-            selectedVariable = variable; // Update the current variable
+            selectedVariable = variable;
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
+            console.log("Filtered Data:", filteredData); // Debugging line
 
             // Set domains for the scales
             x.domain(d3.extent(filteredData, d => d.year));
@@ -72,21 +72,24 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            // Remove existing lines and redraw
-            svg.selectAll(".line").remove();
-            const color = d3.scaleOrdinal(d3.schemeCategory10);
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d[selectedVariable]));
+            svg.selectAll(".line").remove(); // Remove existing lines
 
-            filteredData.forEach(scenario => {
+            // Correctly handling grouped data for lines
+            const scenarioGroups = d3.group(filteredData, d => d.scenario);
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            scenarioGroups.forEach((values, key) => {
                 svg.append("path")
-                    .datum([scenario]) // Ensure data is in array form if treating individually
+                    .datum(values)
                     .attr("class", "line")
                     .attr("fill", "none")
-                    .attr("stroke", color(scenario.scenario))
+                    .attr("stroke", color(key))
                     .attr("stroke-width", 1.5)
-                    .attr("d", line);
+                    .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d[selectedVariable]))
+                    );
+                console.log("Drawing line for:", key); // Debugging line
             });
         }
     } else {
