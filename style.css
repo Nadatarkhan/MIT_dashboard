@@ -36,6 +36,7 @@ body, html {
 .visual2 {
     flex: 1; /* Takes less space than visual1 */
     background-color: #f4f4f4; /* For visibility, change as needed */
+    padding-right: 20px; /* Adds padding to the right side */
 }
 
 /* Adjustments for responsive SVG and Canvas within visual containers */
