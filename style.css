@@ -186,7 +186,7 @@ h1 {
 }
 
 .slider-container .slider-axis-label {
-    font-size: 5px;
+    font-size: 2px;
     fill: #333; /* Label color */
     transform: translateY(-10px); /* Adjust label position */
 }
