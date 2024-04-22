@@ -17,156 +17,129 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        console.log('Container dimensions:', containerWidth, containerHeight);
-
         // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "Emissions";
+        let emissionsData;
+        let gridFilter = "decarbonization"; // Added global variable to track the grid filter
+
+        // Function to update plot based on selected variable
+        function updatePlot(variable) {
+            selectedVariable = variable;
+
+            // Filter the emissionsData based on the gridFilter
+            const filteredData = emissionsData.filter(d => d.grid === gridFilter);
+
+            // Set the domain for the scales
+            x.domain(d3.extent(filteredData, d => d.year));
+            const maxY = d3.max(filteredData, d => d[selectedVariable]);
+            y.domain([0, maxY]);
+
+            // Update the axes
+            svg.select(".x-axis").remove();
+            svg.select(".y-axis").remove();
+
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(y));
+
+            // Update the plot with the filtered data
+            // Remove existing lines
+            svg.selectAll(".line").remove();
+
+            // Group data by scenario
+            const scenarioGroups = {};
+            filteredData.forEach(d => {
+                if (!scenarioGroups[d.scenario]) {
+                    scenarioGroups[d.scenario] = [];
+                }
+                scenarioGroups[d.scenario].push(d);
+            });
+
+            // Define color scale
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // Draw lines for each scenario
+            Object.values(scenarioGroups).forEach(scenario => {
+                svg.append("path")
+                    .datum(scenario)
+                    .attr("class", "line")
+                    .attr("fill", "none")
+                    .attr("stroke", color(scenario[0].scenario))
+                    .attr("stroke-width", 1.5)
+                    .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => d[selectedVariable])
+                    );
+            });
+        }
 
         // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
-            console.log('Data loaded:', data);
-
-            // Map the data to an array of objects
-            let emissionsData = data.map(d => ({
+            emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
-                scenario: d.Scenario
+                scenario: d.Scenario,
+                grid: d.grid // This column must exist in your CSV
             }));
-
-            console.log('Formatted data:', emissionsData);
-
-            // Check if there are any invalid values in emissionsData
-            const invalidValues = emissionsData.filter(d => isNaN(d[selectedVariable]));
-            console.log('Invalid values:', invalidValues);
-
-            // Set the domain for the scales
-            x.domain(d3.extent(emissionsData, d => d.year));
-            const maxY = d3.max(emissionsData, d => d[selectedVariable]);
-            console.log('Max Y value:', maxY);
-            y.domain([0, maxY]);
-
-            console.log('X domain:', x.domain());
-            console.log('Y domain:', y.domain());
-
-            // Add the X Axis
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .append("text") // X-axis label
-                .attr("class", "x-axis-label")
-                .attr("x", width / 2)
-                .attr("y", 40) // Adjusted for padding
-                .style("text-anchor", "middle")
-                .text("Years");
-
-            // Add the Y Axis
-            svg.append("g")
-                .call(d3.axisLeft(y))
-                .append("text") // Y-axis label
-                .attr("class", "y-axis-label")
-                .attr("transform", "rotate(-90)")
-                .attr("x", -height / 2) // Adjusted for padding
-                .attr("y", -60) // Adjusted for padding
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text(selectedVariable);
-
-            // Function to update plot based on selected variable
-            function updatePlot(variable) {
-                selectedVariable = variable;
-
-                console.log('Selected variable:', selectedVariable);
-
-                // Update domain for y-scale
-                let maxY;
-                if (selectedVariable === "Emissions") {
-                    maxY = d3.max(emissionsData, d => d.emission);
-                } else if (selectedVariable === "Cost") {
-                    maxY = d3.max(emissionsData, d => d.cost);
-                } else if (selectedVariable === "Emissions-Cost") {
-                    maxY = d3.max(emissionsData, d => Math.max(d.emission, d.cost));
-                } else {
-                    console.error("Invalid selected variable:", selectedVariable);
-                    return;
-                }
-
-                console.log('Max Y value:', maxY);
-                y.domain([0, maxY]);
-
-                console.log('Y domain after update:', y.domain());
-
-                // Update Y axis label
-                console.log('Updating Y axis label with:', selectedVariable);
-                console.log('Selected y-axis labels:', svg.selectAll(".y-axis-label"));
-                svg.selectAll(".y-axis-label")
-                    .text(selectedVariable);
-
-
-                // Remove existing lines
-                svg.selectAll(".line").remove();
-
-                // Group data by scenario
-                const scenarioGroups = {};
-                emissionsData.forEach(d => {
-                    if (!scenarioGroups[d.scenario]) {
-                        scenarioGroups[d.scenario] = [];
-                    }
-                    scenarioGroups[d.scenario].push(d);
-                });
-
-                // Define color scale
-                const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-                // Draw lines for each scenario
-                Object.values(scenarioGroups).forEach(scenario => {
-                    svg.append("path")
-                        .datum(scenario)
-                        .attr("class", "line")
-                        .attr("fill", "none")
-                        .attr("stroke", color(scenario[0].scenario))
-                        .attr("stroke-width", 1.5)
-                        .attr("d", d3.line()
-                            .x(d => x(d.year))
-                            .y(d => {
-                                if (selectedVariable === "Emissions") {
-                                    return y(d.emission);
-                                } else if (selectedVariable === "Cost") {
-                                    return y(d.cost);
-                                } else if (selectedVariable === "Emissions-Cost") {
-                                    return y(Math.max(d.emission, d.cost));
-                                }
-                            })
-                        );
-                });
-            }
-
-            // Add buttons
-            const buttonContainer = d3.select(container) // Append to container
-                .append("div")
-                .attr("class", "button-container");
-
-            const buttonData = ["Emissions", "Cost", "Emissions-Cost"]; // Button data
-            const buttons = buttonContainer.selectAll("button")
-                .data(buttonData)
-                .enter()
-                .append("button")
-                .attr("class", "pheasant-demure-button solid light hover blink")
-                .text(d => d)
-                .on("click", function() { // Removed the argument
-                    updatePlot(d3.select(this).text()); // Pass the text of the button
-                });
-
 
             // Initial plot
             updatePlot(selectedVariable);
 
+            // Add buttons for Emissions, Cost, Emissions-Cost
+            const buttonContainer = d3.select(container)
+                .append("div")
+                .attr("class", "button-container");
+
+            const buttonData = ["Emissions", "Cost", "Emissions-Cost"];
+            buttonContainer.selectAll("button")
+                .data(buttonData)
+                .enter()
+                .append("button")
+                .attr("class", "variable-button")
+                .text(d => d)
+                .on("click", function() {
+                    updatePlot(d3.select(this).text());
+                });
+
+            // Add the toggle button
+            const toggleLabel = d3.select(container)
+                .append("label")
+                .attr("class", "toggle-wrapper");
+
+            toggleLabel.append("input")
+                .attr("class", "toggleCheckbox")
+                .attr("type", "checkbox")
+                .attr("id", "gridToggle")
+                .on("change", toggleGridFilter);
+
+            const toggleContainer = toggleLabel.append("div")
+                .attr("class", "toggleContainer");
+
+            toggleContainer.append("div")
+                .text("Decarbonized");
+
+            toggleContainer.append("div")
+                .text("Not Decarbonized");
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
+
+        // Toggle grid filter function
+        function toggleGridFilter() {
+            gridFilter = this.checked ? "no decarbonization" : "decarbonization";
+            updatePlot(selectedVariable);
+        }
+
     } else {
         console.error("Container not found");
     }
-});
+}); // End
+
