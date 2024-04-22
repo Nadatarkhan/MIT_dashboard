@@ -35,23 +35,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
             updatePlot(selectedVariable);
 
+            // Button interaction setup
+            document.querySelectorAll('.button-container button').forEach(button => {
+                button.addEventListener('click', function() {
+                    updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
+                });
+            });
+
             document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
                 input.addEventListener('change', function() {
                     gridFilter = this.value;
                     updatePlot(selectedVariable);
                 });
             });
-
-            const buttonContainer = d3.select('.button-container');
-            buttonContainer.selectAll("button")
-                .data(["Emissions", "Cost"])
-                .enter()
-                .append("button")
-                .attr("class", "pheasant-demure-button solid light hover blink")
-                .text(d => d)
-                .on("click", function() {
-                    updatePlot(d3.select(this).text().toLowerCase() === "emissions" ? "emission" : "cost");
-                });
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
