@@ -26,7 +26,7 @@ body, html {
 
 .visual1, .visual2 {
     padding: 0 20px; /* Padding on sides for internal spacing */
-    overflow: hidden; /* Keeps its children contained */
+    overflow: visible; /* Keeps its children contained */
 }
 
 .visual1 {
@@ -34,12 +34,10 @@ body, html {
 }
 
 .visual2 {
-    flex: 1;
-    padding: 0 20px;
-    overflow: hidden; // or 'visible' depending on your needs
-    background-color: #f4f4f4;
-    display: flex; // Ensures flex children are aligned properly
-    align-items: stretch; // Stretches children to fit
+    flex: 1; /* Takes less space than visual1 */
+    background-color: #f4f4f4; /* For visibility, change as needed */
+    padding-right: 30px; /* Adds padding to the right side */
+
 }
 
 /* Adjustments for responsive SVG and Canvas within visual containers */
