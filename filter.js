@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', 40)
                     .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
+                    .attr('transform', 'translate(' + margin.left + ',' + 3 + ')')
                     .call(slider);
 
                 // Style slider
