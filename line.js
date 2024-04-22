@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "Emissions";
+        let selectedVariable = "emission";  // Default to emissions to check its integration
         let gridFilter = "decarbonization"; // Default grid filter
         let emissionsData;
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .append("div")
                 .attr("class", "button-container");
 
-            const buttonData = ["Emissions", "Cost", "Emissions-Cost"];
+            const buttonData = ["Emissions", "Cost"];  // Removed "Emissions-Cost"
             buttonContainer.selectAll("button")
                 .data(buttonData)
                 .enter()
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    updatePlot(d3.select(this).text());
+                    updatePlot(d3.select(this).text().toLowerCase());  // Convert to lowercase to match keys
                 });
 
         }).catch(function(error) {
@@ -57,15 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function updatePlot(variable) {
-            selectedVariable = variable.toLowerCase();
+            selectedVariable = variable;
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
 
             // Set domains for the scales
             x.domain(d3.extent(filteredData, d => d.year));
-            let maxValue = Math.max(...filteredData.map(d => d[selectedVariable]));
-            y.domain([0, isNaN(maxValue) ? 1 : maxValue]); // Prevent NaN domain
+            y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
             // Update axes
             svg.selectAll(".x-axis").remove();
@@ -92,10 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => {
-                            let val = d[selectedVariable];
-                            return y(isNaN(val) ? 0 : val);  // Check for NaN values and default to 0
-                        })
+                        .y(d => d[selectedVariable] !== undefined ? y(d[selectedVariable]) : NaN)  // Ensure the field exists
                     );
             });
         }
