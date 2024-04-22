@@ -52,28 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlot(d3.select(this).text());
                 });
 
-            // If a toggle element is present in HTML, manage its change event
-            const toggle = document.getElementById("gridToggle");
-            if (toggle) {
-                toggle.addEventListener("change", function() {
-                    gridFilter = this.checked ? "no decarbonization" : "decarbonization";
-                    updatePlot(selectedVariable);
-                });
-            }
-
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
 
         function updatePlot(variable) {
-            selectedVariable = variable;
+            selectedVariable = variable.toLowerCase();
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
 
             // Set domains for the scales
             x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
+            let maxValue = Math.max(...filteredData.map(d => d[selectedVariable]));
+            y.domain([0, isNaN(maxValue) ? 1 : maxValue]); // Prevent NaN domain
 
             // Update axes
             svg.selectAll(".x-axis").remove();
@@ -100,7 +92,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => d[selectedVariable])
+                        .y(d => {
+                            let val = d[selectedVariable];
+                            return y(isNaN(val) ? 0 : val);  // Check for NaN values and default to 0
+                        })
                     );
             });
         }
