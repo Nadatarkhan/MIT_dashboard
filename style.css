@@ -26,25 +26,18 @@ body, html {
 .visual1 {
     flex: 2; /* Controls the width relative to visual2 */
     flex-direction: column; /* Stack children vertically */
-    padding: 0 20px; /* Add padding to the sides */
-    overflow: hidden; /* Ensures that children do not overflow the boundaries */
-}
-
-.visual2 {
-    flex: 1;
+    padding: 0 20px; /* Padding on sides for spacing inside the container */
+    overflow: hidden; /* Prevents overflow */
 }
 
 .icon-row {
     display: flex;
-    justify-content: space-around; /* Adjusted to space-around for better spacing control */
+    justify-content: space-around; /* Adjusted to maintain spacing between icons */
     padding: 10px 0;
 }
 
 .icon-container {
     position: relative; /* For positioning circles absolutely within it */
-    flex-grow: 0; /* Prevents stretching */
-    flex-shrink: 0; /* Prevents shrinking */
-    flex-basis: auto; /* Adjust size based on content and available space */
 }
 
 .circles-container {
@@ -54,9 +47,10 @@ body, html {
     position: absolute; /* Absolute positioning relative to icon-container */
     top: 100%; /* Places circles directly below the icon container */
     left: 0; /* Aligns with the left of the icon container */
-    width: 100%; /* Matches the width of the icon container */
+    width: max-content; /* Only as wide as its contents, preventing stretching */
     background-color: rgba(255, 255, 255, 0.9); /* Optional: adds background color for visibility */
     box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    z-index: 100; /* Ensures the container appears above other content */
 }
 
 .circle {
@@ -72,11 +66,10 @@ body, html {
     margin-left: 10px; /* Space between the circle and text */
     white-space: nowrap; /* Prevents text wrapping */
 }
-}
 
 .icon-row img {
     width: auto; /* Adjust width to fit icons as necessary */
-    height: 50px; /* Fixed height for icons */
+    height: 50px; /* Fixed height for icons, prevent resizing */
 }
 
 .graph-container {
