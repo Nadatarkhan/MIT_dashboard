@@ -17,10 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
+        // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "Emissions";
-        let gridFilter = "decarbonization"; // Start with 'decarbonization' as default
+        let gridFilter = "decarbonization"; // Default grid filter
         let emissionsData;
 
         // Load and process the data
@@ -33,14 +34,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            // Set the domain for the scales
-            x.domain(d3.extent(emissionsData, d => d.year));
-            updatePlot(selectedVariable); // Update the plot initially with the default variable
+            // Initialize the plot with the default selected variable and filter
+            updatePlot(selectedVariable, gridFilter);
+
+            // Toggle for grid filter
+            const toggleLabel = d3.select(container)
+                .append("label")
+                .attr("class", "toggle-wrapper");
+
+            toggleLabel.append("input")
+                .attr("class", "toggleCheckbox")
+                .attr("type", "checkbox")
+                .attr("id", "gridToggle")
+                .on("change", function() {
+                    gridFilter = this.checked ? "no decarbonization" : "decarbonization";
+                    updatePlot(selectedVariable, gridFilter);
+                });
+
+            toggleLabel.append("div")
+                .attr("class", "toggleContainer")
+                .text("Toggle Grid Filter");
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
                 .append("div")
                 .attr("class", "button-container");
+
             const buttonData = ["Emissions", "Cost", "Emissions-Cost"];
             buttonContainer.selectAll("button")
                 .data(buttonData)
@@ -49,47 +68,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    updatePlot(d3.select(this).text());
+                    updatePlot(d3.select(this).text(), gridFilter);
                 });
-
-            // Toggle for grid filter
-            const toggleLabel = d3.select(container)
-                .append("label")
-                .attr("class", "toggle-wrapper");
-            toggleLabel.append("input")
-                .attr("class", "toggleCheckbox")
-                .attr("type", "checkbox")
-                .attr("id", "gridToggle")
-                .on("change", function() {
-                    gridFilter = this.checked ? "no decarbonization" : "decarbonization";
-                    updatePlot(selectedVariable);
-                });
-            toggleLabel.append("div")
-                .attr("class", "toggleContainer")
-                .append("div")
-                .text("Toggle Grid Filter");
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
 
-        function updatePlot(variable) {
+        function updatePlot(variable, gridFilter) {
             selectedVariable = variable;
+
+            // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
-            const maxY = d3.max(filteredData, d => d[selectedVariable]);
-            y.domain([0, maxY]); // Update y-domain
 
-            svg.select(".x-axis").call(d3.axisBottom(x));
-            svg.select(".y-axis").call(d3.axisLeft(y));
+            // Set the domain for the scales
+            x.domain(d3.extent(filteredData, d => d.year));
+            const maxY = d3.max(filteredData, d => d[variable]);
+            y.domain([0, maxY]);
 
-            svg.selectAll(".line").remove(); // Remove existing lines
+            // Update the axes
+            svg.selectAll(".x-axis").remove();
+            svg.selectAll(".y-axis").remove();
 
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(y));
+
+            svg.selectAll(".y-axis-label").text(variable);
+            svg.selectAll(".line").remove();
+
+            // Group data by scenario
             const scenarioGroups = {};
             filteredData.forEach(d => {
                 scenarioGroups[d.scenario] = scenarioGroups[d.scenario] || [];
                 scenarioGroups[d.scenario].push(d);
             });
 
+            // Draw lines for each scenario
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             Object.values(scenarioGroups).forEach(scenario => {
                 svg.append("path")
@@ -100,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => +d[selectedVariable])
+                        .y(d => +d[variable])
                     );
             });
         }
