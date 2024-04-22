@@ -179,5 +179,9 @@ h1 {
 .slider-container .slider-axis-label {
     font-size: 12px;
     fill: #333;
-    transform: translateY(-10px);
+    transform: translateY(-20px);
+}
+
+.slider-container {
+    padding-right: 20px; /* Add padding to the slider container */
 }
