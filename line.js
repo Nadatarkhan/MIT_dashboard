@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "Emissions";
@@ -34,26 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            // Initialize the plot with the default selected variable and filter
+            // Set initial plot
             updatePlot(selectedVariable, gridFilter);
 
-            // Toggle for grid filter
-            const toggleLabel = d3.select(container)
-                .append("label")
-                .attr("class", "toggle-wrapper");
-
-            toggleLabel.append("input")
-                .attr("class", "toggleCheckbox")
-                .attr("type", "checkbox")
-                .attr("id", "gridToggle")
-                .on("change", function() {
-                    gridFilter = this.checked ? "no decarbonization" : "decarbonization";
-                    updatePlot(selectedVariable, gridFilter);
-                });
-
-            toggleLabel.append("div")
-                .attr("class", "toggleContainer")
-                .text("Toggle Grid Filter");
+            // Event listener for grid toggle, assuming it's managed in HTML
+            document.getElementById("gridToggle").addEventListener("change", function() {
+                gridFilter = this.checked ? "no decarbonization" : "decarbonization";
+                updatePlot(selectedVariable, gridFilter);
+            });
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
@@ -81,35 +68,26 @@ document.addEventListener('DOMContentLoaded', function() {
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
 
-            // Set the domain for the scales
+            // Set domains
             x.domain(d3.extent(filteredData, d => d.year));
-            const maxY = d3.max(filteredData, d => d[variable]);
+            const maxY = d3.max(filteredData, d => d[selectedVariable]);
             y.domain([0, maxY]);
 
-            // Update the axes
+            // Update axes
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
+            svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+            svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
+            svg.selectAll(".line").remove(); // Remove existing lines
 
-            svg.append("g")
-                .attr("class", "y-axis")
-                .call(d3.axisLeft(y));
-
-            svg.selectAll(".y-axis-label").text(variable);
-            svg.selectAll(".line").remove();
-
-            // Group data by scenario
+            // Group data by scenario and redraw lines
             const scenarioGroups = {};
             filteredData.forEach(d => {
                 scenarioGroups[d.scenario] = scenarioGroups[d.scenario] || [];
                 scenarioGroups[d.scenario].push(d);
             });
 
-            // Draw lines for each scenario
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             Object.values(scenarioGroups).forEach(scenario => {
                 svg.append("path")
@@ -120,7 +98,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => +d[variable])
+                        .y(d => {
+                            if (selectedVariable === "Emissions") {
+                                return y(d.emission);
+                            } else if (selectedVariable === "Cost") {
+                                return y(d.cost);
+                            } else if (selectedVariable === "Emissions-Cost") {
+                                return y(Math.max(d.emission, d.cost));
+                            }
+                        })
                     );
             });
         }
