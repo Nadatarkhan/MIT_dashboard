@@ -125,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 sliderContainer.selectAll('.tick line').remove();
                 sliderContainer.selectAll('.domain').remove();
                 sliderContainer.selectAll('.handle')
-                    .attr('fill', '#007bff')
-                    .attr('stroke', '#007bff')
+                    .attr('fill', 'rgba(94,134,117,0.85)')
+                    .attr('stroke', 'rgba(94,134,117,0.85)')
                     .attr('rx', 5)
                     .attr('ry', 5);
             });
