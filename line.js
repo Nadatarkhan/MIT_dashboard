@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission";  // Default to emissions to check its integration
-        let gridFilter = "decarbonization"; // Default grid filter
+        let selectedVariable = "emission"; // Ensure this matches the data key
+        let gridFilter = "decarbonization";
         let emissionsData;
 
         // Load and process the data
@@ -33,15 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            // Initialize the plot
-            updatePlot(selectedVariable);
+            updatePlot(selectedVariable); // Initial plot
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
                 .append("div")
                 .attr("class", "button-container");
 
-            const buttonData = ["Emissions", "Cost"];  // Removed "Emissions-Cost"
+            const buttonData = ["Emissions", "Cost"];
             buttonContainer.selectAll("button")
                 .data(buttonData)
                 .enter()
@@ -49,15 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    updatePlot(d3.select(this).text().toLowerCase());  // Convert to lowercase to match keys
+                    console.log("Button clicked:", d3.select(this).text());
+                    updatePlot(d3.select(this).text().toLowerCase());
                 });
-
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
 
         function updatePlot(variable) {
-            selectedVariable = variable;
+            selectedVariable = variable; // Update the global variable
+            console.log("Updating plot for:", selectedVariable);
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
@@ -74,25 +74,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             svg.selectAll(".line").remove(); // Remove existing lines
 
-            // Group data by scenario and redraw lines
-            const scenarioGroups = {};
-            filteredData.forEach(d => {
-                scenarioGroups[d.scenario] = scenarioGroups[d.scenario] || [];
-                scenarioGroups[d.scenario].push(d);
-            });
-
+            // Redraw lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
-            Object.values(scenarioGroups).forEach(scenario => {
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d[selectedVariable])); // Ensure this uses the correctly formatted variable
+
+            filteredData.forEach(scenario => {
                 svg.append("path")
                     .datum(scenario)
                     .attr("class", "line")
                     .attr("fill", "none")
-                    .attr("stroke", color(scenario[0].scenario))
+                    .attr("stroke", color(scenario.scenario))
                     .attr("stroke-width", 1.5)
-                    .attr("d", d3.line()
-                        .x(d => x(d.year))
-                        .y(d => d[selectedVariable] !== undefined ? y(d[selectedVariable]) : NaN)  // Ensure the field exists
-                    );
+                    .attr("d", line);
             });
         }
     } else {
