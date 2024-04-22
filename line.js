@@ -33,14 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            // Set initial plot
-            updatePlot(selectedVariable, gridFilter);
-
-            // Event listener for grid toggle, assuming it's managed in HTML
-            document.getElementById("gridToggle").addEventListener("change", function() {
-                gridFilter = this.checked ? "no decarbonization" : "decarbonization";
-                updatePlot(selectedVariable, gridFilter);
-            });
+            // Initialize the plot
+            updatePlot(selectedVariable);
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
@@ -55,23 +49,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    updatePlot(d3.select(this).text(), gridFilter);
+                    updatePlot(d3.select(this).text());
                 });
+
+            // If a toggle element is present in HTML, manage its change event
+            const toggle = document.getElementById("gridToggle");
+            if (toggle) {
+                toggle.addEventListener("change", function() {
+                    gridFilter = this.checked ? "no decarbonization" : "decarbonization";
+                    updatePlot(selectedVariable);
+                });
+            }
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
 
-        function updatePlot(variable, gridFilter) {
+        function updatePlot(variable) {
             selectedVariable = variable;
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
 
-            // Set domains
+            // Set domains for the scales
             x.domain(d3.extent(filteredData, d => d.year));
-            const maxY = d3.max(filteredData, d => d[selectedVariable]);
-            y.domain([0, maxY]);
+            y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
             // Update axes
             svg.selectAll(".x-axis").remove();
@@ -98,15 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("stroke-width", 1.5)
                     .attr("d", d3.line()
                         .x(d => x(d.year))
-                        .y(d => {
-                            if (selectedVariable === "Emissions") {
-                                return y(d.emission);
-                            } else if (selectedVariable === "Cost") {
-                                return y(d.cost);
-                            } else if (selectedVariable === "Emissions-Cost") {
-                                return y(Math.max(d.emission, d.cost));
-                            }
-                        })
+                        .y(d => d[selectedVariable])
                     );
             });
         }
