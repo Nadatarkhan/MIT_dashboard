@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Ensure this matches the data key
-        let gridFilter = "decarbonization";
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "decarbonization"; // Default grid filter
         let emissionsData;
 
         // Load and process the data
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            updatePlot(selectedVariable); // Initial plot
+            updatePlot("emission"); // Initial plot with 'emission'
 
             // Buttons for changing variables
             const buttonContainer = d3.select(container)
@@ -48,16 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("class", "pheasant-demure-button solid light hover blink")
                 .text(d => d)
                 .on("click", function() {
-                    console.log("Button clicked:", d3.select(this).text());
-                    updatePlot(d3.select(this).text().toLowerCase());
+                    let variable = d3.select(this).text().toLowerCase();
+                    updatePlot(variable === "emissions" ? "emission" : variable);
                 });
+
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
 
         function updatePlot(variable) {
-            selectedVariable = variable; // Update the global variable
-            console.log("Updating plot for:", selectedVariable);
+            selectedVariable = variable; // Update the current variable
 
             // Filter data based on the grid filter
             const filteredData = emissionsData.filter(d => d.grid === gridFilter);
@@ -72,17 +72,16 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            svg.selectAll(".line").remove(); // Remove existing lines
-
-            // Redraw lines
+            // Remove existing lines and redraw
+            svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
                 .x(d => x(d.year))
-                .y(d => y(d[selectedVariable])); // Ensure this uses the correctly formatted variable
+                .y(d => y(d[selectedVariable]));
 
             filteredData.forEach(scenario => {
                 svg.append("path")
-                    .datum(scenario)
+                    .datum([scenario]) // Ensure data is in array form if treating individually
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(scenario.scenario))
