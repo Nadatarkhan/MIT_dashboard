@@ -25,7 +25,7 @@ body, html {
 }
 
 .visual1, .visual2 {
-    padding: 0 10px; /* Padding on sides for internal spacing */
+    padding: 0 20px; /* Padding on sides for internal spacing */
     overflow: hidden; /* Keeps its children contained */
 }
 
@@ -37,6 +37,7 @@ body, html {
     flex: 1; /* Takes less space than visual1 */
     background-color: #f4f4f4; /* For visibility, change as needed */
     padding-right: 30px; /* Adds padding to the right side */
+    margin-right: 20px; /* Add margin to the right side */
 }
 
 /* Adjust padding for specific elements within .visual2 */
@@ -161,6 +162,7 @@ h1 {
 
 .slider-container {
     margin-top: 5px;
+    padding-right: 20px; /* Add padding to the slider container */
 }
 
 .slider-container .slider-axis, .slider-axis-title {
@@ -180,8 +182,4 @@ h1 {
     font-size: 12px;
     fill: #333;
     transform: translateY(-20px);
-}
-
-.slider-container {
-    padding-right: 20px; /* Add padding to the slider container */
 }
