@@ -26,6 +26,8 @@ body, html {
 .visual1 {
     flex: 2; /* Controls the width relative to visual2 */
     flex-direction: column; /* Stack children vertically */
+    padding: 0 20px; /* Add padding to the sides */
+    overflow: hidden; /* Ensures that children do not overflow the boundaries */
 }
 
 .visual2 {
@@ -34,9 +36,8 @@ body, html {
 
 .icon-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around; /* Adjusted to space-around for better spacing control */
     padding: 10px 0;
-    position: relative; /* Added to contain absolutely positioned circle containers */
 }
 
 .icon-container {
@@ -48,9 +49,10 @@ body, html {
     flex-direction: column;
     align-items: flex-start; /* Aligns circles to the left */
     position: absolute; /* Absolute positioning relative to icon-container */
-    top: 100%; /* Places circles below the icon container */
+    top: 100%; /* Places circles directly below the icon container */
     left: 0; /* Aligns with the left of the icon container */
-    white-space: nowrap; /* Ensures labels don't wrap */
+    right: 0; /* Ensures the container does not extend beyond the icon width */
+    overflow: hidden; /* Prevents circles from overflowing the container */
 }
 
 .circle {
