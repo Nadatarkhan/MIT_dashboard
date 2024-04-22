@@ -1,3 +1,7 @@
+// line.js
+
+let globalEmissionsData; // Global variable to store the initial data for reuse
+
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
@@ -17,8 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        console.log('Container dimensions:', containerWidth, containerHeight);
-
         // Define the scales and the line
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
@@ -26,25 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
-            console.log('Data loaded:', data);
-
-            // Map the data to an array of objects
-            let emissionsData = data.map(d => ({
+            globalEmissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario
             }));
 
-            console.log('Formatted data:', emissionsData);
-
-            // Check if there are any invalid values in emissionsData
-            const invalidValues = emissionsData.filter(d => isNaN(d[selectedVariable]));
+            // Check if there are any invalid values in globalEmissionsData
+            const invalidValues = globalEmissionsData.filter(d => isNaN(d[selectedVariable]));
             console.log('Invalid values:', invalidValues);
 
             // Set the domain for the scales
-            x.domain(d3.extent(emissionsData, d => d.year));
-            const maxY = d3.max(emissionsData, d => d[selectedVariable]);
+            x.domain(d3.extent(globalEmissionsData, d => d.year));
+            const maxY = d3.max(globalEmissionsData, d => d[selectedVariable]);
             console.log('Max Y value:', maxY);
             y.domain([0, maxY]);
 
@@ -74,98 +71,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 .style("text-anchor", "middle")
                 .text(selectedVariable);
 
-            // Function to update plot based on selected variable
-            function updatePlot(variable) {
-                selectedVariable = variable;
-
-                console.log('Selected variable:', selectedVariable);
-
-                // Update domain for y-scale
-                let maxY;
-                if (selectedVariable === "Emissions") {
-                    maxY = d3.max(emissionsData, d => d.emission);
-                } else if (selectedVariable === "Cost") {
-                    maxY = d3.max(emissionsData, d => d.cost);
-                } else if (selectedVariable === "Emissions-Cost") {
-                    maxY = d3.max(emissionsData, d => Math.max(d.emission, d.cost));
-                } else {
-                    console.error("Invalid selected variable:", selectedVariable);
-                    return;
-                }
-
-                console.log('Max Y value:', maxY);
-                y.domain([0, maxY]);
-
-                console.log('Y domain after update:', y.domain());
-
-                // Update Y axis label
-                console.log('Updating Y axis label with:', selectedVariable);
-                console.log('Selected y-axis labels:', svg.selectAll(".y-axis-label"));
-                svg.selectAll(".y-axis-label")
-                    .text(selectedVariable);
-
-
-                // Remove existing lines
-                svg.selectAll(".line").remove();
-
-                // Group data by scenario
-                const scenarioGroups = {};
-                emissionsData.forEach(d => {
-                    if (!scenarioGroups[d.scenario]) {
-                        scenarioGroups[d.scenario] = [];
-                    }
-                    scenarioGroups[d.scenario].push(d);
-                });
-
-                // Define color scale
-                const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-                // Draw lines for each scenario
-                Object.values(scenarioGroups).forEach(scenario => {
-                    svg.append("path")
-                        .datum(scenario)
-                        .attr("class", "line")
-                        .attr("fill", "none")
-                        .attr("stroke", color(scenario[0].scenario))
-                        .attr("stroke-width", 1.5)
-                        .attr("d", d3.line()
-                            .x(d => x(d.year))
-                            .y(d => {
-                                if (selectedVariable === "Emissions") {
-                                    return y(d.emission);
-                                } else if (selectedVariable === "Cost") {
-                                    return y(d.cost);
-                                } else if (selectedVariable === "Emissions-Cost") {
-                                    return y(Math.max(d.emission, d.cost));
-                                }
-                            })
-                        );
-                });
-            }
-
-            // Add buttons
-            const buttonContainer = d3.select(container) // Append to container
-                .append("div")
-                .attr("class", "button-container");
-
-            const buttonData = ["Emissions", "Cost", "Emissions-Cost"]; // Button data
-            const buttons = buttonContainer.selectAll("button")
-                .data(buttonData)
-                .enter()
-                .append("button")
-                .attr("class", "pheasant-demure-button solid light hover blink")
-                .text(d => d)
-                .on("click", function() { // Removed the argument
-                    updatePlot(d3.select(this).text()); // Pass the text of the button
-                });
-
-
             // Initial plot
-            updatePlot(selectedVariable);
+            updatePlot(selectedVariable, globalEmissionsData);
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
+
+        // Function to update plot based on selected variable
+        function updatePlot(variable, newData) {
+            selectedVariable = variable;
+            let emissionsData = newData || globalEmissionsData;
+
+            // Update domain for y-scale
+            let maxY = d3.max(emissionsData, d => d[selectedVariable]);
+            y.domain([0, maxY]);
+
+            // Update Y axis label
+            svg.selectAll(".y-axis-label").text(selectedVariable);
+
+            // Remove existing lines
+            svg.selectAll(".line").remove();
+
+            // Group data by scenario
+            const scenarioGroups = {};
+            emissionsData.forEach(d => {
+                if (!scenarioGroups[d.scenario]) {
+                    scenarioGroups[d.scenario] = [];
+                }
+                scenarioGroups[d.scenario].push(d);
+            });
+
+            // Define color scale
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // Draw lines for each scenario
+            Object.values(scenarioGroups).forEach(scenario => {
+                svg.append("path")
+                    .datum(scenario)
+                    .attr("class", "line")
+                    .attr("fill", "none")
+                    .attr("stroke", color(scenario[0].scenario))
+                    .attr("stroke-width", 1.5)
+                    .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d[selectedVariable]))
+                    );
+            });
+
+            // Redraw the X and Y axis
+            svg.select(".x-axis-label").call(d3.axisBottom(x));
+            svg.select(".y-axis-label").call(d3.axisLeft(y));
+        }
+
+        // Expose updatePlot to global scope
+        window.updatePlot = updatePlot;
     } else {
         console.error("Container not found");
     }
