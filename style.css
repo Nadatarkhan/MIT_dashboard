@@ -24,10 +24,16 @@ body, html {
 }
 
 .visual1 {
-    flex: 2; /* Controls the width relative to visual2 */
-    flex-direction: column; /* Stack children vertically */
-    padding: 0 20px; /* Padding on sides for spacing inside the container */
-    overflow: hidden; /* Prevents overflow */
+    flex: 2; /* Takes up twice the space compared to visual2 */
+    flex-direction: column;
+    padding: 0 20px;
+    overflow: hidden; /* Keeps its children contained */
+}
+
+.visual2 {
+    flex: 1; /* Takes less space than visual1 */
+    overflow: visible; /* Should show all contents, adjust if contents need to be contained */
+    background-color: #f4f4f4; /* Added for visibility, change as needed */
 }
 
 .icon-row {
