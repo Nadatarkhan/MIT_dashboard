@@ -266,31 +266,26 @@ h1 {
 }
 
 
-#innovation_plot .metric-container {
-    padding: 5px;
-    margin-bottom: 0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 #innovation_plot .metric-container svg {
-    transform: scaleX(0.8) scaleY(0.6);
-    transform-origin: center top;
+    transform: scale(0.7);  /* Adjust the scale factor as needed */
+    transform-origin: center; /* Ensures scaling happens from the center */
 }
 
 #innovation_plot .metric-container .slider-container {
-    margin-top: 0px;
+    width: 100%; // Ensures the slider takes the full width of the container
+    margin-top: 5px; // Adds space between the SVG and the slider
     display: flex;
-    justify-content: center;
-    width: 100%;
+    justify-content: center; // Centers the slider in the container
 }
 
-.pheasant-demure-button {
-    background-color: #f0f0f0;
-    color: #333;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+#innovation_plot .metric-container {
+    padding: 5px;
+    margin-bottom: 2px; // Ensures there is space between each plot and slider combination
+    display: flex;
+    flex-direction: column; // Stacks the SVG and slider vertically
+    align-items: center; // Centers the contents horizontally
 }
+
+
+
+
