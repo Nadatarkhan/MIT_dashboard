@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
-                    .style("fill", "#69b3a2")
+                    .style("fill", "#424242")
                     .on("mouseover", function(event, d) {
                         const tooltip = d3.select("body").append("div")
                             .attr("class", "tooltip")
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .max(d3.max(metricData))
                     .width(width)
                     .default([d3.min(metricData), d3.max(metricData)]) // Set default range
-                    .fill('#007bff') // Color of the slider track
+                    .fill('#545454') // Color of the slider track
                     .on('onchange', val => {
                         svg.selectAll("rect")
                             .attr("opacity", d => {
