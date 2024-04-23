@@ -14,19 +14,20 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    flex: 1 1 auto; /* Flexibly adjusts to available space */
+    height: 60%; /* Top container takes 60% of the screen height */
 }
 
-.visual {
-    border: 1px solid #ffffff;
-    box-sizing: border-box;
-    overflow: visible;
-}
-
-.visual1, .visual2 {
-    flex: 1;
-    padding: 10px;
+.visual1 {
+    flex: 6; /* Takes 60% of the width within its container */
+    flex-direction: column;
+    padding: 0 20px;
     overflow: hidden;
+}
+
+.visual2 {
+    flex: 4; /* Takes 40% of the width within its container */
+    overflow: visible;
+    background-color: #f4f4f4;
 }
 
 .icon-row {
@@ -64,13 +65,13 @@ body, html {
     height: 50px;
 }
 
-.graph-container, .bottom-visual {
-    flex-grow: 1;
+.graph-container {
     width: 100%;
     overflow: visible;
 }
 
 .bottom-visual {
+    flex: 4; /* Bottom container takes 40% of the screen height */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,6 +80,7 @@ body, html {
 
 .bottom-visual img {
     width: 70%;
+    height: auto;
 }
 
 .scaled-image {
@@ -113,7 +115,6 @@ h1, h2 {
     border-radius: 5px;
     background-color: #f0f0f0;
     color: #333;
-    margin: 5px;
 }
 
 .hover:hover {
@@ -145,25 +146,67 @@ h1, h2 {
     transform: translateY(-10px);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .top-container, .bottom-visual {
-        flex-direction: column;
-    }
+/*///////// TOGGLE BAR///////////////
+ */
 
-    .icon-row img {
-        height: 40px; /* Smaller icons for smaller screens */
-    }
-
-    .visual1, .visual2 {
-        padding: 5px; /* Less padding on smaller screens */
-    }
-
-    h1, h2 {
-        font-size: 20px; /* Smaller font size for headings on smaller screens */
-    }
+.toggle-wrapper {
+    margin-top: 2px;
+    margin-bottom: 5px;
 }
 
+.toggleContainer {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: fit-content;
+    border: 3px solid #343434;
+    border-radius: 20px;
+    background: #343434;
+    font-weight: bold;
+    color: #343434;
+    cursor: pointer;
+    padding: 6px 0;
+    transform: scale(0.7);
+    transform-origin: center;
+}
 
+.toggleContainer::before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0;
+    border-radius: 20px;
+    background: white;
+    transition: all 0.3s;
+}
 
+.toggleCheckbox:checked + .toggleContainer::before {
+    left: 50%;
+}
+
+.toggleContainer div {
+    padding: 6px;
+    text-align: center;
+    z-index: 1;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+}
+
+.toggleCheckbox {
+    display: none;
+}
+
+.toggleCheckbox:checked + .toggleContainer div:first-child,
+.toggleCheckbox:checked + .toggleContainer div:last-child {
+    color: white;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox + .toggleContainer div:first-child,
+.toggleCheckbox + .toggleContainer div:last-child {
+    color: #343434;
+    transition: color 0.3s;
+}
 
