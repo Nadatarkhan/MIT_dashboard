@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Append the SVG canvas to the container
+        // Append the SVG canvas to the container, setting a viewBox for responsive scaling
         const svg = d3.select(container)
             .append("svg")
             .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
@@ -61,43 +61,47 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
+            // Clear any previous axes
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
+
+            // X-axis with label
             svg.append("g")
                 .attr("class", "x-axis")
                 .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
-                .selectAll("text")
-                .style("font-size", "18px"); // Increased font size for axis numbers
+                .call(d3.axisBottom(x).tickPadding(10))
                 .append("text")
                 .attr("class", "axis-label")
                 .attr("x", width / 2)
                 .attr("y", 40) // Positioning the label below the x-axis
                 .style("text-anchor", "middle")
-                .text("Year"); // Text label for the x-axis
+                .style("font-size", "16px")
+                .text("Year");
 
+            // Y-axis with label
             svg.append("g")
                 .attr("class", "y-axis")
-                .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
-                .selectAll("text")
-                .style("font-size", "18px"); // Increased font size for axis numbers
+                .call(d3.axisLeft(y).ticks(6).tickPadding(10))
                 .append("text")
                 .attr("class", "axis-label")
                 .attr("transform", "rotate(-90)") // Rotating text for vertical axis
                 .attr("x", -height / 2)
                 .attr("y", -50) // Positioning left of the y-axis
                 .style("text-anchor", "middle")
-                .text("Value"); // Text label for the y-axis
+                .style("font-size", "16px")
+                .text("Value");
 
-            // Make inner lines light grey
+            // Draw grid lines with very light grey
             svg.selectAll(".x-axis line, .y-axis line")
-                .style("stroke", "#ddd"); // Very light grey for grid lines
+                .style("stroke", "#ddd");
 
+            // Clear existing lines and redraw
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
                 .x(d => x(d.year))
-                .y(d => y(d[selectedVariable]));
+                .y(d => y(d[selectedVariable]))
+                .curve(d3.curveMonotoneX); // Smooths the line
 
             const scenarioGroups = d3.groups(filteredData, d => d.scenario);
             scenarioGroups.forEach(([key, values]) => {
@@ -106,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 4) // Increased line weight even more
+                    .attr("stroke-width", 3) // Increased line weight
                     .attr("d", line);
             });
         }
