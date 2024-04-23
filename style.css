@@ -89,7 +89,7 @@ body, html {
 }
 
 .icon-description {
-    text-align: center;
+    text-align: left;
     width: 100%; /* Ensures the description spans the full width of the container */
     background-color: #c9c9c9; /* Consistent with other description areas */
     padding: 5px; /* Adds padding inside the text container for better spacing */
@@ -103,7 +103,7 @@ body, html {
 h1, h2 {
     text-align: left;
     color: black;
-    font-size: 26px;
+    font-size: 18px;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
 }
