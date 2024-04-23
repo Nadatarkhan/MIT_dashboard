@@ -302,19 +302,26 @@ h2 {
 
 .header {
     display: flex;
-    justify-content: space-between; /* This will push the h1 to the left and the buttons to the right */
-    align-items: center; /* This will vertically center align the items in the header */
+    justify-content: space-between; /* Ensures the title and button container are on opposite ends */
+    align-items: center; /* Vertically centers the content */
     padding: 10px;
-    background-color: #f4f4f4; /* Light grey background, adjust as needed */
+    background-color: #f4f4f4; /* Light grey background */
+    width: 100%; /* Ensures the header spans the full width of the viewport */
+}
+
+.header-buttons {
+    display: flex; /* Aligns buttons in a row */
+    justify-content: flex-end; /* Aligns buttons to the far right */
 }
 
 .header-buttons button {
-    margin-left: 10px; /* Space between buttons */
+    margin-left: 10px; /* Adds space between buttons */
 }
 
 .header h1 {
-    margin: 0; /* Removes default margin */
+    margin: 0; /* Removes default margin to avoid any unwanted space */
 }
+
 
 
 
