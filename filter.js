@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 50, bottom: 30, left: 60 },
+        const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             baseWidth = container.clientWidth,
             iconWidth = 50, // Width allocated for the icon
             plotWidth = baseWidth - iconWidth - margin.left - margin.right, // Adjusted width for the plots
@@ -14,21 +14,29 @@ document.addEventListener('DOMContentLoaded', function() {
             metrics.forEach((metric, index) => {
                 const metricData = data.map(d => parseFloat(d[metric]));
 
-                // Create a new container for each metric that will include both the icon and the plot
+                // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
+                metricContainer.style.flexDirection = 'row';
                 metricContainer.style.alignItems = 'center';
 
-                // Add icon for each metric
+                // Append icon for each metric
                 const icon = document.createElement('img');
                 icon.src = `metrics/${metric.toLowerCase()}.png`;
-                icon.style.width = `${iconWidth}px`; // Set icon size
+                icon.style.width = `${iconWidth}px`;
                 icon.style.height = 'auto';
                 metricContainer.appendChild(icon);
 
-                // Append SVG canvas to the metric container for the plot
-                const svg = d3.select(metricContainer)
+                // Create a sub-container for the chart and slider
+                const chartContainer = document.createElement('div');
+                chartContainer.style.flexGrow = '1';
+                chartContainer.style.display = 'flex';
+                chartContainer.style.flexDirection = 'column';
+                metricContainer.appendChild(chartContainer);
+
+                // Append SVG canvas to the chart container for the plot
+                const svg = d3.select(chartContainer)
                     .append("svg")
                     .attr("width", plotWidth)
                     .attr("height", height)
@@ -47,12 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const histogram = d3.histogram()
                     .value(d => d)
                     .domain(x.domain())
-                    .thresholds(x.ticks(20)); // Less ticks for clarity
+                    .thresholds(x.ticks(20)); // Adjust the number of ticks for clarity
 
                 const bins = histogram(metricData);
-
-                // Compute y scale domain based on the maximum bin count
-                y.domain([0, d3.max(bins, d => d.length)]);
 
                 // Append bars for histogram
                 svg.selectAll("rect")
@@ -73,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.append("g")
                     .call(d3.axisLeft(y));
 
-                // Add range slider beneath the chart
+                // Append slider to the chart container
                 const slider = d3.sliderHorizontal()
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
@@ -85,11 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr("opacity", d => (d.x0 >= val[0] && d.x1 <= val[1]) ? 1 : 0.2);
                     });
 
-                // Append slider to container
-                const sliderContainer = d3.select(metricContainer)
-                    .append('div')
-                    .attr('class', 'slider-container')
-                    .style('width', plotWidth + 'px')
+                const sliderSvg = d3.select(chartContainer)
                     .append('svg')
                     .attr('width', plotWidth)
                     .attr('height', 50)
@@ -104,3 +105,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
