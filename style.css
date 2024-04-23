@@ -47,9 +47,17 @@ body, html {
     padding: 10px 0;
 }
 
-.icon-description h2, .icon-description p {
+.icon-description h2 {
     background-color: #c9c9c9;
     padding: 5px;
+    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
+}
+
+.icon-description p {
+    background-color: #c9c9c9;
+    padding: 5px;
+    font-size: 10px;
+    font-style: italic;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
@@ -296,7 +304,6 @@ h2 {
     cursor: pointer;
     float: right; /* Places the arrow at the right corner of the description bar */
 }
-
 
 /*TOPBAR*//
 
