@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add the y Axis and style tick labels
                 svg.append("g")
                     .call(d3.axisLeft(y))
-                    .selectAll(".tick text")  // Select all text elements for the ticks
+                    .selectAll("")  // Select all text elements for the ticks
                     .style("font-size", "0px");  // Set the font size
 
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', 50)
                     .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 5 + ')')
+                    .attr('transform', 'translate(' + margin.left + ',' + 7 + ')')
                     .call(slider);
 
                 // Style slider
