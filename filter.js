@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add the y Axis
                 svg.append("g")
-                    .call(d3.axisLeft(y));
+                    .call(d3.axisLeft(y).tickFormat(""));  // No tick labels on the y-axis
 
                 // Add axis titles
                 svg.append("text")
