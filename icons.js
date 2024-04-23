@@ -21,28 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const circle = document.createElement('input');
             circle.type = 'radio';
-            circle.id = `filter-${values[i]}`;  // Unique ID for each radio button
             circle.name = 'filter';  // All radio buttons share the same name
             circle.value = values[i];
-            circle.style.display = 'none';  // Hide the actual radio input
-
-            const label = document.createElement('label');
-            label.htmlFor = circle.id;  // Connect the label to the radio button
-            label.style.width = '20px';
-            label.style.height = '20px';
-            label.style.borderRadius = '50%';
-            label.style.backgroundColor = '#ccc';  // Default background color
-            label.style.display = 'inline-block';
-            label.style.marginRight = '5px';
+            circle.style.marginRight = '5px';
 
             const text = document.createElement('span');
             text.textContent = labels[i];
-            text.style.fontSize = '10px';
-            text.style.fontFamily = 'Roboto, sans-serif';
-            text.style.marginLeft = '10px';  // Space between the label and text
+            text.style.fontSize = '10px'; // Set the font size for the text labels
+            text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
 
             circleLabelContainer.appendChild(circle);
-            circleLabelContainer.appendChild(label);  // Include the label in the DOM
             circleLabelContainer.appendChild(text);
             circleContainer.appendChild(circleLabelContainer);
         }
