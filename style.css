@@ -111,7 +111,15 @@ body, html {
     height: auto;
 }
 
-h1, h2 {
+h1 {
+    text-align: left;
+    color: black;
+    font-size: 25px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+h2 {
     text-align: left;
     color: black;
     font-size: 18px;
@@ -292,26 +300,16 @@ h1, h2 {
 
 /*TOPBAR*//
 
-.top-bar {
+.header-buttons {
     display: flex;
-    justify-content: space-between; /* Ensures the title and buttons are on opposite ends */
-    align-items: center; /* Vertically centers the items */
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
     background-color: #f4f4f4;
 }
 
-.top-bar button {
-    margin-right: 10px; /* Space between buttons */
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 5px;
-}
 
-.top-bar button:hover {
+.header-buttons:hover {
     background-color: #d0d0d0; /* Darker grey on hover for visual feedback */
 }
 

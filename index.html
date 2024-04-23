@@ -29,8 +29,7 @@
                 <p>Click the icons to choose the implementation pathways</p>
                 <span class="material-icons expand-arrow" onclick="toggleExpansion()">expand_more</span>
             </div>
-            <div class="expandable-bar"></div> <!-- Expandable bar that will slide down -->
-            <!-- Icon Row -->
+            <div class="expandable-bar"></div>
             <div class="icon-row">
                 <!-- Icon instances -->
                 <div class="icon-container" id="icon1"><img src="icons/1.png" alt="Icon 1"></div>
@@ -76,7 +75,6 @@
     </div>
 </div>
 
-<!-- Popup Overlay -->
 <div id="popupOverlay">
     <div id="popupBox">
         <img src="images/cover.png" alt="Welcome Image" style="max-width: 100%; height: auto;">
@@ -93,7 +91,6 @@
         var expandableBar = document.querySelector('.expandable-bar');
         expandableBar.classList.toggle('expanded');
     }
-
     document.addEventListener('DOMContentLoaded', function() {
         window.closePopup = function() {
             document.getElementById('popupOverlay').style.display = 'none';
@@ -103,6 +100,7 @@
 </script>
 </body>
 </html>
+
 
 
 
