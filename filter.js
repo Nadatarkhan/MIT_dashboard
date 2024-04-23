@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 30, bottom: 30, left: 40 },
+        const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             width = container.clientWidth - margin.left - margin.right,
             height = 60 - margin.top - margin.bottom;
 
