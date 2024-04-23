@@ -1,16 +1,20 @@
-documedocument.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        // Get the exact dimensions of the container
+        // Log container dimensions to verify they're being read correctly
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
+        console.log('Container dimensions:', containerWidth, 'x', containerHeight);
 
-        // Adjust margins to ensure all elements are visible within the container
-        const margin = { top: 20, right: 50, bottom: 50, left: 60 },
+        // Define the margins and dimensions for the graph
+        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Create the SVG canvas adjusted to fit within the container properly
+        // Log calculated width and height to ensure they're positive and reasonable
+        console.log('SVG dimensions:', width, 'x', height);
+
+        // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
             .attr("width", containerWidth)
@@ -20,11 +24,10 @@ documedocument.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Default to 'emission'
-        let gridFilter = "all"; // Default grid filter
+        let selectedVariable = "emission";
+        let gridFilter = "all";
         let emissionsData;
 
-        // Load and process the data
         d3.csv("data/example_data.csv").then(function(data) {
             emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
@@ -36,7 +39,6 @@ documedocument.addEventListener('DOMContentLoaded', function() {
 
             updatePlot(selectedVariable);
 
-            // Setup for button interactions
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
                     updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
@@ -57,20 +59,16 @@ documedocument.addEventListener('DOMContentLoaded', function() {
         function updatePlot(variable) {
             selectedVariable = variable;
 
-            // Filter data as per grid filter
             const filteredData = emissionsData.filter(d => gridFilter === "all" ? true : (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
 
-            // Set scale domains
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
-            // Update and redraw axes and lines
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-            // Clear existing lines and redraw
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
