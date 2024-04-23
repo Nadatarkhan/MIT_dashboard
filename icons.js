@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const text = document.createElement('span');
             text.textContent = labels[i];
             text.style.fontSize = '10px'; // Set the font size for the text labels
+            text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
 
             circleLabelContainer.appendChild(circle);
             circleLabelContainer.appendChild(text);
