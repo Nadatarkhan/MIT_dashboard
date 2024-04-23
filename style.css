@@ -70,14 +70,15 @@ body, html {
 
 .icon-label {
     position: absolute;
-    width: 100%; /* Ensures the label spans the width of the container */
-    bottom: 100%; /* Positions the label above the icon */
-    left: 0;
+    width: auto;  /* Allows the label to take only as much width as needed */
+    white-space: nowrap;  /* Ensures the label stays on one line */
+    bottom: 100%;  /* Position above the icon */
+    left: 50%;  /* Center relative to the icon */
+    transform: translateX(-50%);  /* Adjust horizontally to truly center */
     font-size: 10px;
     font-weight: bold;
     color: black;
-    text-align: left; /* Centers the label text horizontally */
-    padding-bottom: 5px; /* Adds a small space between the label and the icon */
+    text-align: center;  /* Ensures text is centered if multiple lines are needed */
 }
 
 .circle {
