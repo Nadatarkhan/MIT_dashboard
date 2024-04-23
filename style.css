@@ -38,7 +38,7 @@ body, html {
 }
 
 .icon-description p {
-    background-color: #c9c9c9; /* Light gray background for clarity */
+    background-color: #d9d9d9; /* Light gray background for clarity */
     padding: 1px;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
     font-size: 12px;
@@ -93,7 +93,7 @@ body, html {
 .icon-description {
     text-align: left;
     width: 100%; /* Ensures the description spans the full width of the container */
-    background-color: #c9c9c9; /* Consistent with other description areas */
+    background-color: #d9d9d9; /* Light gray background for clarity */
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
 
