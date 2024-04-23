@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 50, bottom: 30, left: 50 },
+        const margin = { top: 10, right: 10, bottom: 30, left: 50 },
             baseWidth = container.clientWidth,
             iconWidth = 50, // Width allocated for the icon
             plotWidth = baseWidth - iconWidth - margin.left - margin.right, // Adjusted width for the plots
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
                 metricContainer.style.flexDirection = 'row';
-                metricContainer.style.alignItems = 'center';
+                metricContainer.style.alignItems = 'flex-start';
 
                 // Append icon for each metric
                 const icon = document.createElement('img');
