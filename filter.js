@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add the y Axis and style tick labels
                 svg.append("g")
                     .call(d3.axisLeft(y))
-                    .selectAll("")  // Select all text elements for the ticks
+                    .selectAll(".tick text")  // Select all text elements for the ticks
                     .style("font-size", "0px");  // Set the font size
 
 
