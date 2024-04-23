@@ -84,7 +84,7 @@ body, html {
 }
 
 .controls-container label {
-    font-size: 6px; /* Example size, adjust as needed */
+    font-size: 10px; /* Example size, adjust as needed */
     cursor: pointer;
 }
 
