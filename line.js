@@ -4,18 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Log to confirm dimensions read by the script
-        console.log('Container dimensions:', containerWidth, 'x', containerHeight);
-
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 }, // Adjusted for label space
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Log the calculated dimensions for the SVG content area
-        console.log('SVG dimensions:', width, 'x', height);
-
-        // Append the SVG canvas to the container, ensure the SVG has enough space
+        // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
             .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
@@ -67,11 +61,38 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
+            // Add X axis label
+            svg.selectAll(".x-axis-label").remove(); // Remove old label if present
+            svg.append("text")
+                .attr("class", "x-axis-label")
+                .attr("text-anchor", "end")
+                .attr("x", width / 2 + 40)
+                .attr("y", height + 40)
+                .text("Year");
+
+            // Add Y axis label
+            svg.selectAll(".y-axis-label").remove(); // Remove old label if present
+            svg.append("text")
+                .attr("class", "y-axis-label")
+                .attr("text-anchor", "end")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -50)
+                .attr("x", -height / 2 + 20)
+                .text(selectedVariable === "emission" ? "Emission" : "Cost");
+
+            // Update axes
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
-            svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
-            svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickPadding(10).tickSizeInner(-height)); // Increased tick padding
 
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(y).ticks(6).tickPadding(10).tickSizeInner(-width)); // Increased tick padding
+
+            // Clear existing lines and redraw with increased stroke width
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
@@ -85,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 1.5)
+                    .attr("stroke-width", 3) // Increased line weight
                     .attr("d", line);
             });
         }
