@@ -4,12 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             iconWidth = 50, // Width for the icon
             spaceBetweenIconAndPlot = 10, // Space between the icon and the plot
-            sliderHeight = 50, // Fixed height for sliders
             width = container.clientWidth - margin.left - margin.right - iconWidth - spaceBetweenIconAndPlot,
-            totalHeight = 100, // Total height for each metric container including the plot and slider
-            plotHeight = totalHeight - sliderHeight - margin.top - margin.bottom; // Height available for the plot
-
-        console.log("Container width: " + container.clientWidth + ", Plot width: " + width); // Log dimensions for debugging
+            plotHeight = 100, // Height allocated for the plot
+            sliderHeight = 50, // Height for the slider
+            totalHeight = plotHeight + sliderHeight; // Total height to accommodate both plot and slider
 
         // Load the data
         d3.csv("data/example_data.csv").then(function(data) {
@@ -23,14 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
                 metricContainer.style.alignItems = 'center';
-                metricContainer.style.height = `${totalHeight}px`; // Set the total height for the metric container
+                metricContainer.style.height = `${totalHeight}px`; // Ensure the container is large enough for both components
 
                 // Insert icon for each metric
                 const iconImg = document.createElement('img');
-                iconImg.src = `metrics/${metric.toLowerCase()}.png`; // Dynamic path based on the metric
-                iconImg.style.width = `${iconWidth}px`; // Set the width of the icon
-                iconImg.style.height = 'auto'; // Maintain aspect ratio
-                iconImg.style.marginRight = `${spaceBetweenIconAndPlot}px`; // Space between icon and plot
+                iconImg.src = `metrics/${metric.toLowerCase()}.png`;
+                iconImg.style.width = `${iconWidth}px`;
+                iconImg.style.height = 'auto';
+                iconImg.style.marginRight = `${spaceBetweenIconAndPlot}px`;
                 metricContainer.appendChild(iconImg);
 
                 // Append SVG canvas for the plot
@@ -66,11 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     .enter().append("rect")
                     .attr("x", 1)
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
-                    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+                    .attr("width", d => x(d.x1) - x(d.x0) - 1)
                     .attr("height", d => plotHeight - y(d.length))
                     .style("fill", "#424242");
 
-                // Append slider container below the plot
+                // Append slider container directly below the plot
                 const sliderContainer = d3.select(metricContainer)
                     .append('div')
                     .attr('class', 'slider-container')
@@ -80,13 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('width', width)
                     .attr('height', sliderHeight)
                     .append('g')
-                    .attr('transform', `translate(${margin.left}, 10)`); // Slight adjustment to align properly
+                    .attr('transform', 'translate(0, 0)');
 
                 // Initialize the slider
                 const slider = d3.sliderHorizontal()
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
-                    .width(width - margin.left - margin.right)
+                    .width(width)
                     .default([d3.min(metricData), d3.max(metricData)])
                     .fill('#6b6b6b')
                     .on('onchange', val => {
@@ -97,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                     });
 
-                // Append slider to its container
                 sliderContainer.call(slider);
             });
         }).catch(function(error) {
@@ -107,5 +104,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
 
