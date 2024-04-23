@@ -89,10 +89,12 @@ body, html {
 }
 
 .icon-description {
-    text-align: center; /* Center aligns the text */
+    text-align: left;
     width: 100%; /* Ensures the description spans the full width of the container */
-    background-color: #c9c9c9; /* Example background color for visibility */
-    padding: 5px; /* Adds padding inside the text container for better spacing */
+    background-color: #d9d9d9; /* Light gray background for clarity */
+    padding: 5px 10px; /* Adds padding inside the text container for better spacing and consistency */
+    margin-bottom: 10px; /* Ensures a consistent space below the description */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
 }
 
 
