@@ -27,9 +27,19 @@ body, html {
 
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
-    overflow: hidden; /* Prevents unwanted overflow */
+    display: flex;
+    flex-direction: column; /* Aligns children vertically */
+    overflow: hidden; /* Adjust as needed */
+    padding: 10px; /* Ensure there's padding to not cut off content */
     background-color: #f4f4f4;
 }
+
+.metric-container {
+    flex-grow: 1;
+    margin: 5px; /* Adjust this as needed */
+    overflow: hidden; /* Hide overflow to prevent clipping */
+}
+
 
 .icon-row {
     display: flex;
@@ -89,12 +99,10 @@ body, html {
 }
 
 .icon-description {
-    text-align: left;
+    text-align: center; /* Center aligns the text */
     width: 100%; /* Ensures the description spans the full width of the container */
-    background-color: #d9d9d9; /* Light gray background for clarity */
-    padding: 5px 10px; /* Adds padding inside the text container for better spacing and consistency */
-    margin-bottom: 10px; /* Ensures a consistent space below the description */
-    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    background-color: #c9c9c9; /* Example background color for visibility */
+    padding: 5px; /* Adds padding inside the text container for better spacing */
 }
 
 
