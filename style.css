@@ -41,6 +41,8 @@ body, html {
     background-color: #c9c9c9; /* Light gray background for clarity */
     padding: 5px;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
+    font-size: 12px;
+    font-style: italic;
 }
 
 .icon-container {
