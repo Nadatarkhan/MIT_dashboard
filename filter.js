@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 10, bottom: 30, left: 50 },
-            baseWidth = container.clientWidth,
-            iconWidth = 50, // Width allocated for the icon
-            plotWidth = baseWidth - iconWidth - margin.left - margin.right, // Adjusted width for the plots
+        const margin = { top: 10, right: 50, bottom: 30, left: 60 },
+            iconWidth = 50, // Width for the icons
+            width = container.clientWidth - margin.left - margin.right - iconWidth,
             height = 60 - margin.top - margin.bottom;
 
         // Load the data
@@ -18,44 +17,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
-                metricContainer.style.flexDirection = 'row';
-                metricContainer.style.alignItems = 'flex-start';
 
-                // Append icon for each metric
+                // Append icon to each container
                 const icon = document.createElement('img');
-                icon.src = `metrics/${metric.toLowerCase()}.png`;
+                icon.src = `metrics/${metric.toLowerCase()}.png`; // Assuming the names match the metrics
                 icon.style.width = `${iconWidth}px`;
                 icon.style.height = 'auto';
                 metricContainer.appendChild(icon);
 
-                // Create a sub-container for the chart and slider
-                const chartContainer = document.createElement('div');
-                chartContainer.style.flexGrow = '1';
-                chartContainer.style.display = 'flex';
-                chartContainer.style.flexDirection = 'column';
-                metricContainer.appendChild(chartContainer);
-
-                // Append SVG canvas to the chart container for the plot
-                const svg = d3.select(chartContainer)
+                // Append SVG canvas for the bar chart
+                const svg = d3.select(metricContainer)
                     .append("svg")
-                    .attr("width", plotWidth)
-                    .attr("height", height)
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", `translate(${margin.left},${margin.top})`);
+                    .attr("transform", `translate(${margin.left + iconWidth},${margin.top})`);
 
                 // Set up the x and y scales
                 const x = d3.scaleLinear()
                     .domain(d3.extent(metricData))
-                    .range([0, plotWidth - margin.left - margin.right]);
+                    .range([0, width]);
                 const y = d3.scaleLinear()
                     .range([height, 0])
-                    .domain([0, d3.max(metricData, d => d.length)]);
+                    .domain([0, 0.01]);
 
                 // Create histogram bins
                 const histogram = d3.histogram()
                     .value(d => d)
                     .domain(x.domain())
-                    .thresholds(x.ticks(20)); // Adjust the number of ticks for clarity
+                    .thresholds(x.ticks(40));
 
                 const bins = histogram(metricData);
 
@@ -63,11 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.selectAll("rect")
                     .data(bins)
                     .enter().append("rect")
-                    .attr("x", d => x(d.x0) + 1)
-                    .attr("y", d => y(d.length))
-                    .attr("width", d => x(d.x1) - x(d.x0) - 1)
+                    .attr("x", 1)
+                    .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
+                    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
-                    .attr("fill", "#424242");
+                    .style("fill", "#424242");
 
                 // Add the x Axis
                 svg.append("g")
@@ -76,27 +66,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add the y Axis
                 svg.append("g")
-                    .call(d3.axisLeft(y));
+                    .call(d3.axisLeft(y).tickFormat(""));
 
-                // Append slider to the chart container
+                // Add range slider under the chart
                 const slider = d3.sliderHorizontal()
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
-                    .width(plotWidth - margin.left - margin.right)
+                    .width(width)
                     .default([d3.min(metricData), d3.max(metricData)])
                     .fill('#6b6b6b')
                     .on('onchange', val => {
                         svg.selectAll("rect")
-                            .attr("opacity", d => (d.x0 >= val[0] && d.x1 <= val[1]) ? 1 : 0.2);
+                            .attr("opacity", d => {
+                                const [minValue, maxValue] = val;
+                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
+                            });
                     });
 
-                const sliderSvg = d3.select(chartContainer)
+                const sliderContainer = d3.select(metricContainer)
+                    .append('div')
+                    .attr('class', 'slider-container')
+                    .style('width', width + 'px')
                     .append('svg')
-                    .attr('width', plotWidth)
+                    .attr('width', width + margin.left + margin.right)
                     .attr('height', 50)
                     .append('g')
-                    .attr('transform', 'translate(10, 10)')
+                    .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
                     .call(slider);
+
+                sliderContainer.selectAll('.tick line').remove();
+                sliderContainer.selectAll('.domain').remove();
+                sliderContainer.selectAll('.handle')
+                    .attr('fill', 'rgba(94,134,117,0.85)')
+                    .attr('stroke', 'rgba(94,134,117,0.85)')
+                    .attr('rx', 5)
+                    .attr('ry', 5);
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -105,4 +109,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
