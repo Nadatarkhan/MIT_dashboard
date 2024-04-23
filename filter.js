@@ -91,8 +91,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("text-anchor", "middle")
                     .attr("transform", "rotate(-90)")
                     .attr("x", -height / 2)
-                    .attr("y", -20)
+                    .attr("y", -25)
+                    .style("font-size", "10px")
                     .text("Frequency");
+
+                // Add the y Axis and style tick labels
+                svg.append("g")
+                    .call(d3.axisLeft(y))
+                    .selectAll(".tick text")  // Select all text elements for the ticks
+                    .style("font-size", "5px");  // Set the font size
+
 
                 // Add range slider
                 const slider = d3.sliderHorizontal()
