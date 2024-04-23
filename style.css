@@ -304,7 +304,8 @@ h2 {
     display: flex;
     justify-content: space-between; /* Ensures the title and button container are on opposite ends */
     align-items: center; /* Vertically centers the content */
-    padding: 10px;
+    padding: 40px;
+    padding-left: 40px;
     background-color: #f4f4f4; /* Light grey background */
     width: 100%; /* Ensures the header spans the full width of the viewport */
 }
@@ -312,6 +313,7 @@ h2 {
 .header-buttons {
     display: flex; /* Aligns buttons in a row */
     justify-content: flex-end; /* Aligns buttons to the far right */
+    background-color: #4d4d4d; /* Light grey background */
 }
 
 .header-buttons button {
