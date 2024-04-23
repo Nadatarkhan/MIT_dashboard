@@ -125,7 +125,7 @@ h1 {
     font-size: 25px;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 h2 {
@@ -200,10 +200,10 @@ h2 {
     grid-template-columns: repeat(2, 1fr);
     width: fit-content;
     border: 3px solid #343434;
-    border-radius: 20px;
+    border-radius: 10px;
     background: #343434;
     font-weight: bold;
-    fon-size: 10px;
+    fon-size: 8px;
     color: #343434;
     cursor: pointer;
     padding: 6px 0;
