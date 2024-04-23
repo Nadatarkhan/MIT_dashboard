@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        // Log container dimensions to verify they're being read correctly
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
+
+        // Log to confirm dimensions read by the script
         console.log('Container dimensions:', containerWidth, 'x', containerHeight);
 
         // Define the margins and dimensions for the graph
@@ -11,21 +12,20 @@ document.addEventListener('DOMContentLoaded', function() {
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Log calculated width and height to ensure they're positive and reasonable
+        // Log the calculated dimensions for the SVG content area
         console.log('SVG dimensions:', width, 'x', height);
 
-        // Append the SVG canvas to the container
+        // Append the SVG canvas to the container, ensure the SVG has enough space
         const svg = d3.select(container)
             .append("svg")
-            .attr("width", containerWidth)
-            .attr("height", containerHeight)
+            .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission";
-        let gridFilter = "all";
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all"; // Default grid filter
         let emissionsData;
 
         d3.csv("data/example_data.csv").then(function(data) {
@@ -59,7 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot(variable) {
             selectedVariable = variable;
 
-            const filteredData = emissionsData.filter(d => gridFilter === "all" ? true : (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
+            const filteredData = emissionsData.filter(d => {
+                if (gridFilter === "all") return true;
+                return gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization";
+            });
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
