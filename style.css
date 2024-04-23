@@ -62,18 +62,29 @@ body, html {
 }
 
 .icon-container {
-    position: relative;
+    position: relative; /* Ensure this is set if not already */
+    text-align: center; /* Center the text horizontally */
+    display: inline-block; /* Makes the container fit its content */
+    margin: 20px; /* Provide spacing around each icon container */
+}
+
+.icon-container img {
+    display: block; /* Ensures the image doesn't have extra space around it */
+    margin: 0 auto; /* Center the image within the container */
+    width: 80px; /* Example width, adjust as needed */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .icon-label {
     position: absolute;
     width: 100%;
-    top: 0; /* Adjust this value based on where you want the label */
+    top: -20px; /* Move the label above the icon */
     left: 0;
     font-size: 10px;
     font-weight: bold;
     color: black; /* Change the color as needed */
     text-align: center; /* Center the text over the image */
+    white-space: nowrap; /* Prevents the label from wrapping */
 }
 
 .circle {
