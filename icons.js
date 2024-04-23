@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const text = document.createElement('span');
             text.textContent = labels[i];
+            text.style.fontSize = '10px'; // Set the font size for the text labels
 
             circleLabelContainer.appendChild(circle);
             circleLabelContainer.appendChild(text);
