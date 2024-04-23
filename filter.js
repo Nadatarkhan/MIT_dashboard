@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 50, bottom: 30, left: 60 },
-            iconWidth = 50, // Width for the icons
-            width = container.clientWidth - margin.left - margin.right - iconWidth,
+        const margin = { top: 10, right: 50, bottom: 30, left: 100 }, // Adjust left margin to create space for the icon
+            width = container.clientWidth - margin.left - margin.right,
             height = 60 - margin.top - margin.bottom;
 
         // Load the data
@@ -12,26 +11,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
             metrics.forEach((metric, index) => {
                 const metricData = data.map(d => parseFloat(d[metric]));
+                const iconPath = `metrics/${metric.toLowerCase()}.png`; // Path to the icon image
 
                 // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
+                metricContainer.style.alignItems = 'center';
 
-                // Append icon to each container
+                // Create and append the icon for each metric
                 const icon = document.createElement('img');
-                icon.src = `metrics/${metric.toLowerCase()}.png`; // Assuming the names match the metrics
-                icon.style.width = `${iconWidth}px`;
+                icon.src = iconPath;
+                icon.style.width = '40px'; // Set the icon size
                 icon.style.height = 'auto';
+                icon.style.marginRight = '10px'; // Space between the icon and the chart
                 metricContainer.appendChild(icon);
 
-                // Append SVG canvas for the bar chart
+                // Append SVG canvas to the container
                 const svg = d3.select(metricContainer)
                     .append("svg")
-                    .attr("width", width + margin.left + margin.right)
+                    .attr("width", width)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", `translate(${margin.left + iconWidth},${margin.top})`);
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
 
                 // Set up the x and y scales
                 const x = d3.scaleLinear()
@@ -48,6 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     .thresholds(x.ticks(40));
 
                 const bins = histogram(metricData);
+
+                // Compute y scale domain based on the maximum bin count
+                y.domain([0, d3.max(bins, d => d.length)]);
 
                 // Append bars for histogram
                 svg.selectAll("rect")
@@ -83,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                     });
 
+                // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
                     .append('div')
                     .attr('class', 'slider-container')
