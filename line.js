@@ -4,17 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
+        // Define the margins and dimensions for the graph
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 },
+            width = containerWidth - margin.left - margin.right,
+            height = containerHeight - margin.top - margin.bottom;
+
+        // Append the SVG canvas to the container
         const svg = d3.select(container)
             .append("svg")
             .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
             .append("g")
-            .attr("transform", `translate(${60},${20})`);
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        const x = d3.scaleTime().range([0, containerWidth - 90]);
-        const y = d3.scaleLinear().range([containerHeight - 70, 0]);
-
-        let selectedVariable = "emission";
-        let gridFilter = "all";
+        const x = d3.scaleTime().range([0, width]);
+        const y = d3.scaleLinear().range([height, 0]);
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all"; // Default grid filter
         let emissionsData;
 
         d3.csv("data/example_data.csv").then(function(data) {
@@ -58,41 +63,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
-            svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${containerHeight - 70})`).call(d3.axisBottom(x));
-            svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
+                .selectAll("text")
+                .style("font-size", "18px"); // Increased font size for axis numbers
 
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
+                .selectAll("text")
+                .style("font-size", "18px"); // Increased font size for axis numbers
+
+            // Make inner lines light grey
+            svg.selectAll(".x-axis line, .y-axis line")
+                .style("stroke", "#ddd"); // Very light grey for grid lines
+
+            svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d[selectedVariable]));
 
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
-
             const scenarioGroups = d3.groups(filteredData, d => d.scenario);
             scenarioGroups.forEach(([key, values]) => {
-                const path = svg.append("path")
+                svg.append("path")
                     .datum(values)
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 4)
+                    .attr("stroke-width", 4) // Increased line weight even more
                     .attr("d", line);
-
-                path.on("mouseover", function(event, d) {
-                    tooltip.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltip.html(`Scenario: ${d.scenario}<br>${selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1)}: ${d[selectedVariable]}`)
-                        .style("left", (event.pageX) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                    .on("mouseout", function(d) {
-                        tooltip.transition()
-                            .duration(500)
-                            .style("opacity", 0);
-                    });
             });
         }
     } else {
