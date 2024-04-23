@@ -46,6 +46,8 @@ body, html {
     justify-content: space-around;
     padding: 10px 0;
     padding-top: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 .icon-description h2 {
