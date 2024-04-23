@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
             iconWidth = 50, // Width for the icon
             spaceBetweenIconAndPlot = 10, // Space between the icon and the plot
             width = container.clientWidth - margin.left - margin.right - iconWidth - spaceBetweenIconAndPlot,
-            height = 60 - margin.top - margin.bottom;
+            height = 60 - margin.top - margin.bottom,
+            sliderHeight = 50; // Height for the slider
 
         console.log("Container width: " + container.clientWidth + ", Plot width: " + width); // Log dimensions for debugging
 
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
                 metricContainer.style.alignItems = 'center';
+                metricContainer.style.height = `${height + sliderHeight}px`; // Container must fit both plot and slider
 
                 // Insert icon for each metric
                 const iconImg = document.createElement('img');
@@ -30,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconImg.style.marginRight = `${spaceBetweenIconAndPlot}px`; // Space between icon and plot
                 metricContainer.appendChild(iconImg);
 
-                // Append SVG canvas to the container
+                // Append SVG canvas for the plot
                 const svg = d3.select(metricContainer)
                     .append("svg")
                     .attr("width", width)
-                    .attr("height", height + margin.top + margin.bottom)
+                    .attr("height", height)
                     .append("g")
                     .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -65,30 +67,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
-                    .style("fill", "#424242")
-                    .on("mouseover", function(event, d) {
-                        const tooltip = d3.select("body").append("div")
-                            .attr("class", "tooltip")
-                            .style("opacity", 0);
-                        tooltip.html(`<strong>Range:</strong> ${d.x0.toFixed(2)} - ${d.x1.toFixed(2)}<br><strong>Frequency:</strong> ${d.length}`)
-                            .style("left", (event.pageX) + "px")
-                            .style("top", (event.pageY - 28) + "px");
-                        tooltip.transition()
-                            .duration(200)
-                            .style("opacity", 0.8);
-                    })
-                    .on("mouseout", function() {
-                        d3.select(".tooltip").remove();
+                    .style("fill", "#424242");
+
+                // Append slider container below the plot
+                const sliderContainer = d3.select(metricContainer)
+                    .append('div')
+                    .attr('class', 'slider-container')
+                    .style('width', `${width}px`)
+                    .style('height', `${sliderHeight}px`)
+                    .append('svg')
+                    .attr('width', width)
+                    .attr('height', sliderHeight)
+                    .append('g')
+                    .attr('transform', `translate(${margin.left}, 10)`); // Slight adjustment to align properly
+
+                // Initialize the slider
+                const slider = d3.sliderHorizontal()
+                    .min(d3.min(metricData))
+                    .max(d3.max(metricData))
+                    .width(width - margin.left - margin.right)
+                    .default([d3.min(metricData), d3.max(metricData)])
+                    .fill('#6b6b6b')
+                    .on('onchange', val => {
+                        svg.selectAll("rect")
+                            .attr("opacity", d => {
+                                const [minValue, maxValue] = val;
+                                return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
+                            });
                     });
 
-                // Add the x Axis
-                svg.append("g")
-                    .attr("transform", `translate(0,${height})`)
-                    .call(d3.axisBottom(x));
-
-                // Add the y Axis
-                svg.append("g")
-                    .call(d3.axisLeft(y).tickFormat(""));  // No tick labels on the y-axis
+                // Append slider to its container
+                sliderContainer.call(slider);
             });
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
