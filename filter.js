@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.append("g")
                     .call(d3.axisLeft(y))
                     .selectAll(".tick text")  // Select all text elements for the ticks
-                    .style("font-size", "5px");  // Set the font size
+                    .style("font-size", "0px");  // Set the font size
 
 
                 // Add range slider
