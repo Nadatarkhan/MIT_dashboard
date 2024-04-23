@@ -4,9 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             iconWidth = 50, // Width for the icon
             spaceBetweenIconAndPlot = 10, // Space between the icon and the plot
+            sliderHeight = 50, // Fixed height for sliders
             width = container.clientWidth - margin.left - margin.right - iconWidth - spaceBetweenIconAndPlot,
-            height = 60 - margin.top - margin.bottom,
-            sliderHeight = 50; // Height for the slider
+            totalHeight = 100, // Total height for each metric container including the plot and slider
+            plotHeight = totalHeight - sliderHeight - margin.top - margin.bottom; // Height available for the plot
 
         console.log("Container width: " + container.clientWidth + ", Plot width: " + width); // Log dimensions for debugging
 
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 metricContainer.classList.add('metric-container');
                 metricContainer.style.display = 'flex';
                 metricContainer.style.alignItems = 'center';
-                metricContainer.style.height = `${height + sliderHeight}px`; // Container must fit both plot and slider
+                metricContainer.style.height = `${totalHeight}px`; // Set the total height for the metric container
 
                 // Insert icon for each metric
                 const iconImg = document.createElement('img');
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const svg = d3.select(metricContainer)
                     .append("svg")
                     .attr("width", width)
-                    .attr("height", height)
+                    .attr("height", plotHeight)
                     .append("g")
                     .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -45,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .domain(d3.extent(metricData))
                     .range([0, width]);
                 const y = d3.scaleLinear()
-                    .range([height, 0])
+                    .range([plotHeight, 0])
                     .domain([0, 0.01]); // Adjust the domain as needed
 
                 // Create histogram bins
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("x", 1)
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-                    .attr("height", d => height - y(d.length))
+                    .attr("height", d => plotHeight - y(d.length))
                     .style("fill", "#424242");
 
                 // Append slider container below the plot
@@ -106,4 +107,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
