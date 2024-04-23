@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     .style('width', width + 'px')
                     .append('svg')
                     .attr('width', width + margin.left + margin.right)
-                    .attr('height', 40)
+                    .attr('height', 50)
                     .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+                    .attr('transform', 'translate(' + margin.left + ',' + 5 + ')')
                     .call(slider);
 
                 // Style slider
