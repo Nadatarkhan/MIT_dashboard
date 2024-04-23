@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Roboto, sans-serif;
-    overflow: hidden;
+    overflow: hidden; /* Prevent scrollbars on the body */
 }
 
 .container {
@@ -14,20 +14,27 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    height: 60%; /* Top container takes 60% of the screen height */
+    height: 60%; /* Adjusted to take 60% of the screen height */
+}
+
+.visual {
+    border: 1px solid #e0e0e0; /* Subtle border color */
+    box-sizing: border-box;
+    overflow: hidden; /* Ensuring content doesn't overflow */
 }
 
 .visual1 {
-    flex: 6; /* Takes 60% of the width within its container */
+    flex: 6; /* Takes 60% of the width */
+    display: flex;
     flex-direction: column;
-    padding: 0 20px;
-    overflow: hidden;
+    padding: 10px;
+    overflow: hidden; /* Prevents internal overflow */
 }
 
 .visual2 {
-    flex: 4; /* Takes 40% of the width within its container */
-    overflow: visible;
-    background-color: #f4f4f4;
+    flex: 4; /* Takes 40% of the width */
+    background-color: #f4f4f4; /* Light grey background */
+    overflow: auto; /* Allows scrolling if content overflows */
 }
 
 .icon-row {
@@ -37,10 +44,9 @@ body, html {
 }
 
 .icon-description h2, .icon-description p {
-    background-color: #c9c9c9;
-    margin-left: 10px;
-    margin-top: 0;
+    background-color: #c9c9c9; /* Light grey background */
     padding: 5px;
+    margin: 0 10px; /* Adds horizontal padding */
 }
 
 .icon-container {
@@ -66,16 +72,16 @@ body, html {
 }
 
 .graph-container {
-    width: 100%;
-    overflow: visible;
+    flex-grow: 1;
+    overflow: visible; /* Changed to visible for testing overflow issues */
 }
 
 .bottom-visual {
-    flex: 4; /* Bottom container takes 40% of the screen height */
+    flex: 4; /* Takes 40% of the screen height */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    overflow: visible; /* Ensure content is visible */
 }
 
 .bottom-visual img {
@@ -122,7 +128,7 @@ h1, h2 {
     color: #fff;
 }
 
-/* Styles for the range slider */
+/* Slider styles */
 .slider-container {
     margin-top: 5px;
 }
@@ -146,9 +152,7 @@ h1, h2 {
     transform: translateY(-10px);
 }
 
-/*///////// TOGGLE BAR///////////////
- */
-
+/* Toggle bar styles */
 .toggle-wrapper {
     margin-top: 2px;
     margin-bottom: 5px;
