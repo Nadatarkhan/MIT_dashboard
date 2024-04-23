@@ -39,7 +39,7 @@ body, html {
 
 .icon-description p {
     background-color: #c9c9c9; /* Light gray background for clarity */
-    padding: 5px;
+    padding: 1px;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
     font-size: 12px;
     font-style: italic;
@@ -84,7 +84,7 @@ body, html {
 }
 
 .bottom-visual img {
-    width: 70%;
+    width: 60%;
     height: auto;
     display: block;
     margin-top: 10px; /* Adds space between the text and the image */
