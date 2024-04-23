@@ -69,12 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
                 .selectAll("text")
                 .style("font-size", "18px"); // Increased font size for axis numbers
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("x", width / 2)
+                .attr("y", 40) // Positioning the label below the x-axis
+                .style("text-anchor", "middle")
+                .text("Year"); // Text label for the x-axis
 
             svg.append("g")
                 .attr("class", "y-axis")
                 .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
                 .selectAll("text")
                 .style("font-size", "18px"); // Increased font size for axis numbers
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)") // Rotating text for vertical axis
+                .attr("x", -height / 2)
+                .attr("y", -50) // Positioning left of the y-axis
+                .style("text-anchor", "middle")
+                .text("Value"); // Text label for the y-axis
 
             // Make inner lines light grey
             svg.selectAll(".x-axis line, .y-axis line")
