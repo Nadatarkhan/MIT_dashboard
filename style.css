@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Roboto, sans-serif;
-    overflow: hidden; /* Prevent scrollbars on the body */
+    overflow: hidden;
 }
 
 .container {
@@ -14,27 +14,21 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    height: 60%; /* Adjusted to take 60% of the screen height */
-}
-
-.visual {
-    border: 1px solid #e0e0e0; /* Subtle border color */
-    box-sizing: border-box;
-    overflow: hidden; /* Ensuring content doesn't overflow */
+    height: 60%; /* Top container takes 60% of the screen height */
 }
 
 .visual1 {
-    flex: 6; /* Takes 60% of the width */
+    flex: 6; /* Adjusted for better width utilization */
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    overflow: hidden; /* Prevents internal overflow */
+    padding: 10px; /* Reduced to ensure more space for content */
+    overflow: hidden; /* Ensures no content spills out */
 }
 
 .visual2 {
-    flex: 4; /* Takes 40% of the width */
-    background-color: #f4f4f4; /* Light grey background */
+    flex: 4; /* Maintains 40% width utilization */
     overflow: auto; /* Allows scrolling if content overflows */
+    background-color: #f4f4f4;
 }
 
 .icon-row {
@@ -44,9 +38,9 @@ body, html {
 }
 
 .icon-description h2, .icon-description p {
-    background-color: #c9c9c9; /* Light grey background */
+    background-color: #c9c9c9;
     padding: 5px;
-    margin: 0 10px; /* Adds horizontal padding */
+    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
 .icon-container {
@@ -73,20 +67,24 @@ body, html {
 
 .graph-container {
     flex-grow: 1;
-    overflow: visible; /* Changed to visible for testing overflow issues */
+    width: 100%; /* Ensures SVG uses the maximum available width */
+    overflow: visible; /* Changed to visible to test overflow issues */
 }
 
 .bottom-visual {
-    flex: 4; /* Takes 40% of the screen height */
+    flex: 4; /* Bottom container takes 40% of the screen height */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible; /* Ensure content is visible */
+    overflow: visible; /* Ensures content is visible and not cut off */
+    padding: 10px;
 }
 
 .bottom-visual img {
     width: 70%;
     height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .scaled-image {
@@ -128,7 +126,7 @@ h1, h2 {
     color: #fff;
 }
 
-/* Slider styles */
+/* Styles for the range slider */
 .slider-container {
     margin-top: 5px;
 }
@@ -152,7 +150,9 @@ h1, h2 {
     transform: translateY(-10px);
 }
 
-/* Toggle bar styles */
+/*///////// TOGGLE BAR///////////////
+ */
+
 .toggle-wrapper {
     margin-top: 2px;
     margin-bottom: 5px;
