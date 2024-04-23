@@ -1,15 +1,16 @@
-document.addEventListener('DOMContentLoaded', function() {
+documedocument.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
+        // Get the exact dimensions of the container
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Adjusted margins to provide more space for axis labels
+        // Adjust margins to ensure all elements are visible within the container
         const margin = { top: 20, right: 50, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Ensure the SVG takes full space of the container
+        // Create the SVG canvas adjusted to fit within the container properly
         const svg = d3.select(container)
             .append("svg")
             .attr("width", containerWidth)
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             updatePlot(selectedVariable);
 
-            // Button interaction setup
+            // Setup for button interactions
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
                     updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
@@ -56,17 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot(variable) {
             selectedVariable = variable;
 
-            // Filter data based on the grid filter
-            const filteredData = emissionsData.filter(d => {
-                if (gridFilter === "all") return true;
-                return gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization";
-            });
+            // Filter data as per grid filter
+            const filteredData = emissionsData.filter(d => gridFilter === "all" ? true : (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
 
-            // Set domains for the scales
+            // Set scale domains
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
-            // Update axes
+            // Update and redraw axes and lines
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
             svg.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
