@@ -350,6 +350,11 @@ h2 {
     color: #333; /* Dark grey color for the title text */
 }
 
+input[type='radio']:checked + label {
+    background-color: #983076;  // Example color when selected
+}
+
+
 
 
 
