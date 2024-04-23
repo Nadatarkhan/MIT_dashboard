@@ -304,7 +304,8 @@ h2 {
     display: flex;
     justify-content: space-between; /* Ensures the title and button container are on opposite ends */
     align-items: center; /* Vertically centers the content */
-    padding: 20px 10px 10px 10px; /* Adds more padding to the top */
+    padding: 10px; /* Adds more padding to the top */
+    padding-top: 30px;
     background-color: #f4f4f4; /* Light grey background */
     width: 100%; /* Ensures the header spans the full width of the viewport */
 }
