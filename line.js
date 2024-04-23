@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+        // Adjusted margins to provide more space for axis labels
+        const margin = { top: 20, right: 50, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Append the SVG canvas to the container
+        // Ensure the SVG takes full space of the container
         const svg = d3.select(container)
             .append("svg")
             .attr("width", containerWidth)
