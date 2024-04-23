@@ -62,17 +62,7 @@ body, html {
 }
 
 .icon-container {
-    position: relative; /* Essential for positioning the labels */
-    display: inline-block; /* Allows the container to fit to the content */
-    margin: 20px; /* Adds space around each icon container for better spacing */
-    text-align: center; /* Centers the icon and label within the container */
-}
-
-.icon-container img {
-    width: 80px; /* Preset width to maintain icon size */
-    height: auto; /* Ensures the height adjusts proportionally */
-    display: block; /* Removes extra line space below the image */
-    margin: 0 auto; /* Centers the image horizontally */
+    position: relative;
 }
 
 .icon-label {
@@ -86,7 +76,6 @@ body, html {
     text-align: center; /* Centers the label text horizontally */
     padding-bottom: 5px; /* Adds a small space between the label and the icon */
 }
-
 
 .circle {
     width: 15px;
