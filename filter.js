@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
-            width = container.clientWidth - margin.left - margin.right,
+            containerWidth = container.clientWidth,
+            iconWidth = 50, // Width for the icon
+            spaceBetweenIconAndPlot = 10, // Space between the icon and the plot
+            adjustedWidth = containerWidth - margin.left - margin.right - iconWidth - spaceBetweenIconAndPlot,
             height = 60 - margin.top - margin.bottom;
 
         // Load the data
@@ -15,11 +18,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
+                metricContainer.style.display = 'flex';
+                metricContainer.style.alignItems = 'center';
+
+                // Insert icon for each metric
+                const iconImg = document.createElement('img');
+                iconImg.src = `metrics/${metric.toLowerCase()}.png`; // Dynamic path based on the metric
+                iconImg.style.width = `${iconWidth}px`; // Set the width of the icon
+                iconImg.style.height = 'auto'; // Maintain aspect ratio
+                iconImg.style.marginRight = `${spaceBetweenIconAndPlot}px`; // Space between icon and plot
+                metricContainer.appendChild(iconImg);
 
                 // Append SVG canvas to the container
                 const svg = d3.select(metricContainer)
                     .append("svg")
-                    .attr("width", width + margin.left + margin.right)
+                    .attr("width", adjustedWidth + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
                     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -27,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Set up the x and y scales
                 const x = d3.scaleLinear()
                     .domain(d3.extent(metricData))
-                    .range([0, width]);
+                    .range([0, adjustedWidth]);
                 const y = d3.scaleLinear()
                     .range([height, 0])
                     .domain([0, 0.01]); // Adjust the domain as needed
@@ -82,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.append("text")
                     .attr("class", "x-axis-label")
                     .attr("text-anchor", "middle")
-                    .attr("x", width / 2)
+                    .attr("x", adjustedWidth / 2)
                     .attr("y", height + 30)
                     .text(metric);
 
@@ -98,15 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add the y Axis and style tick labels
                 svg.append("g")
                     .call(d3.axisLeft(y))
-                    .selectAll(".tick text")  // Select all text elements for the ticks
+                    .selectAll(".tick text")
                     .style("font-size", "0px");  // Set the font size
-
 
                 // Add range slider
                 const slider = d3.sliderHorizontal()
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
-                    .width(width)
+                    .width(adjustedWidth)
                     .default([d3.min(metricData), d3.max(metricData)]) // Set default range
                     .fill('#6b6b6b') // Color of the slider track
                     .on('onchange', val => {
@@ -121,9 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const sliderContainer = d3.select(metricContainer)
                     .append('div')
                     .attr('class', 'slider-container')
-                    .style('width', width + 'px')
+                    .style('width', `${adjustedWidth + margin.left + margin.right}px`)
                     .append('svg')
-                    .attr('width', width + margin.left + margin.right)
+                    .attr('width', adjustedWidth + margin.left + margin.right)
                     .attr('height', 50)
                     .append('g')
                     .attr('transform', 'translate(' + margin.left + ',' + 7 + ')')
