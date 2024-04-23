@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+        const margin = { top: 20, right: 70, bottom: 30, left: 70 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
