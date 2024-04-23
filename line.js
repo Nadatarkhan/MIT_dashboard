@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerHeight = container.clientHeight;
 
         // Define the margins and dimensions for the graph
-        const margin = { top: 30, right: 60, bottom: 60, left: 60 },
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -66,24 +66,19 @@ document.addEventListener('DOMContentLoaded', function() {
             svg.append("g")
                 .attr("class", "x-axis")
                 .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .append("text")
-                .attr("class", "axis-label")
-                .attr("x", width / 2)
-                .attr("y", 40)
-                .style("text-anchor", "middle")
-                .text("Year");
+                .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
+                .selectAll("text")
+                .style("font-size", "18px"); // Increased font size for axis numbers
 
             svg.append("g")
                 .attr("class", "y-axis")
-                .call(d3.axisLeft(y))
-                .append("text")
-                .attr("class", "axis-label")
-                .attr("transform", "rotate(-90)")
-                .attr("x", -height / 2)
-                .attr("y", -50)
-                .style("text-anchor", "middle")
-                .text("Value");
+                .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
+                .selectAll("text")
+                .style("font-size", "18px"); // Increased font size for axis numbers
+
+            // Make inner lines light grey
+            svg.selectAll(".x-axis line, .y-axis line")
+                .style("stroke", "#ddd"); // Very light grey for grid lines
 
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -98,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 3)
+                    .attr("stroke-width", 4) // Increased line weight even more
                     .attr("d", line);
             });
         }
