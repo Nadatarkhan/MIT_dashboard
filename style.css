@@ -65,6 +65,17 @@ body, html {
     position: relative;
 }
 
+.icon-label {
+    position: absolute;
+    width: 100%;
+    top: 0; /* Adjust this value based on where you want the label */
+    left: 0;
+    font-size: 10px;
+    font-weight: bold;
+    color: black; /* Change the color as needed */
+    text-align: center; /* Center the text over the image */
+}
+
 .circle {
     width: 15px;
     height: 15px;

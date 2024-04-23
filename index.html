@@ -32,16 +32,16 @@
             <div class="expandable-bar"></div>
             <div class="icon-row">
                 <!-- Icon instances -->
-                <div class="icon-container" data-field="retrofit"><img src="icons/1.png" alt="Building retrofits and PV"></div>
-                <div class="icon-container" data-field="district"><img src="icons/2.png" alt="District Energy Systems"></div>
-                <div class="icon-container" data-field="schedules"><img src="icons/3.png" alt="Temperature Control"></div>
-                <div class="icon-container" data-field="lab"><img src="icons/4.png" alt="Energy-efficient labs"></div>
-                <div class="icon-container" data-field="deepgeo"><img src="icons/5.png" alt="Deep Geothermal"></div>
-                <div class="icon-container" data-field="nuclear"><img src="icons/6.png" alt="Nuclear Batteries"></div>
-                <div class="icon-container" data-field="ess"><img src="icons/7.png" alt="Energy storage + EVs"></div>
-                <div class="icon-container" data-field="ccs"><img src="icons/8.png" alt="Local Carbon Capture"></div>
-                <div class="icon-container" id="icon9"><img src="icons/9.png" alt="Icon 9"></div>
-                <div class="icon-container" data-field="grid"><img src="icons/10.png" alt="Future grid emissions"></div>
+                <div class="icon-container" data-field="retrofit"><img src="icons/1.png" alt="Building retrofits and PV"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="district"><img src="icons/2.png" alt="District Energy Systems"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="schedules"><img src="icons/3.png" alt="Temperature Control"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="lab"><img src="icons/4.png" alt="Energy-efficient labs"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="deepgeo"><img src="icons/5.png" alt="Deep Geothermal"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="nuclear"><img src="icons/6.png" alt="Nuclear Batteries"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="ess"><img src="icons/7.png" alt="Energy storage + EVs"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="ccs"><img src="icons/8.png" alt="Local Carbon Capture"><span class="icon-label"></span></div>
+                <div class="icon-container" id="icon9"><img src="icons/9.png" alt="Icon 9"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="grid"><img src="icons/10.png" alt="Future grid emissions"><span class="icon-label"></span></div>
             </div>
             <div class="controls-container">
                 <div class="toggle-wrapper">
@@ -96,10 +96,17 @@
             document.getElementById('popupOverlay').style.display = 'none';
         };
         document.getElementById('popupOverlay').style.display = 'flex';
+
+        // Set icon labels based on alt text
+        document.querySelectorAll('.icon-container img').forEach(img => {
+            const label = img.nextElementSibling;
+            label.textContent = img.alt; // Set the icon label text
+        });
     });
 </script>
 </body>
 </html>
+
 
 
 
