@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
     if (container) {
-        const margin = { top: 10, right: 50, bottom: 30, left: 60 },
-            iconWidth = 50, // Width for the icons
-            width = container.clientWidth - margin.left - margin.right - iconWidth,
+        const margin = { top: 10, right: 50, bottom: 30, left: 50 },
+            width = container.clientWidth - margin.left - margin.right,
             height = 60 - margin.top - margin.bottom;
 
         // Load the data
@@ -16,22 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
-                metricContainer.style.display = 'flex';
 
-                // Append icon to each container
-                const icon = document.createElement('img');
-                icon.src = `metrics/${metric.toLowerCase()}.png`; // Assuming the names match the metrics
-                icon.style.width = `${iconWidth}px`;
-                icon.style.height = 'auto';
-                metricContainer.appendChild(icon);
-
-                // Append SVG canvas for the bar chart
+                // Append SVG canvas to the container
                 const svg = d3.select(metricContainer)
                     .append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", `translate(${margin.left + iconWidth},${margin.top})`);
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
 
                 // Set up the x and y scales
                 const x = d3.scaleLinear()
@@ -39,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .range([0, width]);
                 const y = d3.scaleLinear()
                     .range([height, 0])
-                    .domain([0, 0.01]);
+                    .domain([0, 0.01]); // Adjust the domain as needed
 
                 // Create histogram bins
                 const histogram = d3.histogram()
@@ -49,6 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const bins = histogram(metricData);
 
+                // Compute y scale domain based on the maximum bin count
+                y.domain([0, d3.max(bins, d => d.length)]);
+
                 // Append bars for histogram
                 svg.selectAll("rect")
                     .data(bins)
@@ -57,7 +51,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("transform", d => `translate(${x(d.x0)},${y(d.length)})`)
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
-                    .style("fill", "#424242");
+                    .style("fill", "#424242")
+                    .on("mouseover", function(event, d) {
+                        const tooltip = d3.select("body").append("div")
+                            .attr("class", "tooltip")
+                            .style("opacity", 0);
+
+                        tooltip.html(`<strong>Range:</strong> ${d.x0.toFixed(2)} - ${d.x1.toFixed(2)}<br><strong>Frequency:</strong> ${d.length}`)
+                            .style("left", (event.pageX) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", 0.8);
+                    })
+                    .on("mouseout", function() {
+                        d3.select(".tooltip").remove();
+                    });
 
                 // Add the x Axis
                 svg.append("g")
@@ -66,15 +76,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add the y Axis
                 svg.append("g")
-                    .call(d3.axisLeft(y).tickFormat(""));
+                    .call(d3.axisLeft(y).tickFormat(""));  // No tick labels on the y-axis
 
-                // Add range slider under the chart
+                // Add axis titles
+                svg.append("text")
+                    .attr("class", "x-axis-label")
+                    .attr("text-anchor", "middle")
+                    .attr("x", width / 2)
+                    .attr("y", height + 30)
+                    .text(metric);
+
+                svg.append("text")
+                    .attr("class", "y-axis-label")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "rotate(-90)")
+                    .attr("x", -height / 2)
+                    .attr("y", -20)
+                    .style("font-size", "10px")
+                    .text("Frequency");
+
+                // Add the y Axis and style tick labels
+                svg.append("g")
+                    .call(d3.axisLeft(y))
+                    .selectAll(".tick text")  // Select all text elements for the ticks
+                    .style("font-size", "0px");  // Set the font size
+
+
+                // Add range slider
                 const slider = d3.sliderHorizontal()
                     .min(d3.min(metricData))
                     .max(d3.max(metricData))
                     .width(width)
-                    .default([d3.min(metricData), d3.max(metricData)])
-                    .fill('#6b6b6b')
+                    .default([d3.min(metricData), d3.max(metricData)]) // Set default range
+                    .fill('#6b6b6b') // Color of the slider track
                     .on('onchange', val => {
                         svg.selectAll("rect")
                             .attr("opacity", d => {
@@ -83,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                     });
 
+                // Append slider to container
                 const sliderContainer = d3.select(metricContainer)
                     .append('div')
                     .attr('class', 'slider-container')
@@ -91,9 +126,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', 50)
                     .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + 10 + ')')
+                    .attr('transform', 'translate(' + margin.left + ',' + 7 + ')')
                     .call(slider);
 
+                // Style slider
                 sliderContainer.selectAll('.tick line').remove();
                 sliderContainer.selectAll('.domain').remove();
                 sliderContainer.selectAll('.handle')
@@ -109,5 +145,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
 
