@@ -224,3 +224,40 @@ h1, h2 {
     transition: color 0.3s;
 }
 
+
+
+/*POP UP */
+
+#popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* High z-index to ensure it's on top */
+}
+
+#popupBox {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    width: 80%;
+    max-width: 400px; /* Adjust size as needed */
+    text-align: center;
+}
+
+#popupOverlay button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #b937b8;
+    color: white;
+}

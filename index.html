@@ -5,28 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decarbonization Pathways</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Icon Fonts: Optional -->
-    <!-- Add this in your HTML <head> section -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <!-- Pheasant Buttons -->
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-reset.css" type="text/css" media="all" />
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons-layout.css" type="text/css" media="all" />
     <link rel="stylesheet" href="./dist/css/pheasant-demure-buttons.css" type="text/css" media="all" />
-    <!-- Include D3.js if your line.js depends on it -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Include d3-simple-slider library -->
     <script src="https://unpkg.com/d3-simple-slider"></script>
-    <script src="line.js" defer></script> <!-- Ensure line.js is loaded after the document -->
-    <script src="filter.js" defer></script> <!-- Include filter.js for visual 2 -->
-    <script src="icons.js" defer></script> <!-- Include icons.js for handling icon click -->
 </head>
 <body>
 <h1>Carbon Reduction Pathways for the MIT Campus</h1>
 <div class="container">
-    <div class="top-container"> <!-- New container for the top visuals -->
+    <div class="top-container">
         <div class="visual visual1">
-            <!-- Title and Subtitle above the icons -->
             <div class="icon-description">
                 <h2>Technologies</h2>
                 <p>Click the icons to choose the implementation pathways</p>
@@ -45,36 +36,23 @@
                 <div class="icon-container" id="icon9"><img src="icons/9.png" alt="Icon 9"></div>
                 <div class="icon-container" id="icon10"><img src="icons/10.png" alt="Icon 10"></div>
             </div>
-            <!-- Toggle button below the icons -->
             <div class="toggle-wrapper">
                 <input type="radio" id="all" name="gridFilter" value="all" checked>
                 <label for="all">All</label>
-
                 <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
                 <label for="decarbonized">Decarbonized</label>
-
                 <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
                 <label for="notDecarbonized">Not Decarbonized</label>
             </div>
-            <!-- Graph Container - Adjusted to hold the D3 line chart -->
-            <div class="graph-container" id="lineChart">
-                <!-- Line chart from line.js will be inserted here -->
-            </div>
+            <div class="graph-container" id="lineChart"></div>
             <div class="button-container">
                 <button class="pheasant-demure-button solid light hover blink">Emissions</button>
                 <button class="pheasant-demure-button solid light hover blink">Cost</button>
             </div>
         </div>
-        <div class="visual visual2" id="innovation_plot">
-            <div class="icon-description">
-                <h2>Metrics</h2>
-                <p>Filter the metrics to explore the different scenarios</p>
-            </div>
-            <!-- Placeholder for innovation plot visualizations -->
-        </div>
-    </div> <!-- End of top-container -->
+        <div class="visual visual2" id="innovation_plot"></div>
+    </div>
     <div class="visual bottom-visual">
-        <!-- Visual 3 Container -->
         <div class="icon-description">
             <h2>Technology Schematic</h2>
             <p>Layout of technologies implemented</p>
@@ -82,11 +60,30 @@
         <img src="images/diagram.png" alt="Diagram" class="scaled-image">
     </div>
 </div>
+
+<!-- Popup Overlay -->
+<div id="popupOverlay">
+    <div id="popupBox">
+        <p>Welcome to the Decarbonization Pathways Dashboard!</p>
+        <button onclick="closePopup()">Explore Pathways!</button>
+    </div>
+</div>
+
+<script src="line.js" defer></script>
+<script src="filter.js" defer></script>
+<script src="icons.js" defer></script>
 <script>
     // Initialize or configure any additional scripts if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        window.closePopup = function() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        };
+        document.getElementById('popupOverlay').style.display = 'flex';
+    });
 </script>
 </body>
 </html>
+
 
 
 
