@@ -266,19 +266,6 @@ h1 {
 }
 
 
-/*Metric Icons */
-
-.metric-container {
-    display: flex;
-    align-items: center;  // Align items vertically
-}
-
-.metric-icon {
-    margin-right: 10px;  // Space between icon and plot
-    width: 20px;  // Set the width of the icon
-    height: 20px;  // Set the height of the icon
-}
-
 
 
 
