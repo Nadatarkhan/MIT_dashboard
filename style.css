@@ -273,23 +273,28 @@ h1, h2 {
 
 /*Expanding Bar in Viz 1 */
 
-.visual1 .icon-description #expandableTrigger {
-    cursor: pointer;
-    padding: 5px;
-    background-color: #ccc;
-    text-align: center;
-    border-radius: 5px;
-    margin-top: 5px;
+.expandable-bar {
+    height: 0;
+    background-color: #f1f1f1; /* Light grey background */
+    overflow: hidden;
+    transition: height 0.3s ease;
 }
 
-/* Initial state of the container to be expanded */
-.visual1.expanded {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10; /* Make sure it covers other content */
-    background-color: white; /* Optional */
-    opacity: 85%;
+.expanded {
+    height: 200px; /* Adjust based on desired expanded height */
 }
+
+.icon-description .expand-arrow {
+    cursor: pointer;
+    float: right; /* Places the arrow at the right corner of the description bar */
+}
+
+/* Additional styles to align the description */
+.icon-description {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: #d9d9d9;
+}
+

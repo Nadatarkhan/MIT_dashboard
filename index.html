@@ -18,11 +18,15 @@
 <div class="container">
     <div class="top-container">
         <div class="visual visual1">
-            <div class="icon-description" onclick="expandSection()">
+            <div class="icon-description">
                 <h2>Technologies</h2>
-                <p>Click here or the icons to choose the implementation pathways</p>
+                <p>Click the icons to choose the implementation pathways</p>
+                <span class="material-icons expand-arrow" onclick="toggleExpansion()">expand_more</span>
             </div>
+            <div class="expandable-bar"></div> <!-- Expandable bar that will slide down -->
+            <!-- Icon Row -->
             <div class="icon-row">
+                <!-- Icon instances -->
                 <div class="icon-container" id="icon1"><img src="icons/1.png" alt="Icon 1"></div>
                 <div class="icon-container" id="icon2"><img src="icons/2.png" alt="Icon 2"></div>
                 <div class="icon-container" id="icon3"><img src="icons/3.png" alt="Icon 3"></div>
@@ -33,6 +37,7 @@
                 <div class="icon-container" id="icon8"><img src="icons/8.png" alt="Icon 8"></div>
                 <div class="icon-container" id="icon9"><img src="icons/9.png" alt="Icon 9"></div>
                 <div class="icon-container" id="icon10"><img src="icons/10.png" alt="Icon 10"></div>
+                <!-- Add more icons as needed -->
             </div>
             <div class="controls-container">
                 <div class="toggle-wrapper">
@@ -79,9 +84,9 @@
 <script src="filter.js" defer></script>
 <script src="icons.js" defer></script>
 <script>
-    function expandSection() {
-        var visual1 = document.querySelector('.visual1');
-        visual1.classList.toggle('expanded');
+    function toggleExpansion() {
+        var expandableBar = document.querySelector('.expandable-bar');
+        expandableBar.classList.toggle('expanded');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -93,8 +98,6 @@
 </script>
 </body>
 </html>
-
-
 
 
 
