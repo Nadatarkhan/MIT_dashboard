@@ -9,6 +9,7 @@ body, html {
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: 0 20px; /* Added left and right padding */
 }
 
 .top-container {
@@ -18,15 +19,15 @@ body, html {
 }
 
 .visual1 {
-    flex: 6; /* Adjusted for better width utilization */
+    flex: 6; /* Takes 60% of the width within its container */
     display: flex;
     flex-direction: column;
-    padding: 10px; /* Reduced to ensure more space for content */
-    overflow: hidden; /* Ensures no content spills out */
+    padding: 0 20px;
+    overflow: hidden;
 }
 
 .visual2 {
-    flex: 4; /* Maintains 40% width utilization */
+    flex: 4; /* Takes 40% of the width within its container */
     overflow: auto; /* Allows scrolling if content overflows */
     background-color: #f4f4f4;
 }
@@ -39,8 +40,9 @@ body, html {
 
 .icon-description h2, .icon-description p {
     background-color: #c9c9c9;
+    margin-left: 10px;
+    margin-top: 0;
     padding: 5px;
-    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
 .icon-container {
@@ -66,9 +68,8 @@ body, html {
 }
 
 .graph-container {
-    flex-grow: 1;
-    width: 100%; /* Ensures SVG uses the maximum available width */
-    overflow: visible; /* Changed to visible to test overflow issues */
+    width: 100%;
+    overflow: visible;
 }
 
 .bottom-visual {
@@ -76,15 +77,12 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible; /* Ensures content is visible and not cut off */
     padding: 10px;
 }
 
 .bottom-visual img {
-    width: 60%;
+    width: 70%;
     height: auto;
-    display: block;
-    margin: 0 auto;
 }
 
 .scaled-image {
@@ -95,7 +93,7 @@ body, html {
 h1, h2 {
     text-align: left;
     color: black;
-    font-size: 16px;
+    font-size: 26px;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
 }
@@ -176,7 +174,7 @@ h1, h2 {
 
 .toggleContainer::before {
     content: '';
-    position: absolute;
+    position:absolute;
     width: 50%;
     height: 100%;
     left: 0;
@@ -213,4 +211,3 @@ h1, h2 {
     color: #343434;
     transition: color 0.3s;
 }
-
