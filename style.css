@@ -46,8 +46,8 @@ body, html {
     justify-content: space-around;
     padding: 10px 0;
     padding-top: 30px;
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 .icon-description h2 {
@@ -79,6 +79,7 @@ body, html {
     font-weight: bold;
     color: black;
     text-align: center;  /* Ensures text is centered if multiple lines are needed */
+    padding-bottom: 5px;  /* Add more padding if needed */
 }
 
 .circle {
