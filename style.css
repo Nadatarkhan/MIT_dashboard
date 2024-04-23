@@ -290,13 +290,14 @@ h1, h2 {
 }
 
 
-/*TOPBAR*/
+/*TOPBAR*//
 
 .top-bar {
     display: flex;
-    justify-content: flex-end; /* Align buttons to the left */
-    padding: 10px; /* Add some space inside the header */
-    background-color: #f4f4f4; /* Light grey background */
+    justify-content: space-between; /* Ensures the title and buttons are on opposite ends */
+    align-items: center; /* Vertically centers the items */
+    padding: 10px;
+    background-color: #f4f4f4;
 }
 
 .top-bar button {
