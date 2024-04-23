@@ -83,6 +83,12 @@ body, html {
     background-color: #8c318b;  /* Change to your desired "selected" color */
 }
 
+.controls-container label {
+    font-size: 6px; /* Example size, adjust as needed */
+    cursor: pointer;
+}
+
+
 .icon-row img {
     height: 50px;
 }
