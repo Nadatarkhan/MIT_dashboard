@@ -48,8 +48,8 @@ body, html {
     color: #000;
     background-color: #c9c9c9; /* Light gray background */
     text-align: left;
-    margin-bottom: 2px;
-    margin-top: 1; /* Eliminates margin above the h2 */
+    margin-bottom: 0px;
+    margin-top: 0; /* Eliminates margin above the h2 */
 }
 
 .icon-description p {
