@@ -2,13 +2,14 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Roboto, sans-serif;
-    overflow: hidden;
+    overflow: hidden; /* Prevents unwanted scrolling on the entire page */
 }
 
 .container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: 10px; /* Padding around the entire dashboard for better spacing */
 }
 
 .top-container {
@@ -20,26 +21,31 @@ body, html {
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Changed to row to align elements side by side */
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
 }
 
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px; /* Space between controls and the chart */
+}
+
+.toggle-wrapper, .button-container {
+    margin-bottom: 10px; /* Space between control groups */
+}
+
+.graph-container {
+    flex-grow: 1; /* Allows the graph to take up the remaining space */
+    overflow: hidden;
+}
+
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
-    display: flex;
-    flex-direction: column; /* Aligns children vertically */
-    overflow: hidden; /* Adjust as needed */
-    padding: 10px; /* Ensure there's padding to not cut off content */
+    overflow: hidden; /* Removed scrolling */
     background-color: #f4f4f4;
 }
-
-.metric-container {
-    flex-grow: 1;
-    margin: 5px; /* Adjust this as needed */
-    overflow: hidden; /* Hide overflow to prevent clipping */
-}
-
 
 .icon-row {
     display: flex;
@@ -47,10 +53,12 @@ body, html {
     padding: 10px 0;
 }
 
-.icon-description h2, .icon-description p {
-    background-color: #c9c9c9;
-    padding: 5px;
+.icon-description p {
+    background-color: #d9d9d9; /* Light gray background for clarity */
+    padding: 1px;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
+    font-size: 12px;
+    font-style: italic;
 }
 
 .icon-container {
@@ -75,18 +83,12 @@ body, html {
     height: 50px;
 }
 
-.graph-container {
-    flex-grow: 1;
-    width: 100%; /* Ensures SVG uses the maximum available width */
-    overflow: visible; /* Changed to visible to test overflow issues */
-}
-
 .bottom-visual {
-    flex: 4; /* Bottom container takes 45% of the screen height */
+    flex: 4.5; /* Bottom container takes 45% of the screen height */
     display: flex;
-    flex-direction: column; /* Changes layout to vertical */
-    justify-content: flex-start; /* Aligns content to the top */
-    align-items: center; /* Centers content horizontally */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     padding: 10px;
     width: 100%; /* Ensures it takes full container width */
 }
@@ -99,12 +101,11 @@ body, html {
 }
 
 .icon-description {
-    text-align: left; /* Center aligns the text */
+    text-align: left;
     width: 100%; /* Ensures the description spans the full width of the container */
-    background-color: #c9c9c9; /* Example background color for visibility */
+    background-color: #d9d9d9; /* Light gray background for clarity */
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
-
 
 .scaled-image {
     width: 100%;
@@ -186,7 +187,6 @@ h1, h2 {
     border-radius: 20px;
     background: #343434;
     font-weight: bold;
-    fon-size: 10px;
     color: #343434;
     cursor: pointer;
     padding: 6px 0;
@@ -196,7 +196,7 @@ h1, h2 {
 
 .toggleContainer::before {
     content: '';
-    position: absolute;
+    position:absolute;
     width: 50%;
     height: 100%;
     left: 0;
@@ -233,6 +233,7 @@ h1, h2 {
     color: #343434;
     transition: color 0.3s;
 }
+
 
 /*POP UP */
 

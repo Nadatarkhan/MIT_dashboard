@@ -36,14 +36,22 @@
                 <div class="icon-container" id="icon9"><img src="icons/9.png" alt="Icon 9"></div>
                 <div class="icon-container" id="icon10"><img src="icons/10.png" alt="Icon 10"></div>
             </div>
-            <div class="toggle-wrapper">
-                <input type="radio" id="all" name="gridFilter" value="all" checked>
-                <label for="all">All</label>
-                <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
-                <label for="decarbonized">Decarbonized</label>
-                <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
-                <label for="notDecarbonized">Not Decarbonized</label>
+            <!-- New container for controls -->
+            <div class="controls-container">
+                <div class="toggle-wrapper">
+                    <input type="radio" id="all" name="gridFilter" value="all" checked>
+                    <label for="all">All</label>
+                    <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
+                    <label for="decarbonized">Decarbonized</label>
+                    <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
+                    <label for="notDecarbonized">Not Decarbonized</label>
+                </div>
+                <div class="button-container">
+                    <button class="pheasant-demure-button solid light hover blink">Emissions</button>
+                    <button class="pheasant-demure-button solid light hover blink">Cost</button>
+                </div>
             </div>
+            <!-- Graph Container for the D3 line chart -->
             <div class="graph-container" id="lineChart"></div>
             <div class="button-container">
                 <button class="pheasant-demure-button solid light hover blink">Emissions</button>
