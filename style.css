@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Roboto, sans-serif;
-    overflow: hidden; /* Prevents unwanted scrolling on the entire page */
+    overflow: hidden;
 }
 
 .container {
@@ -27,7 +27,7 @@ body, html {
 
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
-    overflow: hidden; /* Removed scrolling */
+    overflow: hidden; /* Prevents unwanted overflow */
     background-color: #f4f4f4;
 }
 
@@ -37,12 +37,10 @@ body, html {
     padding: 10px 0;
 }
 
-.icon-description p {
-    background-color: #d9d9d9; /* Light gray background for clarity */
-    padding: 1px;
+.icon-description h2, .icon-description p {
+    background-color: #c9c9c9;
+    padding: 5px;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
-    font-size: 12px;
-    font-style: italic;
 }
 
 .icon-container {
@@ -70,15 +68,15 @@ body, html {
 .graph-container {
     flex-grow: 1;
     width: 100%; /* Ensures SVG uses the maximum available width */
-    overflow: visible; /* Allows for potential overflow during resizing */
+    overflow: visible; /* Changed to visible to test overflow issues */
 }
 
 .bottom-visual {
-    flex: 4.5; /* Bottom container takes 45% of the screen height */
+    flex: 4; /* Bottom container takes 45% of the screen height */
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column; /* Changes layout to vertical */
+    justify-content: flex-start; /* Aligns content to the top */
+    align-items: center; /* Centers content horizontally */
     padding: 10px;
     width: 100%; /* Ensures it takes full container width */
 }
@@ -91,11 +89,12 @@ body, html {
 }
 
 .icon-description {
-    text-align: left;
+    text-align: center; /* Center aligns the text */
     width: 100%; /* Ensures the description spans the full width of the container */
-    background-color: #d9d9d9; /* Light gray background for clarity */
+    background-color: #c9c9c9; /* Example background color for visibility */
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
+
 
 .scaled-image {
     width: 100%;
@@ -186,7 +185,7 @@ h1, h2 {
 
 .toggleContainer::before {
     content: '';
-    position:absolute;
+    position: absolute;
     width: 50%;
     height: 100%;
     left: 0;
@@ -224,8 +223,6 @@ h1, h2 {
     transition: color 0.3s;
 }
 
-
-
 /*POP UP */
 
 #popupOverlay {
@@ -261,3 +258,4 @@ h1, h2 {
     background-color: #b937b8;
     color: white;
 }
+
