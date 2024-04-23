@@ -300,16 +300,21 @@ h2 {
 
 /*TOPBAR*//
 
-.header-buttons {
+.header {
     display: flex;
-    justify-content: right;
-    align-items: center;
+    justify-content: space-between; /* This will push the h1 to the left and the buttons to the right */
+    align-items: center; /* This will vertically center align the items in the header */
     padding: 10px;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Light grey background, adjust as needed */
 }
 
-.header-buttons:hover {
-    background-color: #d0d0d0; /* Darker grey on hover for visual feedback */
+.header-buttons button {
+    margin-left: 10px; /* Space between buttons */
 }
+
+.header h1 {
+    margin: 0; /* Removes default margin */
+}
+
 
 
