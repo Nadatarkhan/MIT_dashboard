@@ -289,12 +289,4 @@ h1, h2 {
     float: right; /* Places the arrow at the right corner of the description bar */
 }
 
-/* Additional styles to align the description */
-.icon-description {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    background-color: #d9d9d9;
-}
 
