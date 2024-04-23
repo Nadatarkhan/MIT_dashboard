@@ -302,12 +302,11 @@ h2 {
 
 .header-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     padding: 10px;
     background-color: #f4f4f4;
 }
-
 
 .header-buttons:hover {
     background-color: #d0d0d0; /* Darker grey on hover for visual feedback */
