@@ -74,7 +74,7 @@ body, html {
     font-size: 10px;
     font-weight: bold;
     color: black;
-    text-align: center; /* Centers the label text horizontally */
+    text-align: left; /* Centers the label text horizontally */
     padding-bottom: 5px; /* Adds a small space between the label and the icon */
 }
 
