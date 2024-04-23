@@ -304,8 +304,7 @@ h2 {
     display: flex;
     justify-content: space-between; /* Ensures the title and button container are on opposite ends */
     align-items: center; /* Vertically centers the content */
-    padding: 40px;
-    padding-left: 40px;
+    padding: 10px;
     background-color: #f4f4f4; /* Light grey background */
     width: 100%; /* Ensures the header spans the full width of the viewport */
 }
@@ -313,16 +312,24 @@ h2 {
 .header-buttons {
     display: flex; /* Aligns buttons in a row */
     justify-content: flex-end; /* Aligns buttons to the far right */
-    background-color: #4d4d4d; /* Light grey background */
 }
 
 .header-buttons button {
     margin-left: 10px; /* Adds space between buttons */
+    background-color: #363636; /* Example: Blue background for buttons */
+    color: white; /* Text color for buttons */
+    border: none; /* Removes the default border */
+    padding: 10px 15px; /* Padding inside the button */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Cursor changes to pointer when hovering over the button */
 }
 
 .header h1 {
     margin: 0; /* Removes default margin to avoid any unwanted space */
+    padding-left: 20px; /* Adds left padding to the title */
+    color: #333; /* Dark grey color for the title text */
 }
+
 
 
 
