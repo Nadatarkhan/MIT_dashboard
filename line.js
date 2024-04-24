@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 context.restore();
                 drawAxis();
-                drawGridLines(filteredData);
             }
 
             function drawAxis() {
@@ -99,38 +98,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top + height);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -50, -y(d) + 3);
+                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -70, -height / 2 + 20); // Y-axis Label
+                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -100, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
-            }
 
-            function drawGridLines(data) {
-                // Horizontal grid lines
-                context.save();
-                context.translate(margin.left, margin.top);
-                y.ticks(10).forEach(d => {
-                    context.beginPath();
-                    context.moveTo(0, y(d));
-                    context.lineTo(width, y(d));
-                    context.strokeStyle = 'lightgrey';
-                    context.stroke();
-                });
-
-                // Vertical grid lines
-                x.ticks().forEach(d => {
-                    context.beginPath();
-                    context.moveTo(x(d), 0);
-                    context.lineTo(x(d), -height);
-                    context.strokeStyle = 'lightgrey';
-                    context.stroke();
-                });
-                context.restore();
+                // Remove vertical grid lines
+                // context.save();
+                // context.translate(margin.left, margin.top);
+                // x.ticks().forEach(d => {
+                //     context.beginPath();
+                //     context.moveTo(x(d), 0);
+                //     context.lineTo(x(d), -height);
+                //     context.strokeStyle = 'lightgrey';
+                //     context.stroke();
+                // });
+                // context.restore();
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -139,3 +127,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
