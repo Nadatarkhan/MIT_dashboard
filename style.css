@@ -40,14 +40,12 @@ body, html {
     overflow: hidden; /* Hide overflow to prevent clipping */
 }
 
-
 .icon-row {
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
-    padding-top: 30px;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding: 10px 40px 30px 40px; /* Adjusted for proper spacing */
+    align-items: center; /* Centers content vertically */
+    flex-wrap: wrap; /* Allows items to wrap in smaller screens */
 }
 
 .icon-description h2 {
@@ -66,48 +64,51 @@ body, html {
 
 .icon-container {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers icons and labels horizontally */
 }
 
 .icon-label {
     position: absolute;
-    width: auto;  /* Allows the label to take only as much width as needed */
-    white-space: nowrap;  /* Ensures the label stays on one line */
-    bottom: 100%;  /* Position above the icon */
-    left: 50%;  /* Center relative to the icon */
-    transform: translateX(-50%);  /* Adjust horizontally to truly center */
+    width: auto; /* Allows the label to take only as much width as needed */
+    white-space: nowrap; /* Ensures the label stays on one line */
+    bottom: 100%; /* Position above the icon */
+    left: 50%; /* Center relative to the icon */
+    transform: translateX(-50%); /* Adjust horizontally to truly center */
     font-size: 10px;
     font-weight: bold;
     color: black;
-    text-align: center;  /* Ensures text is centered if multiple lines are needed */
-    padding-bottom: 7px;  /* padding between icons and labels */
+    text-align: center; /* Ensures text is centered if multiple lines are needed */
+    padding-bottom: 7px; /* Padding between icons and labels */
 }
 
-.circle {
-    width: 15px;
-    height: 15px;
-    background-color: #ccc;
-    border-radius: 50%;
-    margin-top: 5px;
+/* Enhancing radio button visibility and customization */
+input[type='radio'] {
+    opacity: 1;  /* Make sure radio buttons are visible if previously hidden */
+    position: relative; /* Ensure position is set if needed for alignment */
+    cursor: pointer;  /* Makes it clear the radio button is clickable */
+    margin-right: 5px; /* Spacing between the radio button and label */
 }
 
-.circle + span {
-    font-size: 8px;
-    margin-left: 2px;
-    white-space: nowrap;
+/* Styling for labels next to radio buttons to improve usability */
+.radio-group label {
+    cursor: pointer; /* Indicates that the label is clickable */
+    display: inline-block; /* Ensures proper alignment with the radio button */
+    margin-right: 10px; /* Space between each radio button group */
+    color: #333; /* Sets the text color for readability */
+    font-size: 12px; /* Sets an appropriate font size for labels */
 }
 
-.circle-radio:checked + .circle-visual {
-    background-color: #8c318b;  /* Change to your desired "selected" color */
+/* Styling for checked radio buttons to indicate active selection */
+input[type='radio']:checked + label {
+    color: #983076;  /* Changes the label color to indicate selection */
+    font-weight: bold; /* Makes the label text bold when selected */
 }
 
 .controls-container label {
     font-size: 10px; /* Example size, adjust as needed */
     cursor: pointer;
-}
-
-
-.icon-row img {
-    height: 50px;
 }
 
 .graph-container {
@@ -140,31 +141,29 @@ body, html {
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
 
-
 .scaled-image {
     width: 100%;
     height: auto;
 }
 
-h1 {
+h1, h2 {
     text-align: left;
     color: black;
-    font-size: 25px;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
+}
+
+h1 {
+    font-size: 25px;
     padding-top: 10px;
 }
 
 h2 {
-    text-align: left;
-    color: black;
     font-size: 18px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
 }
 
 .tooltip {
-    position: absolute;
+    position:absolute;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -189,7 +188,6 @@ h2 {
     color: #fff;
 }
 
-/* Styles for the range slider */
 .slider-container {
     margin-top: 5px;
 }
@@ -213,9 +211,6 @@ h2 {
     transform: translateY(-10px);
 }
 
-/*///////// TOGGLE BAR///////////////
- */
-
 .toggle-wrapper {
     margin-top: 2px;
     margin-bottom: 5px;
@@ -230,7 +225,7 @@ h2 {
     border-radius: 10px;
     background: #343434;
     font-weight: bold;
-    fon-size: 8px;
+    font-size: 8px;
     color: #343434;
     cursor: pointer;
     padding: 6px 0;
@@ -278,8 +273,6 @@ h2 {
     transition: color 0.3s;
 }
 
-/*POP UP */
-
 #popupOverlay {
     position: fixed;
     top: 0;
@@ -314,9 +307,6 @@ h2 {
     color: white;
 }
 
-
-/*Expanding Bar in Viz 1 */
-
 .expandable-bar {
     height: 0;
     background-color: #f1f1f1; /* Light grey background */
@@ -332,8 +322,6 @@ h2 {
     cursor: pointer;
     float: right; /* Places the arrow at the right corner of the description bar */
 }
-
-/*TOPBAR*//
 
 .header {
     display: flex;
@@ -366,12 +354,6 @@ h2 {
     padding-left: 20px; /* Adds left padding to the title */
     color: #333; /* Dark grey color for the title text */
 }
-
-input[type='radio']:checked + label {
-    background-color: #983076;  // Example color when selected
-}
-
-
 
 
 

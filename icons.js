@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
         district: null,
         nuclear: null,
         deepgeo: null,
-        renovate: null,
         ess: null,
         ccs: null
     };
 
+    // Function to create radio buttons under each icon
     function createCircles(container) {
-        removeCircles(); // Ensure no duplicates
+        removeCircles(); // First, remove any existing circles to prevent duplicates
 
         const circleContainer = document.createElement('div');
         circleContainer.classList.add('circles-container');
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         circleContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
-        const values = ["business", "partial", "full"];  // Filter values
+        const values = ["baseline", "partial", "full"];  // Mapping the labels to filter values
 
         for (let i = 0; i < 3; i++) {
             const circleLabelContainer = document.createElement('div');
@@ -40,24 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const circle = document.createElement('input');
             circle.type = 'radio';
-            circle.name = container.dataset.field;  // Unique name based on data field
+            circle.name = container.dataset.field;  // Each set of radios is grouped by data-field
             circle.value = values[i];
             circle.style.marginRight = '5px';
 
             const text = document.createElement('span');
             text.textContent = labels[i];
-            text.style.fontSize = '10px'; // Set the font size for the text labels
-            text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
+            text.style.fontSize = '10px';
+            text.style.fontFamily = 'Roboto, sans-serif';
 
             circleLabelContainer.appendChild(circle);
             circleLabelContainer.appendChild(text);
             circleContainer.appendChild(circleLabelContainer);
 
-            // Add the change event listener to the radio button
-            circle.addEventListener('change', function(e) {
-                if (e.target.checked) {
-                    // Update the filter state object
-                    currentFilters[container.dataset.field] = statusMapping[e.target.value];
+            // Event listener for changes in radio button selection
+            circle.addEventListener('change', function() {
+                if (this.checked) {
+                    currentFilters[container.dataset.field] = this.value;
                     applyFiltersAndUpdatePlot();
                 }
             });
@@ -66,29 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
         container.appendChild(circleContainer);
     }
 
+    // Function to remove all circles from the DOM
     function removeCircles() {
         const existingContainers = document.querySelectorAll('.circles-container');
         existingContainers.forEach(container => container.remove());
     }
 
+    // Function to apply filters based on selected radio buttons and update the plot
     function applyFiltersAndUpdatePlot() {
-        // Apply all current filters to the data and update the plot
-        // Assuming `data` is the dataset and `updatePlot` is the plotting function
-        const filteredData = data.filter(row => {
+        const filteredData = window.emissionsData.filter(row => {
             return Object.keys(currentFilters).every(field => {
                 const filterValue = currentFilters[field];
                 return filterValue === null || row[field] === filterValue;
             });
         });
 
-        updatePlot(filteredData);  // Update the plot with the filtered data
+        // Assuming `updatePlot` is a globally accessible function that updates the visualization
+        window.updatePlot(filteredData);
     }
 
-    // Function to update the plot, implemented elsewhere
-    function updatePlot(filteredData) {
-        // Your existing updatePlot function that redraws the plot with new data
-    }
-
+    // Iterates over each icon container to attach click event handlers
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
             if (container.contains(container.querySelector('.circles-container'))) {

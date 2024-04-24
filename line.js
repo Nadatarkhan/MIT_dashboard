@@ -21,20 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all"; // Default grid filter
 
-        // Global state for current filters, assuming there is a direct mapping
-        window.currentFilters = {
-            grid: null,
-            retrofit: null,
-            schedules: null,
-            lab: null,
-            district: null,
-            nuclear: null,
-            deepgeo: null,
-            renovate: null,
-            ess: null,
-            ccs: null
-        };
-
         // Load data and then apply initial filters and draw plot
         d3.csv("data/example_data.csv").then(function(data) {
             window.emissionsData = data.map(d => ({
@@ -54,18 +40,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 ccs: d.ccs
             }));
 
-            window.updatePlot(selectedVariable);
+            updatePlot(selectedVariable);
 
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
-                    window.updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
+                    updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
                 });
             });
 
             document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
                 input.addEventListener('change', function() {
                     gridFilter = this.value;
-                    window.updatePlot(selectedVariable);
+                    updatePlot(selectedVariable);
                 });
             });
 
