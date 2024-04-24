@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Updating plot");
                 const filteredData = emissionsData.filter(d => d.implementation === implementationLevel);
 
+                console.log("Filtered Data for", implementationLevel, ":", filteredData);
+
                 if (filteredData.length === 0) {
                     console.log("No data found for the selected implementation level:", implementationLevel);
                     return;
@@ -102,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.restore();
                 drawAxis();
             }
+
 
 
             function drawAxis() {
