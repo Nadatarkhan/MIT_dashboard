@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const dpi = window.devicePixelRatio;
 
-        const containerWidth = container.clientWidth - 200;
-        const containerHeight = container.clientHeight - 280;
+        const containerWidth = container.clientWidth - 100;
+        const containerHeight = container.clientHeight - 200;
 
         const canvas = d3.select(container)
             .append("canvas")
