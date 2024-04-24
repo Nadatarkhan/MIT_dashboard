@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
-                    context.lineWidth = 2; // Adjust line width
+                    context.lineWidth = 0.5; // Adjust line width
                     context.strokeStyle = color(index);
                     context.stroke();
                 });
