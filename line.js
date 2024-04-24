@@ -50,6 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Error loading or processing data:", error);
         });
 
+        d3.csv("data/example_data.csv").then(function(data) {
+            console.log(data);  // Check the parsed data
+            emissionsData = data.map(d => ({
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                cost: +d.Cost,
+                scenario: d.Scenario,
+                grid: d.grid
+            }));
+            updatePlot(selectedVariable);
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
+
         function updatePlot(variable) {
             selectedVariable = variable;
 
