@@ -41,25 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Proceed with plot initialization and event listeners...
             updatePlot(selectedVariable, implementationLevel); // Initial plot update
 
-            // Event listener for baseline button
-            document.getElementById('baseline-btn').addEventListener('click', function() {
-                implementationLevel = "baseline";
-                console.log("Baseline button clicked, implementation level set to:", implementationLevel);
-                updatePlot(selectedVariable, implementationLevel);
-            });
-
-            // Event listener for partial button
-            document.getElementById('partial-btn').addEventListener('click', function() {
-                implementationLevel = "partial";
-                console.log("Partial button clicked, implementation level set to:", implementationLevel);
-                updatePlot(selectedVariable, implementationLevel);
-            });
-
-            // Event listener for full button
-            document.getElementById('full-btn').addEventListener('click', function() {
-                implementationLevel = "full";
-                console.log("Full button clicked, implementation level set to:", implementationLevel);
-                updatePlot(selectedVariable, implementationLevel);
+            // Dynamically create buttons for baseline, partial, and full implementations
+            const implementationButtons = ['baseline', 'partial', 'full'];
+            implementationButtons.forEach(impl => {
+                const button = document.createElement('button');
+                button.textContent = impl;
+                button.addEventListener('click', function() {
+                    implementationLevel = impl;
+                    console.log(implementationLevel.charAt(0).toUpperCase() + implementationLevel.slice(1) + " button clicked, implementation level set to:", implementationLevel);
+                    updatePlot(selectedVariable, implementationLevel);
+                });
+                container.appendChild(button);
             });
 
         }).catch(function(error) {
@@ -134,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
+
 
 
 
