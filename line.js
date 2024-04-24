@@ -81,20 +81,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function drawAxis() {
                 context.save();
-                context.translate(margin.left, margin.top);
+                context.translate(margin.left, height + margin.top);
 
                 // Draw X-axis
-                context.translate(0, height);
-                context.scale(1, -1);
                 x.ticks().forEach(d => {
-                    context.fillText(d3.timeFormat("%Y")(d), x(d), -10);
+                    context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
                 });
 
                 // Draw Y-axis
-                context.scale(1, -1);
+                context.translate(-margin.left, -height - margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -50, -y(d) + 5);
+                    context.fillText(d, -10, y(d) + 3);
                 });
+
+                // Draw X and Y axis lines
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(width, 0);
+                context.moveTo(0, 0);
+                context.lineTo(0, -height);
+                context.strokeStyle = 'black';
+                context.stroke();
 
                 context.restore();
             }
