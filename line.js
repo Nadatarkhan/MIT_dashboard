@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission";
+        let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
 
         d3.csv("data/example_data.csv").then(function(data) {
@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 context.restore();
                 drawAxis();
+                drawGridLines(filteredData);
             }
 
             function drawAxis() {
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 x.ticks().forEach(d => {
                     context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
                 });
+                context.fillText("Year", width / 2, 40); // X-axis Label
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(width, 0);
@@ -97,13 +99,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top + height);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -50, -y(d));
+                    context.fillText(d, -50, -y(d) + 3);
                 });
+                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -70, -height / 2 + 20); // Y-axis Label
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
+                context.restore();
+            }
+
+            function drawGridLines(data) {
+                // Horizontal grid lines
+                context.save();
+                context.translate(margin.left, margin.top);
+                y.ticks(10).forEach(d => {
+                    context.beginPath();
+                    context.moveTo(0, y(d));
+                    context.lineTo(width, y(d));
+                    context.strokeStyle = 'lightgrey';
+                    context.stroke();
+                });
+
+                // Vertical grid lines
+                x.ticks().forEach(d => {
+                    context.beginPath();
+                    context.moveTo(x(d), 0);
+                    context.lineTo(x(d), -height);
+                    context.strokeStyle = 'lightgrey';
+                    context.stroke();
+                });
                 context.restore();
             }
         }).catch(function(error) {
