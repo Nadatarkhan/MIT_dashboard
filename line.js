@@ -126,5 +126,14 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Container not found");
     }
+
+    // Move buttons and toggles under the plot
+    const controlsContainer = document.querySelector('.controls');
+    if (controlsContainer) {
+        const graphContainer = document.querySelector('.graph-container');
+        graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
+    } else {
+        console.error("Controls container not found");
+    }
 });
 
