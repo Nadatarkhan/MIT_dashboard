@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const dpi = window.devicePixelRatio;
 
-        // Increased plot size
-        const containerWidth = container.clientWidth - 100; // Reduced right margin
-        const containerHeight = container.clientHeight - 100; // Reduced bottom margin
+        // Modify these values to change the overall size of the canvas and the plot
+        const containerWidth = container.clientWidth - 200; // Reduced margin for a larger plot area
+        const containerHeight = container.clientHeight - 200; // Reduced margin for a larger plot area
 
         const canvas = d3.select(container)
             .append("canvas")
@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
-        const margin = { top: 40, right: 20, bottom: 40, left: 60 }, // Adjusted margins
+        // Adjusted margins
+        const margin = { top: 40, right: 20, bottom: 40, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
-                    context.lineWidth = 2; // Made lines thicker
+                    context.lineWidth = 2; // Make lines thicker
                     context.strokeStyle = color(index);
                     context.stroke();
                 });
@@ -101,11 +102,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Y-axis
                 context.save();
-                context.translate(margin.left, margin.top + height);
+                context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
                     context.fillText(d, -50, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -100, -height / 2 + 20); // Y-axis label
+                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -100, -height / 2 + 20); // Y-axis label
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
@@ -116,27 +117,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function setupZoom() {
                 const zoom = d3.zoom()
-                    .scaleExtent([1, 5])
+                    .scaleExtent([1, 10])
                     .translateExtent([[0, 0], [width, height]])
                     .on("zoom", zoomed);
 
                 canvas.call(zoom);
 
-                function zoomed(event) {
-                    const transform = event.transform;
+                function zoomed({transform}) {
                     x.range([0, width].map(d => transform.applyX(d)));
                     y.range([height, 0].map(d => transform.applyY(d)));
-                    updatePlot(selectedVariable);
+                    updatePlot(selectedVariable);  // Redraw plot
                 }
             }
 
             function setupTooltip() {
                 canvas.on("mousemove", function(event) {
                     const mouse = d3.pointer(event);
-                    const mouseX = x.invert(mouse[0] - margin.left);
-                    const mouseY = y.invert(mouse[1] - margin.top);
-                    // Calculate closest data point and display tooltip
-                    // This requires more specific logic based on your data structure
+                    // Calculate closest data point
+                    // Display tooltip
                 });
             }
         }).catch(function(error) {
@@ -155,4 +153,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
-
