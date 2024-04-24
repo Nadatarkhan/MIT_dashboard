@@ -39,13 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
-                    implementationLevel = this.getAttribute('data-field');
-                    console.log("Icon clicked, implementation level set to:", implementationLevel);
-                    if (this.querySelector('.implementation-options')) {
-                        this.removeChild(this.querySelector('.implementation-options'));
-                    } else {
-                        showImplementationOptions(this);
-                    }
+                    const scenarioFilter = this.getAttribute('data-field');
+                    console.log("Icon clicked, implementation level set to:", scenarioFilter);
+                    showImplementationOptions(this);
                 });
             });
 
@@ -136,15 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.error("Container not found");
-    }
-
-    const controlsContainer = document.querySelector('.controls-container');
-    if (controlsContainer) {
-        const graphContainer = document.querySelector('.graph-container');
-        graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
-        console.log("Controls moved under the plot");
-    } else {
-        console.error("Controls container not found");
     }
 });
 
