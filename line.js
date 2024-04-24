@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const dpi = window.devicePixelRatio;
 
-        const containerWidth = container.clientWidth - 300;
-        const containerHeight = container.clientHeight - 280;
+        // Increased plot size
+        const containerWidth = container.clientWidth - 100; // Reduced right margin
+        const containerHeight = container.clientHeight - 100; // Reduced bottom margin
 
         const canvas = d3.select(container)
             .append("canvas")
@@ -15,12 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
-        const margin = { top: 40, right: 40, bottom: 60, left: 200 },
+        const margin = { top: 40, right: 20, bottom: 40, left: 60 }, // Adjusted margins
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
+
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
 
@@ -49,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+            setupZoom(); // Setup zoom
+            setupTooltip(); // Setup tooltip
+
             function updatePlot(variable) {
                 const filteredData = emissionsData.filter(d => gridFilter === "all" ||
                     (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau"));
@@ -70,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
-                    context.lineWidth = 0.1;
+                    context.lineWidth = 2; // Made lines thicker
                     context.strokeStyle = color(index);
                     context.stroke();
                 });
@@ -98,27 +103,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top + height);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
+                    context.fillText(d, -50, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
+                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -100, -height / 2 + 20); // Y-axis label
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
+            }
 
-                // Remove vertical grid lines
-                // context.save();
-                // context.translate(margin.left, margin.top);
-                // x.ticks().forEach(d => {
-                //     context.beginPath();
-                //     context.moveTo(x(d), 0);
-                //     context.lineTo(x(d), -height);
-                //     context.strokeStyle = 'lightgrey';
-                //     context.stroke();
-                // });
-                // context.restore();
+            function setupZoom() {
+                const zoom = d3.zoom()
+                    .scaleExtent([1, 5])
+                    .translateExtent([[0, 0], [width, height]])
+                    .on("zoom", zoomed);
+
+                canvas.call(zoom);
+
+                function zoomed(event) {
+                    const transform = event.transform;
+                    x.range([0, width].map(d => transform.applyX(d)));
+                    y.range([height, 0].map(d => transform.applyY(d)));
+                    updatePlot(selectedVariable);
+                }
+            }
+
+            function setupTooltip() {
+                canvas.on("mousemove", function(event) {
+                    const mouse = d3.pointer(event);
+                    const mouseX = x.invert(mouse[0] - margin.left);
+                    const mouseY = y.invert(mouse[1] - margin.top);
+                    // Calculate closest data point and display tooltip
+                    // This requires more specific logic based on your data structure
+                });
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -136,3 +155,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
+
