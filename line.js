@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
         // Set explicit dimensions if needed
-        const containerWidth = container.clientWidth - 100; // Further reduce width
-        const containerHeight = container.clientHeight - 120; // Further reduce height
+        const containerWidth = container.clientWidth - 200; // Further reduce width
+        const containerHeight = container.clientHeight - 320; // Further reduce height
 
         // Create a canvas instead of SVG
         const canvas = d3.select(container)
