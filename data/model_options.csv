@@ -1,0 +1,13 @@
+Tech/Context,Option 1,Option 2,Option 3,Comments
+climate,rcp45,rcp85,n/a,Global climate trajectory
+grid,bau,cheap_ng,decarbonization,"New England grid (""business as usual"", ""cheap natural gas"", ""95 % decarbonization"")"
+renorate,slow,fast,n/a,Renovation rate
+retrofit,baseline,partial,full,energy retrofits
+schedules,baseline,partial,full,"thermostats, schedules, building automation"
+lab,baseline,partial,full,lab retrofits
+district,baseline,partial,full,district heating and cooling system
+nuclear,baseline,partial,full,nuclear microreactors
+deepgeo,baseline,partial,full,deep geothermal
+ccs,baseline,partial,full,carbon capture and storage
+pv,baseline,partial,full,photovoltaics
+ess,baseline,n/a,n/a,NB: only baseline included; partial/full for future work
