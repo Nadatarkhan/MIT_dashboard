@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
 
-    let pvFilter = "baseline"; // Default to 'baseline'
+    let pvFilters = []; // Array to hold the active pv filters
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
@@ -37,21 +37,28 @@ document.addEventListener('DOMContentLoaded', function() {
             pv: d.pv // Assuming pv has 'baseline', 'partial', or 'full'
         }));
 
-        // Attach event listeners to radio buttons for the 'pv' field
+        // Attach event listeners to checkboxes for the 'pv' field
         document.querySelectorAll('input[name="pvFilter"]').forEach(input => {
             input.addEventListener('change', function() {
-                pvFilter = this.value;
-                console.log("PV filter changed to:", pvFilter);
+                const filterValue = this.value;
+                const filterIndex = pvFilters.indexOf(filterValue);
+
+                if (this.checked && filterIndex === -1) {
+                    pvFilters.push(filterValue);
+                } else if (!this.checked && filterIndex !== -1) {
+                    pvFilters.splice(filterIndex, 1);
+                }
+
+                console.log("PV filters updated to:", pvFilters);
                 updatePlot();
             });
         });
 
-        // Initial update plot call
-        updatePlot();
-
         function updatePlot() {
-            console.log("Updating plot for PV filter:", pvFilter);
-            const filteredData = emissionsData.filter(d => d.pv === pvFilter);
+            console.log("Updating plot with PV filters:", pvFilters);
+            const filteredData = pvFilters.length > 0
+                ? emissionsData.filter(d => pvFilters.includes(d.pv))
+                : []; // If no filters are selected, the plot remains empty
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
@@ -81,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // X Axis
             context.save();
             context.translate(margin.left, height + margin.top);
+            context.beginPath();
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
             });
