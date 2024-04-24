@@ -38,9 +38,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     const scenarioFilter = this.getAttribute('data-field');
                     console.log("Icon clicked, implementation level set to:", scenarioFilter);
                     implementationLevel = scenarioFilter;
+                    showImplementationOptions(this);
                     updatePlot();
                 });
             });
+
+            function showImplementationOptions(iconContainer) {
+                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+                const container = document.createElement('div');
+                container.className = 'implementation-options';
+                ['baseline', 'partial', 'full'].forEach((level, index) => {
+                    const label = document.createElement('label');
+                    const radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.name = 'implementationFilter';
+                    radioButton.value = level;
+                    if (index === 0) radioButton.checked = true;
+                    radioButton.onchange = () => {
+                        implementationLevel = radioButton.value;
+                        console.log("Implementation level changed to:", implementationLevel);
+                        updatePlot();
+                    };
+                    label.appendChild(radioButton);
+                    label.appendChild(document.createTextNode(level));
+                    container.appendChild(label);
+                });
+                // Clear existing options before adding new ones
+                const existingOptions = document.querySelector('.implementation-options');
+                if (existingOptions) {
+                    existingOptions.remove();
+                }
+                iconContainer.appendChild(container);
+            }
 
             function updatePlot() {
                 console.log("Updating plot");
@@ -105,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
 
 
