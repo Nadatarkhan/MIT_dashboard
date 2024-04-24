@@ -6,29 +6,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const radioContainer = document.createElement('div');
         radioContainer.classList.add('radio-buttons-container');
-        radioContainer.style.position = 'absolute';
-        radioContainer.style.left = '0';
-        radioContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
         const values = ["baseline", "partial", "full"];  // Filter values
 
         for (let i = 0; i < 3; i++) {
             const radioLabelContainer = document.createElement('label');
-            radioLabelContainer.style.display = 'flex';
-            radioLabelContainer.style.alignItems = 'center';
-            radioLabelContainer.style.marginBottom = '5px';
+            radioLabelContainer.classList.add('radio-label');
 
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = 'filter';  // All radio buttons share the same name
             radio.value = values[i];
-            radio.style.marginRight = '5px';
+            radio.classList.add('radio-input');
 
             const text = document.createElement('span');
             text.textContent = labels[i];
-            text.style.fontSize = '10px'; // Set the font size for the text labels
-            text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
+            text.classList.add('radio-text');
 
             radioLabelContainer.appendChild(radio);
             radioLabelContainer.appendChild(text);
