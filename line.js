@@ -2,10 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
         const dpi = window.devicePixelRatio;
-
         const containerWidth = container.clientWidth - 100;
         const containerHeight = container.clientHeight - 230;
-
         const canvas = d3.select(container)
             .append("canvas")
             .attr("width", containerWidth * dpi)
@@ -23,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
+        let scenarioFilter = ""; // No scenario filter by default
+        let implementationLevel = "baseline"; // Default implementation level
 
         d3.csv("data/example_data.csv").then(function(data) {
             const emissionsData = data.map(d => ({
@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
-                grid: d.grid
+                grid: d.grid,
+                implementation: d.Implementation // Assuming there is a field for implementation level
             }));
 
             updatePlot(selectedVariable);
@@ -49,9 +50,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+            // Setting up scenario filters
+            document.querySelectorAll('.icon-container').forEach(container => {
+                container.addEventListener('click', function() {
+                    scenarioFilter = this.getAttribute('data-field');
+                    showImplementationOptions(this);
+                });
+            });
+
+            function showImplementationOptions(iconContainer) {
+                const container = document.createElement('div');
+                container.className = 'implementation-options';
+                ['baseline', 'partial', 'full'].forEach((level, index) => {
+                    const label = document.createElement('label');
+                    const radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.name = 'implementationFilter';
+                    radioButton.value = level;
+                    if (index === 0) radioButton.checked = true;
+                    radioButton.onchange = () => {
+                        implementationLevel = radioButton.value;
+                        updatePlot(selectedVariable);
+                    };
+                    label.appendChild(radioButton);
+                    label.appendChild(document.createTextNode(["Business as usual", "Partial implementation", "Full implementation"][index]));
+                    container.appendChild(label);
+                });
+                const currentOptions = iconContainer.parentNode.querySelector('.implementation-options');
+                if (currentOptions) iconContainer.parentNode.removeChild(currentOptions);
+                iconContainer.appendChild(container);
+            }
+
             function updatePlot(variable) {
-                const filteredData = emissionsData.filter(d => gridFilter === "all" ||
-                    (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau"));
+                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || (d.scenario === scenarioFilter && d.implementation === implementationLevel)));
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
@@ -80,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             function drawAxis() {
-                // X-axis
                 context.save();
                 context.translate(margin.left, height + margin.top);
                 x.ticks().forEach(d => {
@@ -96,29 +126,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Y-axis
                 context.save();
-                context.translate(margin.left, margin.top + height);
+                context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
                     context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
+                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
-
-                // Remove vertical grid lines
-                // context.save();
-                // context.translate(margin.left, margin.top);
-                // x.ticks().forEach(d => {
-                //     context.beginPath();
-                //     context.moveTo(x(d), 0);
-                //     context.lineTo(x(d), -height);
-                //     context.strokeStyle = 'lightgrey';
-                //     context.stroke();
-                // });
-                // context.restore();
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -136,3 +154,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
+
+
