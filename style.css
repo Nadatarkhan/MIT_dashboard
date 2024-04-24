@@ -68,6 +68,12 @@ body, html {
     position: relative;
 }
 
+.icon-container.active {
+    border: 2px solid #b937b8; // Use a bright color to indicate selection
+background-color: #f4f4f4; // Light background color for active state
+}
+
+
 .icon-label {
     position: absolute;
     width: auto;  /* Allows the label to take only as much width as needed */
@@ -383,4 +389,20 @@ h2 {
 
 input[type='radio']:checked + label {
     background-color: #983076;  // Example color when selected
+}
+
+.implementation-options input[type="radio"] {
+    appearance: none;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.implementation-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.implementation-options input[type="radio"]:checked + label {
+    color: #b937b8; // Highlight the text color when selected
 }
