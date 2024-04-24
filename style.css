@@ -114,6 +114,13 @@ body, html {
     background-color: #f4f4f4; /* Optional: Background color for better visibility */
 }
 
+.controls {
+    flex: 1; /* Adjust the flex value to allocate space properly */
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
 
 .icon-row img {
     height: 50px;
