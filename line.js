@@ -80,26 +80,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             function drawAxis() {
+                // X-axis
                 context.save();
                 context.translate(margin.left, height + margin.top);
-
-                // Draw X-axis
                 x.ticks().forEach(d => {
-                    context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
+                    context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
                 });
+                context.restore();
 
-                // Draw Y-axis
-                context.translate(-margin.left, -height - margin.top);
+                // Y-axis
+                context.save();
+                context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -10, y(d) + 3);
+                    context.fillText(d, -50, y(d)); // Adjusted for alignment
                 });
 
                 // Draw X and Y axis lines
                 context.beginPath();
                 context.moveTo(0, 0);
-                context.lineTo(width, 0);
-                context.moveTo(0, 0);
                 context.lineTo(0, -height);
+                context.moveTo(0, 0);
+                context.lineTo(width, 0);
                 context.strokeStyle = 'black';
                 context.stroke();
 
