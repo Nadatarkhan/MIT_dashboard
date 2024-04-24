@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
+        const margin = { top: 40, right: 40, bottom: 60, left: 200 },
+            width = containerWidth - margin.left - margin.right,
+            height = containerHeight - margin.top - margin.bottom;
+
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
@@ -114,11 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 context.restore();
-                drawAxis();
+                drawAxis(variable);
             }
 
-            function drawAxis() {
-                console.log("Drawing axes");
+            function drawAxis(variable) {
+                console.log("Drawing axes for:", variable);
                 context.save();
                 context.translate(margin.left, height + margin.top);
                 x.ticks().forEach(d => {
