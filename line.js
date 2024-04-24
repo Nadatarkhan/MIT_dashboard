@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const canvas = d3.select(container)
             .append("canvas")
-            .attr("width", containerWidth * dpi)
-            .attr("height", containerHeight * dpi)
-            .style("width", containerWidth + "px")
-            .style("height", containerHeight + "px");
+            .attr("width", containerWidth * dpi) // Multiply by dpi
+            .attr("height", containerHeight * dpi) // Multiply by dpi
+            .style("width", containerWidth + "px") // Set CSS width
+            .style("height", containerHeight + "px"); // Set CSS height
         const context = canvas.node().getContext("2d");
-        context.scale(dpi, dpi);
+        context.scale(dpi, dpi); // Scale all drawings by the DPI
 
-        const margin = { top: 40, right: 40, bottom: 60, left: 200 },
+        const margin = { top: 40, right: 40, bottom: 60, left: 80 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
@@ -60,18 +60,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top);
 
-                const color = d3.scaleOrdinal(d3.schemeCategory10);
-                const line = d3.line()
-                    .x(d => x(d.year))
-                    .y(d => y(d[variable]))
-                    .context(context);
-
                 const scenarioGroups = d3.groups(filteredData, d => d.scenario);
                 scenarioGroups.forEach((group, index) => {
+                    const values = group[1];
+                    const maxEmission = d3.max(values, v => v[variable]);
+                    const gradient = context.createLinearGradient(0, y(0), 0, y(maxEmission));
+                    gradient.addColorStop(0, 'lightblue'); // Lighter color for lower values
+                    gradient.addColorStop(1, 'darkblue'); // Darker color for higher values
+
+                    const line = d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d[variable]))
+                        .context(context);
+
                     context.beginPath();
-                    line(group[1]);
-                    context.lineWidth = 0.5;
-                    context.strokeStyle = color(index);
+                    line(values);
+                    context.lineWidth = 1.5;
+                    context.strokeStyle = gradient;
                     context.stroke();
                 });
 
@@ -100,25 +105,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 y.ticks(10).forEach(d => {
                     context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -100, -height / 2 + 20); // Shift Y-axis label further left
+                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -100, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
-
-                // Remove vertical grid lines
-                // context.save();
-                // context.translate(margin.left, margin.top);
-                // x.ticks().forEach(d => {
-                //     context.beginPath();
-                //     context.moveTo(x(d), 0);
-                //     context.lineTo(x(d), -height);
-                //     context.strokeStyle = 'lightgrey';
-                //     context.stroke();
-                // });
-                // context.restore();
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -127,4 +120,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
