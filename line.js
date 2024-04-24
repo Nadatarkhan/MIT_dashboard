@@ -30,13 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
             data = csvData.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
-                cost: +d.Cost,
                 scenario: d.Scenario,
-                implementation: d.Implementation // Ensure implementation level is assigned from data
+                baseline: d.baseline,
+                partial: d.partial,
+                full: d.full
             }));
 
-            // Check implementation level assigned to each data entry
-            console.log("Implementation levels assigned to data entries:", data.map(d => d.implementation));
+            // Check implementation levels assigned to each data entry
+            console.log("Implementation levels assigned to data entries:", data.map(d => d.baseline, d.partial, d.full));
 
             // Proceed with plot initialization and event listeners...
             updatePlot(selectedVariable, implementationLevel); // Initial plot update
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot(variable, implLevel) {
             console.log("Updating plot");
             // Implement the logic to update the plot based on the selected implementation level
-            const filteredData = data.filter(d => d.implementation === implLevel);
+            const filteredData = data.filter(d => d[implLevel] === implLevel);
 
             if (filteredData.length > 0) {
                 x.domain(d3.extent(filteredData, d => d.year));
@@ -126,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
 
 
