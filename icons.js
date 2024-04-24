@@ -6,10 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Full implementation': 'full'
     };
 
-    // Array of field names from the CSV data
-    const fields = ["retrofit", "district", "schedules", "lab", "deepgeo", "nuclear", "ess", "ccs", "grid"];
-
-    function createCircles(container) {
+    function createCircles(container, selectedScenario) {
         removeCircles(); // Ensure no duplicates
 
         const circleContainer = document.createElement('div');
@@ -32,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
             circle.name = 'filter';  // All radio buttons share the same name
             circle.value = values[i];
             circle.style.marginRight = '5px';
+
+            // If the current scenario matches the selected scenario, create a filled circle
+            if (values[i] === selectedScenario) {
+                circle.checked = true;
+            }
 
             const text = document.createElement('span');
             text.textContent = labels[i];
@@ -62,19 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
-            const field = container.getAttribute('data-field'); // Get the field name associated with the clicked icon
+            const selectedScenario = container.getAttribute('data-field');
             if (container.contains(container.querySelector('.circles-container'))) {
                 removeCircles();
             } else {
-                createCircles(container);
-                // On click, update the plot based on the selected field
-                document.querySelectorAll('input[name="filter"]').forEach(input => {
-                    input.addEventListener('change', function() {
-                        const value = this.value;
-                        updatePlot(field, value);
-                    });
-                });
+                createCircles(container, selectedScenario);
             }
         });
     });
 });
+
