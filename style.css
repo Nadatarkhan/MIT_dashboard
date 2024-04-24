@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Roboto, sans-serif;
-    overflow: hidden; /* May adjust to 'auto' if overflow is needed */
+    overflow: hidden;
 }
 
 .container {
@@ -14,129 +14,153 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    height: 55%; /* Adjusted for correct proportional height */
-}
-
-.visual1, .visual2 {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Adjust if necessary to 'auto' for showing overflow content */
-    padding: 10px;
+    height: 55%; /* Top container takes 55% of the screen height */
 }
 
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
+    display: flex;
+    flex-direction: column;
+    padding: 10px; /* Consistent padding for better content alignment */
+    overflow: hidden; /* Ensures no content spills out */
 }
 
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
-    background-color: #f4f4f4; /* Light gray background for distinction */
+    display: flex;
+    flex-direction: column; /* Aligns children vertically */
+    overflow: hidden; /* Adjust as needed */
+    padding: 10px; /* Ensure there's padding to not cut off content */
+    background-color: #f4f4f4;
 }
 
 .metric-container {
     flex-grow: 1;
-    margin: 5px;
-    overflow: hidden;
+    margin: 5px; /* Adjust this as needed */
+    overflow: hidden; /* Hide overflow to prevent clipping */
 }
+
 
 .icon-row {
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px 40px 30px 40px;
+    padding: 10px 0;
+    padding-top: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
-.icon-description h2, .icon-description p {
+.icon-description h2 {
     background-color: #c9c9c9;
     padding: 5px;
-    margin: 0 10px;
+    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
 .icon-description p {
+    background-color: #c9c9c9;
+    padding: 5px;
     font-size: 14px;
     font-style: italic;
+    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
 .icon-container {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
 }
 
 .icon-label {
     position: absolute;
-    width: auto;
-    white-space: nowrap;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    width: auto;  /* Allows the label to take only as much width as needed */
+    white-space: nowrap;  /* Ensures the label stays on one line */
+    bottom: 100%;  /* Position above the icon */
+    left: 50%;  /* Center relative to the icon */
+    transform: translateX(-50%);  /* Adjust horizontally to truly center */
     font-size: 10px;
     font-weight: bold;
     color: black;
-    text-align: center;
-    padding-bottom: 7px;
+    text-align: center;  /* Ensures text is centered if multiple lines are needed */
+    padding-bottom: 7px;  /* padding between icons and labels */
 }
 
-input[type='radio'] {
-    opacity: 1;
-    cursor: pointer;
-    margin-right: 5px;
+.circle {
+    width: 15px;
+    height: 15px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.circle + span {
+    font-size: 8px;
+    margin-left: 2px;
+    white-space: nowrap;
+}
+
+.circle-radio:checked + .circle-visual {
+    background-color: #8c318b;  /* Change to your desired "selected" color */
 }
 
 .controls-container label {
-    font-size: 10px;
+    font-size: 10px; /* Example size, adjust as needed */
     cursor: pointer;
+}
+
+
+.icon-row img {
+    height: 50px;
 }
 
 .graph-container {
     flex-grow: 1;
-    width: 100%;
-    overflow: visible;
+    width: 100%; /* Ensures SVG uses the maximum available width */
+    overflow: visible; /* Changed to visible to test overflow issues */
 }
 
 .bottom-visual {
-    flex: 4;
+    flex: 4; /* Bottom container takes 45% of the screen height */
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column; /* Changes layout to vertical */
+    justify-content: flex-start; /* Aligns content to the top */
+    align-items: center; /* Centers content horizontally */
     padding: 10px;
-    width: 100%;
+    width: 100%; /* Ensures it takes full container width */
 }
 
 .bottom-visual img {
     width: 60%;
     height: auto;
     display: block;
-    margin-top: 10px;
+    margin-top: 10px; /* Adds space between the text and the image */
 }
 
 .icon-description {
-    text-align: left;
-    width: 100%;
-    background-color: #c9c9c9;
-    padding: 5px;
+    text-align: left; /* Center aligns the text */
+    width: 100%; /* Ensures the description spans the full width of the container */
+    background-color: #c9c9c9; /* Example background color for visibility */
+    padding: 5px; /* Adds padding inside the text container for better spacing */
 }
+
 
 .scaled-image {
     width: 100%;
     height: auto;
 }
 
-h1, h2 {
+h1 {
     text-align: left;
     color: black;
-    font-size: 25px; /* h1 size */
-    font-size: 18px; /* h2 size */
+    font-size: 25px;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
+    padding-top: 10px;
 }
 
-h1 {
-    padding-top: 10px;
+h2 {
+    text-align: left;
+    color: black;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
 }
 
 .tooltip {
@@ -165,6 +189,7 @@ h1 {
     color: #fff;
 }
 
+/* Styles for the range slider */
 .slider-container {
     margin-top: 5px;
 }
@@ -188,6 +213,9 @@ h1 {
     transform: translateY(-10px);
 }
 
+/*///////// TOGGLE BAR///////////////
+ */
+
 .toggle-wrapper {
     margin-top: 2px;
     margin-bottom: 5px;
@@ -202,7 +230,7 @@ h1 {
     border-radius: 10px;
     background: #343434;
     font-weight: bold;
-    font-size: 8px;
+    fon-size: 8px;
     color: #343434;
     cursor: pointer;
     padding: 6px 0;
@@ -250,17 +278,19 @@ h1 {
     transition: color 0.3s;
 }
 
+/*POP UP */
+
 #popupOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1000; /* High z-index to ensure it's on top */
 }
 
 #popupBox {
@@ -270,7 +300,7 @@ h1 {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
     width: 80%;
-    max-width: 600px;
+    max-width: 600px; /* Adjust size as needed */
     text-align: center;
 }
 
@@ -284,53 +314,64 @@ h1 {
     color: white;
 }
 
+
+/*Expanding Bar in Viz 1 */
+
 .expandable-bar {
     height: 0;
-    background-color: #f1f1f1;
+    background-color: #f1f1f1; /* Light grey background */
     overflow: hidden;
     transition: height 0.3s ease;
 }
 
 .expanded {
-    height: 200px;
+    height: 200px; /* Adjust based on desired expanded height */
 }
 
 .icon-description .expand-arrow {
     cursor: pointer;
-    float: right;
+    float: right; /* Places the arrow at the right corner of the description bar */
 }
+
+/*TOPBAR*//
 
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
+    justify-content: space-between; /* Ensures the title and button container are on opposite ends */
+    align-items: center; /* Vertically centers the content */
+    padding: 10px; /* Adds more padding to the top */
     padding-top: 30px;
-    background-color: #f4f4f4;
-    width: 100%;
+    background-color: #f4f4f4; /* Light grey background */
+    width: 100%; /* Ensures the header spans the full width of the viewport */
 }
 
 .header-buttons {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 20px;
+    display: flex; /* Aligns buttons in a row */
+    justify-content: flex-end; /* Aligns buttons to the far right */
+    padding-right: 20px; /* Adds padding to the right side of the buttons */
 }
 
 .header-buttons button {
-    margin-left: 10px;
-    background-color: #363636;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-left: 10px; /* Adds space between buttons */
+    background-color: #363636; /* Example: Blue background for buttons */
+    color: white; /* Text color for buttons */
+    border: none; /* Removes the default border */
+    padding: 10px 15px; /* Padding inside the button */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Cursor changes to pointer when hovering over the button */
 }
 
 .header h1 {
-    margin: 0;
-    padding-left: 20px;
-    color: #333;
+    margin: 0; /* Removes default margin to avoid any unwanted space */
+    padding-left: 20px; /* Adds left padding to the title */
+    color: #333; /* Dark grey color for the title text */
 }
+
+input[type='radio']:checked + label {
+    background-color: #983076;  // Example color when selected
+}
+
+
 
 
 
