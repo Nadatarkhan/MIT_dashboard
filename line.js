@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Implementation levels assigned to data entries:", data.map(d => d.implementation));
 
             // Proceed with plot initialization and event listeners...
-
             updatePlot(selectedVariable, implementationLevel); // Initial plot update
 
             document.querySelectorAll('.icon-container').forEach(container => {
@@ -51,16 +50,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            function showImplementationOptions(iconContainer) {
-                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-                // Implement the logic to show implementation options
-            }
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
 
-            function updatePlot(variable, implLevel) {
-                console.log("Updating plot");
-                // Implement the logic to update the plot based on the selected implementation level
-                const filteredData = data.filter(d => d.implementation === implLevel);
+        function showImplementationOptions(iconContainer) {
+            console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+            // Implement the logic to show implementation options
+        }
 
+        function updatePlot(variable, implLevel) {
+            console.log("Updating plot");
+            // Implement the logic to update the plot based on the selected implementation level
+            const filteredData = data.filter(d => d.implementation === implLevel);
+
+            if (filteredData.length > 0) {
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
 
@@ -85,42 +89,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 context.restore();
                 drawAxis(variable);
+            } else {
+                console.log("No data found for the selected implementation level:", implLevel);
             }
+        }
 
-            function drawAxis(variable) {
-                console.log("Drawing axes for:", variable);
-                context.save();
-                context.translate(margin.left, height + margin.top);
-                x.ticks().forEach(d => {
-                    context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
-                });
-                context.fillText("Year", width / 2, 40); // X-axis Label
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(width, 0);
-                context.strokeStyle = 'black';
-                context.stroke();
-                context.restore();
+        function drawAxis(variable) {
+            console.log("Drawing axes for:", variable);
+            context.save();
+            context.translate(margin.left, height + margin.top);
+            x.ticks().forEach(d => {
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
+            });
+            context.fillText("Year", width / 2, 40); // X-axis Label
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(width, 0);
+            context.strokeStyle = 'black';
+            context.stroke();
+            context.restore();
 
-                // Y-axis
-                context.save();
-                context.translate(margin.left, margin.top);
-                y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
-                });
-                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(0, -height);
-                context.strokeStyle = 'black';
-                context.stroke();
-                context.restore();
-            }
-        }).catch(function(error) {
-            console.error("Error loading or processing data:", error);
-        });
+            // Y-axis
+            context.save();
+            context.translate(margin.left, margin.top);
+            y.ticks(10).forEach(d => {
+                context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
+            });
+            context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, -height);
+            context.strokeStyle = 'black';
+            context.stroke();
+            context.restore();
+        }
     } else {
         console.error("Container not found");
     }
 });
+
 
