@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 2;
+            context.lineWidth = 0.7;
             context.strokeStyle = 'steelblue';
             context.stroke();
 
