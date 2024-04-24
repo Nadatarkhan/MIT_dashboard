@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const canvas = d3.select(container)
             .append("canvas")
-            .attr("width", containerWidth * dpi) // Multiply by dpi
-            .attr("height", containerHeight * dpi) // Multiply by dpi
-            .style("width", containerWidth + "px") // Set CSS width
-            .style("height", containerHeight + "px"); // Set CSS height
+            .attr("width", containerWidth * dpi)
+            .attr("height", containerHeight * dpi)
+            .style("width", containerWidth + "px")
+            .style("height", containerHeight + "px");
         const context = canvas.node().getContext("2d");
-        context.scale(dpi, dpi); // Scale all drawings by the DPI
+        context.scale(dpi, dpi);
 
         const margin = { top: 40, right: 40, bottom: 60, left: 80 },
             width = containerWidth - margin.left - margin.right,
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
-                    context.lineWidth = 0.5; // Adjust line width
+                    context.lineWidth = 0.5;
                     context.strokeStyle = color(index);
                     context.stroke();
                 });
@@ -80,20 +80,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             function drawAxis() {
-                // X-axis
-                context.save();
-                context.translate(margin.left, height + margin.top);
-                x.ticks().forEach(d => {
-                    context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
-                });
-                context.restore();
-
-                // Y-axis
                 context.save();
                 context.translate(margin.left, margin.top);
-                y.ticks(10).forEach(d => {
-                    context.fillText(d, -10, y(d));
+
+                // Draw X-axis
+                context.translate(0, height);
+                context.scale(1, -1);
+                x.ticks().forEach(d => {
+                    context.fillText(d3.timeFormat("%Y")(d), x(d), -10);
                 });
+
+                // Draw Y-axis
+                context.scale(1, -1);
+                y.ticks(10).forEach(d => {
+                    context.fillText(d, -50, -y(d) + 5);
+                });
+
                 context.restore();
             }
         }).catch(function(error) {
