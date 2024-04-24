@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Full implementation': 'full'
     };
 
-    function createCircles(container) {
+    function createCircles(container, field) {
         removeCircles(); // Ensure no duplicates
 
         const circleContainer = document.createElement('div');
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         circleContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
-        const values = ["business", "partial", "full"];  // Filter values
+        const values = ["baseline", "partial", "full"];  // Filter values
 
         for (let i = 0; i < 3; i++) {
             const circleLabelContainer = document.createElement('div');
@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
             circleLabelContainer.appendChild(circle);
             circleLabelContainer.appendChild(text);
             circleContainer.appendChild(circleLabelContainer);
+
+            circle.addEventListener('change', function() {
+                updatePlot(field, circle.value);
+            });
         }
 
         container.appendChild(circleContainer);
@@ -51,18 +55,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update the plot
     // Assumes `updatePlot` from line.js is accessible globally
     function updatePlot(field, value) {
-        // Assuming `data` is your dataset that you pass to the `updatePlot` function in line.js
-        const filteredData = data.filter(row => row[field] === value);
-        // Call the updatePlot from line.js with the filtered data
-        window.updatePlot(filteredData); // This will depend on the implementation of your line.js
+        // Call the updatePlot function from line.js with the selected field and value
+        window.updatePlot(field, value);
     }
 
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
+            const field = container.dataset.field;
             if (container.contains(container.querySelector('.circles-container'))) {
                 removeCircles();
             } else {
-                createCircles(container);
+                createCircles(container, field);
             }
         });
     });
