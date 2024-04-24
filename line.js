@@ -24,11 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         d3.csv("data/example_data.csv").then(function(data) {
             emissionsData = data.map(d => ({
-                year: new Date(d.epw_year), // Convert year to Date object for better handling in time scales
-                emission: +d.Emissions, // Unary plus to convert string to number
-                cost: +d.Cost, // Unary plus to convert string to number
-                innovation: +d.Innovation, // Assuming 'Innovation' is a field you need as a number
-                risk: +d.Risk, // Assuming 'Risk' is a field you need as a number
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                cost: +d.Cost,
                 scenario: d.Scenario,
                 grid: d.grid
             }));
