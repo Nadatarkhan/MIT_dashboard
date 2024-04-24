@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function updatePlot(variable) {
                 console.log("Updating plot for variable:", variable);
-                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || (d.scenario === scenarioFilter && d.implementation === implementationLevel)));
+                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || d.scenario !== scenarioFilter || d.implementation !== implementationLevel));
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.restore();
                 drawAxis(variable);
             }
+
 
             function drawAxis(variable) {
                 console.log("Drawing axes for:", variable);
