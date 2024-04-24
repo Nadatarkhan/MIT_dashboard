@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d[variable]));
+            y.domain([0, d3.max(filteredData, d => d[variable])]);
+
 
             // Clear the canvas
             context.clearRect(0, 0, containerWidth, containerHeight);
