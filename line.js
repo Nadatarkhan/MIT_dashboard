@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Move buttons and toggles under the plot
-    const controlsContainer = document.querySelector('.controls');
+    const controlsContainer = document.querySelector('.controls-container');
     if (controlsContainer) {
         const graphContainer = document.querySelector('.graph-container');
         graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
