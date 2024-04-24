@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y (d) + 3); // Shift label left for more space
+                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
                 context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
@@ -123,3 +123,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
