@@ -24,20 +24,6 @@
 <div class="container">
     <div class="top-container">
         <div class="visual visual1">
-            <div class="controls">
-                <div class="toggle-wrapper">
-                    <input type="radio" id="all" name="gridFilter" value="all" checked>
-                    <label for="all">All</label>
-                    <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
-                    <label for="decarbonized">Decarbonized</label>
-                    <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
-                    <label for="notDecarbonized">Not Decarbonized</label>
-                </div>
-                <div class="button-container">
-                    <button class="pheasant-demure-button solid light hover blink">Emissions</button>
-                    <button class="pheasant-demure-button solid light hover blink">Cost</button>
-                </div>
-            </div>
             <div class="icon-description">
                 <h2>Technologies</h2>
                 <p>Click the icons to choose the implementation pathways</p>
@@ -55,6 +41,20 @@
                 <div class="icon-container" data-field="ess"><img src="icons/7.png" alt="Energy storage + EVs"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="ccs"><img src="icons/8.png" alt="Local Carbon Capture"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="grid"><img src="icons/10.png" alt="Future grid emissions"><span class="icon-label"></span></div>
+            </div>
+            <div class="controls-container">
+                <div class="toggle-wrapper">
+                    <input type="radio" id="all" name="gridFilter" value="all" checked>
+                    <label for="all">All</label>
+                    <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
+                    <label for="decarbonized">Decarbonized</label>
+                    <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
+                    <label for="notDecarbonized">Not Decarbonized</label>
+                </div>
+                <div class="button-container">
+                    <button class="pheasant-demure-button solid light hover blink">Emissions</button>
+                    <button class="pheasant-demure-button solid light hover blink">Cost</button>
+                </div>
             </div>
             <div class="graph-container" id="lineChart"></div>
         </div>
@@ -105,8 +105,6 @@
 </script>
 </body>
 </html>
-
-
 
 
 

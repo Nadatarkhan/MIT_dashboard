@@ -105,33 +105,15 @@ body, html {
     cursor: pointer;
 }
 
-.controls-sidebar {
-    flex-basis: 200px; /* Fixed width for controls */
-    display: flex;
-    flex-direction: column; /* Stacks controls vertically */
-    padding: 20px;
-    margin-right: 20px; /* Space between controls and chart */
-    background-color: #f4f4f4; /* Optional: Background color for better visibility */
-}
-
-.controls {
-    flex: 1; /* Adjust the flex value to allocate space properly */
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-}
-
 
 .icon-row img {
     height: 50px;
 }
 
 .graph-container {
-    flex-grow: 1; /* Allows the chart to take remaining space */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-grow: 1;
+    width: 100%; /* Ensures SVG uses the maximum available width */
+    overflow: visible; /* Changed to visible to test overflow issues */
 }
 
 .bottom-visual {
@@ -388,9 +370,3 @@ h2 {
 input[type='radio']:checked + label {
     background-color: #983076;  // Example color when selected
 }
-
-
-
-
-
-
