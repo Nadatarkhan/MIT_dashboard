@@ -6,31 +6,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const radioContainer = document.createElement('div');
         radioContainer.classList.add('radio-buttons-container');
+        radioContainer.style.position = 'absolute';
+        radioContainer.style.left = '0';
+        radioContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
         const values = ["baseline", "partial", "full"];  // Filter values
 
         for (let i = 0; i < 3; i++) {
             const radioLabelContainer = document.createElement('label');
-            radioLabelContainer.classList.add('radio-label');
+            radioLabelContainer.style.display = 'flex';
+            radioLabelContainer.style.alignItems = 'center';
+            radioLabelContainer.style.marginBottom = '5px';
 
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = 'filter';  // All radio buttons share the same name
             radio.value = values[i];
-            radio.classList.add('radio-input');
+            radio.style.marginRight = '5px';
 
             const text = document.createElement('span');
             text.textContent = labels[i];
-            text.classList.add('radio-text');
+            text.style.fontSize = '10px'; // Set the font size for the text labels
+            text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
 
             radioLabelContainer.appendChild(radio);
             radioLabelContainer.appendChild(text);
             radioContainer.appendChild(radioLabelContainer);
 
             // Add event listener to each radio button
-            radio.addEventListener('change', function(event) {
-                event.stopPropagation();
+            radio.addEventListener('change', function() {
                 const selectedValue = this.value;
                 updatePlot(selectedScenario, selectedValue);
             });
@@ -54,8 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     iconContainers.forEach(container => {
-        container.addEventListener('click', function(event) {
-            event.stopPropagation();
+        container.addEventListener('click', function() {
             const selectedScenario = container.getAttribute('data-field');
             if (container.contains(container.querySelector('.radio-buttons-container'))) {
                 removeRadioButtons();
@@ -65,3 +69,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
