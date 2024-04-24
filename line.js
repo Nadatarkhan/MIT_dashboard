@@ -29,6 +29,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let pvFilters = []; // Array to hold the active pv filters
 
+    // Add PV checkboxes dynamically
+    const pvIconContainer = document.querySelector('.icon-container[data-field="pv"]');
+    if (pvIconContainer) {
+        const form = document.createElement('form');
+        ['baseline', 'partial', 'full'].forEach(value => {
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.id = value;
+            input.name = 'pvFilter';
+            input.value = value;
+
+            const label = document.createElement('label');
+            label.htmlFor = value;
+            label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+
+            form.appendChild(input);
+            form.appendChild(label);
+            form.appendChild(document.createElement('br'));
+        });
+        pvIconContainer.appendChild(form);
+    } else {
+        console.log("PV icon container not found");
+    }
+
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
@@ -37,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
             pv: d.pv // Assuming pv has 'baseline', 'partial', or 'full'
         }));
 
-        // Attach event listeners to checkboxes for the 'pv' field
         document.querySelectorAll('input[name="pvFilter"]').forEach(input => {
             input.addEventListener('change', function() {
                 const filterValue = this.value;
@@ -72,10 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .y(d => y(d.emission))
                 .context(context);
 
-            // Draw the line
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 0.1;
+            context.lineWidth = 2;
             context.strokeStyle = 'steelblue';
             context.stroke();
 
@@ -85,10 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawAxis() {
-            // X Axis
             context.save();
             context.translate(margin.left, height + margin.top);
-            context.beginPath();
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
             });
@@ -99,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.stroke();
             context.restore();
 
-            // Y Axis
             context.save();
             context.translate(margin.left, margin.top);
             y.ticks().forEach(d => {
@@ -116,8 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Error loading or processing data:", error);
     });
 });
-
-
 
 
 
