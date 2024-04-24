@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
-        let scenarioFilter = ""; // No scenario filter by default
-        let implementationLevel = "baseline"; // Default implementation level
+        let scenarioFilters = []; // Array to hold selected scenarios to be excluded
+        let implementationFilters = []; // Array to hold selected implementation levels to be excluded
 
         d3.csv("data/example_data.csv").then(function(data) {
             console.log("Data loaded successfully");
@@ -39,52 +39,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
             updatePlot(selectedVariable);
 
-            document.querySelectorAll('input[name="gridFilter"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    gridFilter = this.value;
-                    console.log("Grid filter changed to:", gridFilter);
+            document.querySelectorAll('.icon-container').forEach(container => {
+                container.addEventListener('click', function() {
+                    const scenario = this.getAttribute('data-field');
+                    console.log("Icon clicked, scenario filter set to:", scenario);
+                    toggleScenarioFilter(scenario);
                     updatePlot(selectedVariable);
                 });
             });
 
-            document.querySelectorAll('.icon-container').forEach(container => {
-                container.addEventListener('click', function() {
-                    scenarioFilter = this.getAttribute('data-field');
-                    console.log("Icon clicked, scenario filter set to:", scenarioFilter);
-                    if (this.querySelector('.implementation-options')) {
-                        this.removeChild(this.querySelector('.implementation-options'));
-                    } else {
-                        showImplementationOptions(this);
-                    }
-                });
-            });
+            function toggleScenarioFilter(scenario) {
+                const index = scenarioFilters.indexOf(scenario);
+                if (index === -1) {
+                    // Scenario not found in filters, add it
+                    scenarioFilters.push(scenario);
+                } else {
+                    // Scenario found in filters, remove it
+                    scenarioFilters.splice(index, 1);
+                }
+            }
 
-            function showImplementationOptions(iconContainer) {
-                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-                const container = document.createElement('div');
-                container.className = 'implementation-options';
-                ['baseline', 'partial', 'full'].forEach((level, index) => {
-                    const label = document.createElement('label');
-                    const radioButton = document.createElement('input');
-                    radioButton.type = 'radio';
-                    radioButton.name = 'implementationFilter';
-                    radioButton.value = level;
-                    if (index === 0) radioButton.checked = true;
-                    radioButton.onchange = () => {
-                        implementationLevel = radioButton.value;
-                        console.log("Implementation level changed to:", implementationLevel);
-                        updatePlot(selectedVariable);
-                    };
-                    label.appendChild(radioButton);
-                    label.appendChild(document.createTextNode(level));
-                    container.appendChild(label);
-                });
-                iconContainer.appendChild(container);
+            function toggleImplementationFilter(implementation) {
+                const index = implementationFilters.indexOf(implementation);
+                if (index === -1) {
+                    // Implementation not found in filters, add it
+                    implementationFilters.push(implementation);
+                } else {
+                    // Implementation found in filters, remove it
+                    implementationFilters.splice(index, 1);
+                }
             }
 
             function updatePlot(variable) {
                 console.log("Updating plot for variable:", variable);
-                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || d.scenario !== scenarioFilter || d.implementation !== implementationLevel));
+                // Filter data based on grid and implementation level filters
+                let filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!implementationFilters.length || !implementationFilters.includes(d.implementation)));
+
+                // Remove data points corresponding to selected scenarios
+                scenarioFilters.forEach(scenario => {
+                    filteredData = filteredData.filter(d => d.scenario !== scenario);
+                });
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
@@ -112,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawAxis(variable);
             }
 
-
             function drawAxis(variable) {
                 console.log("Drawing axes for:", variable);
                 context.save();
@@ -132,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y (d) + 3); // Shift label left for more space
+                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
                 context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
@@ -147,15 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.error("Container not found");
-    }
-
-    const controlsContainer = document.querySelector('.controls-container');
-    if (controlsContainer) {
-        const graphContainer = document.querySelector('.graph-container');
-        graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
-        console.log("Controls moved under the plot");
-    } else {
-        console.error("Controls container not found");
     }
 });
 
