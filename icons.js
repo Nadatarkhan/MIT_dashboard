@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const iconContainers = document.querySelectorAll('.icon-container');
 
-    function createRadioButtons(container) {
+    function createRadioButtons(container, selectedScenario) {
         removeRadioButtons(); // Ensure no duplicates
 
         const radioContainer = document.createElement('div');
@@ -33,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
             radioLabelContainer.appendChild(radio);
             radioLabelContainer.appendChild(text);
             radioContainer.appendChild(radioLabelContainer);
+
+            // Add event listener to each radio button
+            radio.addEventListener('change', function() {
+                const selectedValue = this.value;
+                updatePlot(selectedScenario, selectedValue);
+            });
         }
 
         container.appendChild(radioContainer);
