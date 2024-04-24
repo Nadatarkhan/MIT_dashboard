@@ -27,63 +27,64 @@ document.addEventListener('DOMContentLoaded', function() {
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
 
-    let pvFilters = []; // Array to hold the active pv filters
+    let filters = {}; // Object to hold the active filters for each technology
 
-    // Add PV checkboxes dynamically
-    const pvIconContainer = document.querySelector('.icon-container[data-field="pv"]');
-    if (pvIconContainer) {
-        const form = document.createElement('form');
-        ['baseline', 'partial', 'full'].forEach(value => {
-            const input = document.createElement('input');
-            input.type = 'checkbox';
-            input.id = value;
-            input.name = 'pvFilter';
-            input.value = value;
-            input.style.transform = 'scale(0.6)'; // Smaller checkbox
-            input.style.marginRight = '3px'; // Spacing between checkbox and label
-
-            const label = document.createElement('label');
-            label.htmlFor = value;
-            label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
-
-            form.appendChild(input);
-            form.appendChild(label);
-            form.appendChild(document.createElement('br'));
-        });
-        pvIconContainer.appendChild(form);
-    } else {
-        console.log("PV icon container not found");
-    }
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv'];
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions,
-            pv: d.pv // Assuming pv has 'baseline', 'partial', or 'full'
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
-        document.querySelectorAll('input[name="pvFilter"]').forEach(input => {
-            input.addEventListener('change', function() {
-                const filterValue = this.value;
-                const filterIndex = pvFilters.indexOf(filterValue);
+        fields.forEach(field => {
+            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+            if (iconContainer) {
+                const form = document.createElement('form');
+                ['baseline', 'partial', 'full'].forEach(value => {
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = `${field}-${value}`;
+                    input.name = `${field}Filter`;
+                    input.value = value;
+                    input.style.transform = 'scale(0.75)';
+                    input.style.marginRight = '5px';
 
-                if (this.checked && filterIndex === -1) {
-                    pvFilters.push(filterValue);
-                } else if (!this.checked && filterIndex !== -1) {
-                    pvFilters.splice(filterIndex, 1);
-                }
+                    const label = document.createElement('label');
+                    label.htmlFor = `${field}-${value}`;
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                    label.style.fontSize = '12px';
 
-                console.log("PV filters updated to:", pvFilters);
-                updatePlot();
-            });
+                    form.appendChild(input);
+                    form.appendChild(label);
+                    form.appendChild(document.createElement('br'));
+
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
+                        const filterIndex = filters[field].indexOf(value);
+                        if (this.checked && filterIndex === -1) {
+                            filters[field].push(value);
+                        } else if (!this.checked && filterIndex !== -1) {
+                            filters[field].splice(filterIndex, 1);
+                        }
+                        updatePlot();
+                    });
+                });
+                iconContainer.appendChild(form);
+            } else {
+                console.log(`${field} icon container not found`);
+            }
         });
 
         function updatePlot() {
-            console.log("Updating plot with PV filters:", pvFilters);
-            const filteredData = pvFilters.length > 0
-                ? emissionsData.filter(d => pvFilters.includes(d.pv))
-                : []; // If no filters are selected, the plot remains empty
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 0.08;
+            context.lineWidth = 2;
             context.strokeStyle = 'steelblue';
             context.stroke();
 
