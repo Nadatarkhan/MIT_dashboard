@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const dpi = window.devicePixelRatio;
 
-        // Modify these values to change the overall size of the canvas and the plot
-        const containerWidth = container.clientWidth - 200; // Reduced margin for a larger plot area
-        const containerHeight = container.clientHeight - 200; // Reduced margin for a larger plot area
+        const containerWidth = container.clientWidth - 200;
+        const containerHeight = container.clientHeight - 280;
 
         const canvas = d3.select(container)
             .append("canvas")
@@ -16,14 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
-        // Adjusted margins
-        const margin = { top: 40, right: 20, bottom: 40, left: 60 },
+        const margin = { top: 40, right: 40, bottom: 60, left: 200 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
 
@@ -52,9 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            setupZoom(); // Setup zoom
-            setupTooltip(); // Setup tooltip
-
             function updatePlot(variable) {
                 const filteredData = emissionsData.filter(d => gridFilter === "all" ||
                     (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau"));
@@ -76,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
-                    context.lineWidth = 2; // Make lines thicker
+                    context.lineWidth = 0.1;
                     context.strokeStyle = color(index);
                     context.stroke();
                 });
@@ -102,40 +96,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Y-axis
                 context.save();
-                context.translate(margin.left, margin.top);
+                context.translate(margin.left, margin.top + height);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -50, -y(d) + 3); // Shift label left for more space
+                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -100, -height / 2 + 20); // Y-axis label
+                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
-            }
 
-            function setupZoom() {
-                const zoom = d3.zoom()
-                    .scaleExtent([1, 10])
-                    .translateExtent([[0, 0], [width, height]])
-                    .on("zoom", zoomed);
-
-                canvas.call(zoom);
-
-                function zoomed({transform}) {
-                    x.range([0, width].map(d => transform.applyX(d)));
-                    y.range([height, 0].map(d => transform.applyY(d)));
-                    updatePlot(selectedVariable);  // Redraw plot
-                }
-            }
-
-            function setupTooltip() {
-                canvas.on("mousemove", function(event) {
-                    const mouse = d3.pointer(event);
-                    // Calculate closest data point
-                    // Display tooltip
-                });
+                // Remove vertical grid lines
+                // context.save();
+                // context.translate(margin.left, margin.top);
+                // x.ticks().forEach(d => {
+                //     context.beginPath();
+                //     context.moveTo(x(d), 0);
+                //     context.lineTo(x(d), -height);
+                //     context.strokeStyle = 'lightgrey';
+                //     context.stroke();
+                // });
+                // context.restore();
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
