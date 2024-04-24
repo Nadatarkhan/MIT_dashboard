@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function updatePlot(variable) {
                 const filteredData = emissionsData.filter(d => gridFilter === "all" ||
-                    (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
+                    (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau"));
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
