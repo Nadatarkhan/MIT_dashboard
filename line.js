@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             input.id = value;
             input.name = 'pvFilter';
             input.value = value;
+            input.style.transform = 'scale(0.6)'; // Smaller checkbox
+            input.style.marginRight = '3px'; // Spacing between checkbox and label
 
             const label = document.createElement('label');
             label.htmlFor = value;
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 2;
+            context.lineWidth = 0.08;
             context.strokeStyle = 'steelblue';
             context.stroke();
 
