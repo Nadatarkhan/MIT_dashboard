@@ -42,18 +42,35 @@ document.addEventListener('DOMContentLoaded', function() {
             // Proceed with plot initialization and event listeners...
             updatePlot(selectedVariable, implementationLevel); // Initial plot update
 
-            // Dynamically create buttons for baseline, partial, and full implementations
-            const implementationButtons = ['baseline', 'partial', 'full'];
-            implementationButtons.forEach(impl => {
-                const button = document.createElement('button');
-                button.textContent = impl;
-                button.addEventListener('click', function() {
-                    implementationLevel = impl;
-                    console.log(implementationLevel.charAt(0).toUpperCase() + implementationLevel.slice(1) + " button clicked, implementation level set to:", implementationLevel);
+            document.querySelectorAll('.icon-container').forEach(container => {
+                container.addEventListener('click', function() {
+                    implementationLevel = this.getAttribute('data-field');
+                    console.log("Icon clicked, implementation level set to:", implementationLevel);
+                    showImplementationOptions(this);
                     updatePlot(selectedVariable, implementationLevel);
                 });
-                container.appendChild(button);
             });
+
+            function showImplementationOptions(iconContainer) {
+                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+                // Implement the logic to show implementation options
+                const implementationOptions = ['baseline', 'partial', 'full'];
+                implementationOptions.forEach(option => {
+                    const label = document.createElement('label');
+                    const radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.name = 'implementationLevel';
+                    radioButton.value = option;
+                    radioButton.addEventListener('change', function() {
+                        implementationLevel = option;
+                        console.log("Implementation level changed to:", implementationLevel);
+                        updatePlot(selectedVariable, implementationLevel);
+                    });
+                    label.appendChild(radioButton);
+                    label.appendChild(document.createTextNode(option));
+                    iconContainer.appendChild(label);
+                });
+            }
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
@@ -103,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             context.fillText("Year", width / 2, 40); // X-axis Label
             context.beginPath();
-            context.moveTo(0, 0);
+            context.moveTo(0,0);
             context.lineTo(width, 0);
             context.strokeStyle = 'black';
             context.stroke();
@@ -127,6 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
+
 
 
 
