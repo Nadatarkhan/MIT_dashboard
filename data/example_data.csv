@@ -1,0 +1,53 @@
+Scenario,epw_year,climate,grid,retrofit,schedules,lab,district,nuclear,deepgeo,renovate,ess,ccs,Emissions,Innovation,Risk,Cost
+1,2025,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,391907904.14,10.00,10.00,50.00
+1,2026,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,364404725.00,1.00,1.00,40.00
+1,2027,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,348236816.18,2.00,2.00,10.00
+1,2028,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,332968372.53,3.00,3.00,20.00
+1,2029,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,296898881.14,4.00,4.00,100.00
+1,2030,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,289986923.66,5.00,5.00,200.00
+1,2031,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,274038072.46,6.00,6.00,58.00
+1,2032,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,260784517.20,7.00,7.00,58.00
+1,2033,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,255861078.57,8.00,8.00,58.00
+1,2034,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,231308805.19,7.00,7.00,58.00
+1,2035,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,219812066.01,9.00,10.00,58.00
+1,2036,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,218058084.29,7.00,7.00,58.00
+1,2037,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,215516798.79,5.00,5.00,58.00
+1,2038,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,211796292.84,5.00,5.00,58.00
+1,2039,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,211564955.75,5.00,5.00,58.00
+1,2040,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,211332216.78,5.00,5.00,58.00
+1,2041,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,210916482.68,5.00,5.00,58.00
+1,2042,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,210499361.55,5.00,5.00,58.00
+1,2043,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,210080949.83,5.00,5.00,58.00
+1,2044,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209661290.29,6.00,6.00,58.00
+1,2045,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209240450.50,6.00,6.00,58.00
+1,2046,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209193305.21,6.00,6.00,58.00
+1,2047,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209145204.44,6.00,6.00,58.00
+1,2048,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209096467.96,6.00,6.00,58.00
+1,2049,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,209047009.57,6.00,6.00,10.00
+1,2050,rcp45,decarbonization,full,full,full,baseline,baseline,baseline,fast,baseline,baseline,208996914.99,6.00,6.00,10.00
+2,2025,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,391907904.14,6.00,6.00,200.00
+2,2026,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,364404725.00,3.00,3.00,200.00
+2,2027,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,348236816.18,3.00,3.00,200.00
+2,2028,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,332968372.53,3.00,3.00,200.00
+2,2029,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,296898881.14,3.00,3.00,200.00
+2,2030,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,289986923.66,3.00,3.00,200.00
+2,2031,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,274038072.46,3.00,3.00,200.00
+2,2032,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,260784517.20,3.00,3.00,200.00
+2,2033,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,255861078.57,3.00,3.00,200.00
+2,2034,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,231308805.19,4.00,4.00,200.00
+2,2035,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,219812066.01,4.00,4.00,200.00
+2,2036,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,218058084.29,4.00,4.00,200.00
+2,2037,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,215516798.79,4.00,4.00,200.00
+2,2038,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,211796292.84,4.00,4.00,200.00
+2,2039,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,211564955.75,4.00,4.00,200.00
+2,2040,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18113525.71,4.00,4.00,200.00
+2,2041,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18104089.91,4.00,4.00,200.00
+2,2042,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18095513.45,2.00,2.00,200.00
+2,2043,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18088760.91,2.00,2.00,200.00
+2,2044,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18083391.15,10.00,10.00,200.00
+2,2045,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18078565.55,9.00,9.00,200.00
+2,2046,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18074216.26,8.00,8.00,200.00
+2,2047,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18070176.68,7.00,7.00,200.00
+2,2048,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18066446.69,7.00,7.00,200.00
+2,2049,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18063237.38,7.00,7.00,200.00
+2,2050,rcp45,no decarbonization,full,full,full,baseline,baseline,full,fast,baseline,baseline,18060690.95,7.00,7.00,200.00
