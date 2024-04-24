@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'Full implementation': 'full'
     };
 
-    function createCircles(container, field) {
+    // Array of field names from the CSV data
+    const fields = ["retrofit", "district", "schedules", "lab", "deepgeo", "nuclear", "ess", "ccs", "grid"];
+
+    function createCircles(container) {
         removeCircles(); // Ensure no duplicates
 
         const circleContainer = document.createElement('div');
@@ -38,10 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
             circleLabelContainer.appendChild(circle);
             circleLabelContainer.appendChild(text);
             circleContainer.appendChild(circleLabelContainer);
-
-            circle.addEventListener('change', function() {
-                updatePlot(field, circle.value);
-            });
         }
 
         container.appendChild(circleContainer);
@@ -55,17 +54,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update the plot
     // Assumes `updatePlot` from line.js is accessible globally
     function updatePlot(field, value) {
-        // Call the updatePlot function from line.js with the selected field and value
-        window.updatePlot(field, value);
+        // Assuming `data` is your dataset that you pass to the `updatePlot` function in line.js
+        const filteredData = data.filter(row => row[field] === value);
+        // Call the updatePlot from line.js with the filtered data
+        window.updatePlot(filteredData); // This will depend on the implementation of your line.js
     }
 
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
-            const field = container.dataset.field;
+            const field = container.getAttribute('data-field'); // Get the field name associated with the clicked icon
             if (container.contains(container.querySelector('.circles-container'))) {
                 removeCircles();
             } else {
-                createCircles(container, field);
+                createCircles(container);
+                // On click, update the plot based on the selected field
+                document.querySelectorAll('input[name="filter"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const value = this.value;
+                        updatePlot(field, value);
+                    });
+                });
             }
         });
     });
