@@ -398,10 +398,18 @@ input[type='radio']:checked + label {
 }
 
 .implementation-options label {
-    display: flex;
-    align-items: center;
+    display: inline-block;
+    padding: 5px 8px; /* Decreased padding */
+    margin: 3px; /* Decreased margin */
+    background-color: #f4f4f4; /* Light grey background */
+    border: 1px solid #ccc; /* Grey border */
+    border-radius: 5px; /* Rounded corners */
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 12px; /* Decreased font size */
 }
+
+
 
 .implementation-options input[type="radio"]:checked + label {
     color: #b937b8;
