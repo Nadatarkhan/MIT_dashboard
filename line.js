@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
-
     if (container) {
         const dpi = window.devicePixelRatio;
+
         const containerWidth = container.clientWidth - 300;
         const containerHeight = container.clientHeight - 280;
 
@@ -22,13 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all";
 
         d3.csv("data/example_data.csv").then(function(data) {
             const emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
-                scenario: d.Scenario
+                scenario: d.Scenario,
+                grid: d.grid
             }));
 
             updatePlot(selectedVariable);
@@ -40,9 +42,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+            document.querySelectorAll('input[name="gridFilter"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    gridFilter = this.value;
+                    updatePlot(selectedVariable);
+                });
+            });
+
             function updatePlot(variable) {
-                x.domain(d3.extent(emissionsData, d => d.year));
-                y.domain([0, d3.max(emissionsData, d => d[variable])]);
+                const filteredData = emissionsData.filter(d => gridFilter === "all" ||
+                    (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau"));
+
+                x.domain(d3.extent(filteredData, d => d.year));
+                y.domain([0, d3.max(filteredData, d => d[variable])]);
 
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 context.save();
@@ -54,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .y(d => y(d[variable]))
                     .context(context);
 
-                const scenarioGroups = d3.groups(emissionsData, d => d.scenario);
+                const scenarioGroups = d3.groups(filteredData, d => d.scenario);
                 scenarioGroups.forEach((group, index) => {
                     context.beginPath();
                     line(group[1]);
@@ -95,6 +107,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.strokeStyle = 'black';
                 context.stroke();
                 context.restore();
+
+                // Remove vertical grid lines
+                // context.save();
+                // context.translate(margin.left, margin.top);
+                // x.ticks().forEach(d => {
+                //     context.beginPath();
+                //     context.moveTo(x(d), 0);
+                //     context.lineTo(x(d), -height);
+                //     context.strokeStyle = 'lightgrey';
+                //     context.stroke();
+                // });
+                // context.restore();
             }
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
