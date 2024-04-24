@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        const containerWidth = container.clientWidth - 200;
-        const containerHeight = container.clientHeight - 280;
+        const containerWidth = container.clientWidth - 200; // Adjust as necessary
+        const containerHeight = container.clientHeight - 280; // Adjust as necessary
 
         const canvas = d3.select(container)
             .append("canvas")
@@ -18,17 +18,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission";
         let gridFilter = "all";
+        let emissionsData; // Define emissionsData variable here to ensure scope availability
 
+        // Load and process data
         d3.csv("data/example_data.csv").then(function(data) {
-            let emissionsData = data.map(d => ({
+            emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
                 grid: d.grid
             }));
-
-            updatePlot(selectedVariable);
 
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlot(selectedVariable);
                 });
             });
+
+            // Call updatePlot initially after ensuring data is fully processed
+            updatePlot(selectedVariable);
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
@@ -70,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenarioGroups.forEach((group, index) => {
                 context.beginPath();
                 line(group[1]);
-                context.lineWidth = 0.5;
+                context.lineWidth = 1;
                 context.strokeStyle = color(index);
                 context.stroke();
             });
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // X-axis
             context.save();
             context.translate(margin.left, height + margin.top);
-            context.beginPath();
+            context.scale(1, -1);
             x.ticks().forEach(function(d) {
                 context.moveTo(x(d), 0);
                 context.lineTo(x(d), -5);
