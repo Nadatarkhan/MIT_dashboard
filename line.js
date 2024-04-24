@@ -4,14 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        console.log("Container dimensions:", containerWidth, containerHeight);  // Log container dimensions
-
         // Define the margins and dimensions for the graph
         const margin = { top: 20, right: 30, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
-
-        console.log("SVG dimensions:", width, height);  // Log SVG dimensions
 
         // Append the SVG canvas to the container
         const svg = d3.select(container)
@@ -27,8 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let emissionsData;
 
         d3.csv("data/example_data.csv").then(function(data) {
-            console.log("Raw data:", data);  // Log raw data
-
             emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
@@ -37,20 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            console.log("Processed data:", emissionsData);  // Log processed data
-
             updatePlot(selectedVariable);
 
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
-                    console.log("Button clicked:", this.textContent);  // Log button text
                     updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
                 });
             });
 
             document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
                 input.addEventListener('change', function() {
-                    console.log("Filter change:", this.value);  // Log filter change
                     gridFilter = this.value;
                     updatePlot(selectedVariable);
                 });
@@ -60,14 +50,27 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Error loading or processing data:", error);
         });
 
+        d3.csv("data/example_data.csv").then(function(data) {
+            console.log(data);  // Check the parsed data
+            emissionsData = data.map(d => ({
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                cost: +d.Cost,
+                scenario: d.Scenario,
+                grid: d.grid
+            }));
+            updatePlot(selectedVariable);
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
+
         function updatePlot(variable) {
             selectedVariable = variable;
 
             const filteredData = emissionsData.filter(d => {
-                return (gridFilter === "all" || d.grid === gridFilter);
+                if (gridFilter === "all") return true;
+                return gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization";
             });
-
-            console.log("Filtered data:", filteredData);  // Log filtered data
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
@@ -79,13 +82,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
                 .selectAll("text")
-                .style("font-size", "18px");
+                .style("font-size", "18px"); // Increased font size for axis numbers
 
             svg.append("g")
                 .attr("class", "y-axis")
                 .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
                 .selectAll("text")
-                .style("font-size", "18px");
+                .style("font-size", "18px"); // Increased font size for axis numbers
+
+            // Make inner lines light grey
+            svg.selectAll(".x-axis line, .y-axis line")
+                .style("stroke", "#ddd"); // Very light grey for grid lines
 
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -100,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 4)
+                    .attr("stroke-width", 4) // Increased line weight even more
                     .attr("d", line);
             });
         }
@@ -108,4 +115,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
