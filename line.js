@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
-        const margin = { top: 40, right: 40, bottom: 60, left: 80 },
+        const margin = { top: 40, right: 40, bottom: 60, left: 100 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
