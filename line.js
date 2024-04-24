@@ -86,24 +86,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 x.ticks().forEach(d => {
                     context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
                 });
-                context.restore();
-
-                // Y-axis
-                context.save();
-                context.translate(margin.left, margin.top);
-                y.ticks(10).forEach(d => {
-                    context.fillText(d, -50, y(d)); // Adjusted for alignment
-                });
-
-                // Draw X and Y axis lines
                 context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(0, -height);
                 context.moveTo(0, 0);
                 context.lineTo(width, 0);
                 context.strokeStyle = 'black';
                 context.stroke();
+                context.restore();
 
+                // Y-axis
+                context.save();
+                context.translate(margin.left, margin.top + height);
+                y.ticks(10).forEach(d => {
+                    context.fillText(d, -50, -y(d));
+                });
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(0, -height);
+                context.strokeStyle = 'black';
+                context.stroke();
                 context.restore();
             }
         }).catch(function(error) {
