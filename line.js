@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded and parsed");
-
     const container = document.querySelector('.visual1');
+
     if (!container) {
         console.error("Container not found");
         return;
@@ -20,141 +20,88 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
-    const margin = { top: 40, right: 40, bottom: 60, left: 200 };
-    const width = containerWidth - margin.left - margin.right;
-    const height = containerHeight - margin.top - margin.bottom;
+    const margin = {top: 40, right: 40, bottom: 60, left: 200},
+        width = containerWidth - margin.left - margin.right,
+        height = containerHeight - margin.top - margin.bottom;
 
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
 
-    let scenarioFilter = ''; // No scenario filter by default
-    let implementationLevel = ''; // No implementation level filter by default
+    let pvFilter = "baseline"; // Default to 'baseline'
 
-    // Load and process the data
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
-
-        // Process the data
-        const processedData = data.map(d => ({
+        const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions,
-            scenario: d.Scenario,
-            implementation: d.Implementation // Assuming this is how you have your implementation levels in your CSV
+            pv: d.pv // Assuming pv has 'baseline', 'partial', or 'full'
         }));
 
-        // Initial plot without filters
-        updatePlot(processedData);
-
-        // Event listeners for scenario icons
-        document.querySelectorAll('.icon-container').forEach(container => {
-            container.addEventListener('click', function() {
-                scenarioFilter = this.getAttribute('data-field');
-                console.log("Icon clicked, scenario filter set to:", scenarioFilter);
-                showImplementationOptions(this); // Show the implementation level buttons
+        // Attach event listeners to radio buttons for the 'pv' field
+        document.querySelectorAll('input[name="pvFilter"]').forEach(input => {
+            input.addEventListener('change', function() {
+                pvFilter = this.value;
+                console.log("PV filter changed to:", pvFilter);
+                updatePlot();
             });
         });
 
-        function showImplementationOptions(iconContainer) {
-            console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-            const container = document.createElement('div');
-            container.className = 'implementation-options';
-            ['baseline', 'partial', 'full'].forEach((level) => {
-                const label = document.createElement('label');
-                const radioButton = document.createElement('input');
-                radioButton.type = 'radio';
-                radioButton.name = 'implementationFilter';
-                radioButton.value = level;
-                radioButton.onchange = () => {
-                    implementationLevel = radioButton.value;
-                    console.log("Implementation level changed to:", implementationLevel);
-                    updatePlot(processedData); // Update the plot when a new implementation level is selected
-                };
-                label.appendChild(radioButton);
-                label.appendChild(document.createTextNode(level));
-                container.appendChild(label);
-            });
-            iconContainer.appendChild(container);
-        }
+        // Initial update plot call
+        updatePlot();
 
-        function updatePlot(data) {
-            console.log("Updating plot");
+        function updatePlot() {
+            console.log("Updating plot for PV filter:", pvFilter);
+            const filteredData = emissionsData.filter(d => d.pv === pvFilter);
 
-            // Filter the data based on the scenario and implementation level
-            const filteredData = data.filter(d =>
-                (!scenarioFilter || d.scenario === scenarioFilter) &&
-                (!implementationLevel || d.implementation === implementationLevel)
-            );
-
-            // Define domains
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            // Clear the canvas for redrawing
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw the line for each scenario
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
 
+            // Draw the line
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 1.5;
+            context.lineWidth = 2;
             context.strokeStyle = 'steelblue';
             context.stroke();
 
-            // Restore context and draw axis
             context.restore();
+
             drawAxis();
         }
 
         function drawAxis() {
-            // Add the X Axis
+            // X Axis
             context.save();
-            context.translate(margin.left, margin.top + height);
+            context.translate(margin.left, height + margin.top);
+            x.ticks().forEach(d => {
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
+            });
+            context.fillText("Year", width / 2, 40);
             context.beginPath();
-            x.ticks().forEach(function(d) {
-                context.moveTo(x(d), 0);
-                context.lineTo(x(d), 6);
-            });
-            context.strokeStyle = "black";
+            context.moveTo(0, 0);
+            context.lineTo(width, 0);
             context.stroke();
-
-            context.textAlign = "center";
-            x.ticks().forEach(function(d) {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
-            });
-
-            // X-axis label
-            context.fillText("Year", width / 2, margin.bottom / 1.5);
-
             context.restore();
 
-            // Add the Y Axis
+            // Y Axis
             context.save();
             context.translate(margin.left, margin.top);
+            y.ticks().forEach(d => {
+                context.fillText(d, -50, y(d));
+            });
+            context.fillText("Emissions", -100, height / 2);
             context.beginPath();
-            y.ticks(10).forEach(function(d) {
-                context.moveTo(0, y(d));
-                context.lineTo(-6, y(d));
-            });
-            context.strokeStyle = "black";
+            context.moveTo(0, 0);
+            context.lineTo(0, -height);
             context.stroke();
-
-            context.textAlign = "right";
-            context.textBaseline = "middle";
-            y.ticks(10).forEach(function(d) {
-                context.fillText(d, -9, y(d));
-            });
-
-            // Y-axis label
-            context.rotate(-Math.PI / 2); // Rotate context for vertical text
-            context.textAlign = "center";
-            context.fillText("Emissions", -height / 2, -margin.left / 1.5);
-
             context.restore();
         }
     }).catch(function(error) {
