@@ -1,29 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        // Set explicit dimensions if needed
-        const containerWidth = container.clientWidth - 200; // Further reduce width
-        const containerHeight = container.clientHeight - 280; // Further reduce height
+        const containerWidth = container.clientWidth - 200;
+        const containerHeight = container.clientHeight - 280;
 
-        // Create a canvas instead of SVG
         const canvas = d3.select(container)
             .append("canvas")
             .attr("width", containerWidth)
             .attr("height", containerHeight);
         const context = canvas.node().getContext("2d");
 
-        const margin = { top: 40, right: 40, bottom: 60, left: 80 }, // Increased margins
+        const margin = { top: 40, right: 40, bottom: 60, left: 80 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Default to 'emission'
-        let gridFilter = "all"; // Default grid filter
-        let emissionsData; // Define emissionsData variable here
+        let selectedVariable = "emission";
+        let gridFilter = "all";
 
         d3.csv("data/example_data.csv").then(function(data) {
-            emissionsData = data.map(d => ({
+            let emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
@@ -59,12 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[variable])]);
 
-            // Clear the canvas
             context.clearRect(0, 0, containerWidth, containerHeight);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
                 .x(d => x(d.year))
@@ -75,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenarioGroups.forEach((group, index) => {
                 context.beginPath();
                 line(group[1]);
-                context.lineWidth = 1;
+                context.lineWidth = 0.5;
                 context.strokeStyle = color(index);
                 context.stroke();
             });
@@ -85,21 +80,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawAxis() {
-            // Draw X-axis
+            // X-axis
             context.save();
             context.translate(margin.left, height + margin.top);
-            context.scale(1, -1);
-            x.axisBottom().scale(x)(context);
+            context.beginPath();
+            x.ticks().forEach(function(d) {
+                context.moveTo(x(d), 0);
+                context.lineTo(x(d), -5);
+            });
+            context.strokeStyle = "black";
+            context.stroke();
+            context.textAlign = "center";
+            x.ticks().forEach(function(d) {
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
+            });
             context.restore();
 
-            // Draw Y-axis
+            // Y-axis
             context.save();
             context.translate(margin.left, margin.top);
-            y.axisLeft().scale(y)(context);
+            context.beginPath();
+            y.ticks(10).forEach(function(d) {
+                context.moveTo(0, y(d));
+                context.lineTo(-5, y(d));
+            });
+            context.stroke();
+            context.textAlign = "right";
+            context.textBaseline = "middle";
+            y.ticks(10).forEach(function(d) {
+                context.fillText(d, -10, y(d));
+            });
             context.restore();
         }
     } else {
         console.error("Container not found");
     }
 });
-
