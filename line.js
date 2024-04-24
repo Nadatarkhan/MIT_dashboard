@@ -59,17 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.addEventListener('click', function() {
                     scenarioFilter = this.getAttribute('data-field');
                     console.log("Icon clicked, scenario filter set to:", scenarioFilter);
-                    showImplementationOptions(this);
+                    if (this.querySelector('.implementation-options')) {
+                        this.removeChild(this.querySelector('.implementation-options'));
+                    } else {
+                        showImplementationOptions(this);
+                    }
                 });
             });
 
             function showImplementationOptions(iconContainer) {
                 console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-                const existingOptions = iconContainer.querySelector('.implementation-options');
-                if (existingOptions) {
-                    console.log("Removing existing implementation options");
-                    iconContainer.removeChild(existingOptions);
-                }
                 const container = document.createElement('div');
                 container.className = 'implementation-options';
                 ['baseline', 'partial', 'full'].forEach((level, index) => {
@@ -85,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         updatePlot(selectedVariable);
                     };
                     label.appendChild(radioButton);
-                    label.appendChild(document.createTextNode(["Business as usual", "Partial implementation", "Full implementation"][index]));
+                    label.appendChild(document.createTextNode(level));
                     container.appendChild(label);
                 });
                 iconContainer.appendChild(container);
@@ -166,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
+
 
 
 
