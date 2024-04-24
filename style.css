@@ -105,6 +105,15 @@ body, html {
     cursor: pointer;
 }
 
+.controls {
+    position: relative;
+    width: 100%; /* Adjust as needed */
+    display: flex;
+    flex-direction: column; /* Arrange buttons and toggles vertically */
+    align-items: flex-start; /* Align items to the left */
+    margin-bottom: 20px; /* Add some space between the controls and the plot */
+}
+
 
 .icon-row img {
     height: 50px;
