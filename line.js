@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         // Set explicit dimensions if needed
         const containerWidth = container.clientWidth - 200; // Further reduce width
-        const containerHeight = container.clientHeight - 320; // Further reduce height
+        const containerHeight = container.clientHeight - 280; // Further reduce height
 
         // Create a canvas instead of SVG
         const canvas = d3.select(container)
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenarioGroups.forEach((group, index) => {
                 context.beginPath();
                 line(group[1]);
-                context.lineWidth = 4;
+                context.lineWidth = 1;
                 context.strokeStyle = color(index);
                 context.stroke();
             });
