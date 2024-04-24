@@ -4,29 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Define the margins and dimensions for the graph
+        // Create a canvas instead of SVG
+        const canvas = d3.select(container)
+            .append("canvas")
+            .attr("width", containerWidth)
+            .attr("height", containerHeight);
+        const context = canvas.node().getContext("2d");
+
         const margin = { top: 20, right: 30, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
-        // Append the SVG canvas to the container
-        const svg = d3.select(container)
-            .append("svg")
-            .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission"; // Default to 'emission'
-        let gridFilter = "all"; // Default grid filter
+        let selectedVariable = "emission";
+        let gridFilter = "all";
 
-        // Load the CSV file and process data
         d3.csv("data/example_data.csv").then(function(data) {
             let emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
-                emission: +d.Emissions, // Ensure emission data is converted to number
-                cost: +d.Cost, // Ensure cost is treated as a number
+                emission: +d.Emissions,
+                cost: +d.Cost,
                 scenario: d.Scenario,
                 grid: d.grid
             }));
@@ -57,38 +55,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d[variable])]);
+            y.domain([0, d3.max(filteredData, d => d[variable]));
 
-            svg.selectAll(".x-axis").remove();
-            svg.selectAll(".y-axis").remove();
+            // Clear the canvas
+            context.clearRect(0, 0, containerWidth, containerHeight);
 
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height));
+            // Draw axes
+            drawAxis();
 
-            svg.append("g")
-                .attr("class", "y-axis")
-                .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width));
-
-            svg.selectAll(".line").remove();
+            // Draw lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d[variable]));
-
-            const scenarioGroups = d3.groups(filteredData, d => d.scenario);
-            scenarioGroups.forEach(([key, values]) => {
-                svg.append("path")
-                    .datum(values)
-                    .attr("class", "line")
-                    .attr("fill", "none")
-                    .attr("stroke", color(key))
-                    .attr("stroke-width", 4)
-                    .attr("d", line);
+            filteredData.forEach((d, i) => {
+                context.beginPath();
+                context.moveTo(x(d.year), y(d[variable]));
+                context.lineTo(x(d.year), y(d[variable]));
+                context.strokeStyle = color(i);
+                context.stroke();
             });
+        }
+
+        function drawAxis() {
+            // Add custom code to draw axes using canvas API
         }
     } else {
         console.error("Container not found");
     }
 });
+
