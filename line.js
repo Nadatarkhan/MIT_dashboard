@@ -83,12 +83,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     label.appendChild(document.createTextNode(["Business as usual", "Partial implementation", "Full implementation"][index]));
                     container.appendChild(label);
                 });
-                const currentOptions = iconContainer.parentNode.querySelector('.implementation-options');
+                const currentOptions = iconContainer.querySelector('.implementation-options');
                 if (currentOptions) {
                     console.log("Removing existing options");
-                    iconContainer.parentNode.removeChild(currentOptions);
+                    iconContainer.removeChild(currentOptions);
                 }
-                iconContainer.appendChild(container);
+                iconContainer.appendChild(container); // Append directly to iconContainer
             }
 
             function updatePlot(variable) {
