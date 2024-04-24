@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
-        let implementationLevel = "baseline"; // Default implementation level
+        let implementationLevel = ""; // No implementation level by default
 
         d3.csv("data/example_data.csv").then(function(data) {
             console.log("Data loaded successfully");
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
+                grid: d.grid,
                 implementation: d.Implementation
             }));
 
@@ -40,9 +41,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.addEventListener('click', function() {
                     implementationLevel = this.getAttribute('data-field');
                     console.log("Icon clicked, implementation level set to:", implementationLevel);
-                    updatePlot(selectedVariable);
+                    if (this.querySelector('.implementation-options')) {
+                        this.removeChild(this.querySelector('.implementation-options'));
+                    } else {
+                        showImplementationOptions(this);
+                    }
                 });
             });
+
+            function showImplementationOptions(iconContainer) {
+                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+                const container = document.createElement('div');
+                container.className = 'implementation-options';
+                ['baseline', 'partial', 'full'].forEach((level, index) => {
+                    const label = document.createElement('label');
+                    const radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.name = 'implementationFilter';
+                    radioButton.value = level;
+                    if (index === 0) radioButton.checked = true;
+                    radioButton.onchange = () => {
+                        implementationLevel = radioButton.value;
+                        console.log("Implementation level changed to:", implementationLevel);
+                        updatePlot(selectedVariable);
+                    };
+                    label.appendChild(radioButton);
+                    label.appendChild(document.createTextNode(level));
+                    container.appendChild(label);
+                });
+                iconContainer.appendChild(container);
+            }
 
             function updatePlot(variable) {
                 console.log("Updating plot for variable:", variable);
@@ -119,10 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
-
-
-
-
 
 
 
