@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function showImplementationOptions(iconContainer) {
                 console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+                const existingOptions = iconContainer.querySelector('.implementation-options');
+                if (existingOptions) {
+                    console.log("Removing existing implementation options");
+                    iconContainer.removeChild(existingOptions);
+                }
                 const container = document.createElement('div');
                 container.className = 'implementation-options';
                 ['baseline', 'partial', 'full'].forEach((level, index) => {
@@ -83,12 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     label.appendChild(document.createTextNode(["Business as usual", "Partial implementation", "Full implementation"][index]));
                     container.appendChild(label);
                 });
-                const currentOptions = iconContainer.querySelector('.implementation-options');
-                if (currentOptions) {
-                    console.log("Removing existing options");
-                    iconContainer.removeChild(currentOptions);
-                }
-                iconContainer.appendChild(container); // Append directly to iconContainer
+                iconContainer.appendChild(container);
             }
 
             function updatePlot(variable) {
@@ -166,5 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
+
 
 
