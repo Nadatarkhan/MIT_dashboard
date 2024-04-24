@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+        const containerWidth = container.clientWidth - 60; // Subtracting left and right margins
+        const containerHeight = container.clientHeight - 70; // Subtracting top and bottom margins
 
-        // Create a smaller canvas for a better fit
+        // Create a canvas instead of SVG
         const canvas = d3.select(container)
             .append("canvas")
             .attr("width", containerWidth)
             .attr("height", containerHeight);
         const context = canvas.node().getContext("2d");
 
-        const margin = { top: 40, right: 30, bottom: 50, left: 60 },
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
-            height = containerHeight - margin.top - margin.bottom - 40; // Additional height adjustment
+            height = containerHeight - margin.top - margin.bottom;
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all"; // Default grid filter
-        let emissionsData;
+        let emissionsData; // Define emissionsData variable here
 
         d3.csv("data/example_data.csv").then(function(data) {
             emissionsData = data.map(d => ({
@@ -31,6 +31,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }));
 
             updatePlot(selectedVariable);
+
+            document.querySelectorAll('.button-container button').forEach(button => {
+                button.addEventListener('click', function() {
+                    selectedVariable = this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost";
+                    updatePlot(selectedVariable);
+                });
+            });
+
+            document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
+                input.addEventListener('change', function() {
+                    gridFilter = this.value;
+                    updatePlot(selectedVariable);
+                });
+            });
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
         });
 
         function updatePlot(variable) {
@@ -42,44 +58,47 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[variable])]);
 
+            // Clear the canvas
             context.clearRect(0, 0, containerWidth, containerHeight);
             context.save();
             context.translate(margin.left, margin.top);
 
-            drawAxis();
-
+            // Draw lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
-            filteredData.forEach((group, index) => {
-                const values = group[1];
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d[variable]))
+                .context(context);
+
+            const scenarioGroups = d3.groups(filteredData, d => d.scenario);
+            scenarioGroups.forEach((group, index) => {
                 context.beginPath();
-                values.forEach((d, i) => {
-                    if (i === 0) {
-                        context.moveTo(x(d.year), y(d[variable]));
-                    } else {
-                        context.lineTo(x(d.year), y(d[variable]));
-                    }
-                });
+                line(group[1]);
+                context.lineWidth = 4;
                 context.strokeStyle = color(index);
                 context.stroke();
             });
 
             context.restore();
+            drawAxis();
         }
 
         function drawAxis() {
-            // X-axis
-            context.beginPath();
-            context.moveTo(0, height);
-            context.lineTo(width, height);
-            context.stroke();
+            // Draw X-axis
+            context.save();
+            context.translate(margin.left, height + margin.top);
+            context.scale(1, -1);
+            x.axisBottom().scale(x)(context);
+            context.restore();
 
-            // Y-axis
-            context.beginPath();
-            context.moveTo(0, 0);
-            context.lineTo(0, height);
-            context.stroke();
+            // Draw Y-axis
+            context.save();
+            context.translate(margin.left, margin.top);
+            y.axisLeft().scale(y)(context);
+            context.restore();
         }
     } else {
         console.error("Container not found");
     }
 });
+
