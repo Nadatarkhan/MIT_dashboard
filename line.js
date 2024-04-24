@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let selectedVariable = "emission";
-        let gridFilter = "all";
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all"; // Default grid filter
 
         d3.csv("data/example_data.csv").then(function(data) {
             let emissionsData = data.map(d => ({
@@ -57,26 +57,30 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[variable])]);
 
-
             // Clear the canvas
             context.clearRect(0, 0, containerWidth, containerHeight);
 
-            // Draw axes
-            drawAxis();
-
             // Draw lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
-            filteredData.forEach((d, i) => {
+            const scenarioGroups = d3.groups(filteredData, d => d.scenario);
+            scenarioGroups.forEach((group, index) => {
+                const values = group[1];
                 context.beginPath();
-                context.moveTo(x(d.year), y(d[variable]));
-                context.lineTo(x(d.year), y(d[variable]));
-                context.strokeStyle = color(i);
+                values.forEach((d, i) => {
+                    if (i === 0) {
+                        context.moveTo(x(d.year), y(d[variable]));
+                    } else {
+                        context.lineTo(x(d.year), y(d[variable]));
+                    }
+                });
+                context.strokeStyle = color(index);
                 context.stroke();
             });
         }
 
         function drawAxis() {
-            // Add custom code to draw axes using canvas API
+            // Add custom code to draw axes using the canvas API
+            // This is a placeholder for actual axis drawing code
         }
     } else {
         console.error("Container not found");
