@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all";
-        let scenarioFilters = new Set(); // Store selected scenarios to filter
+        let scenarioFilter = ""; // No scenario filter by default
         let implementationLevel = "baseline"; // Default implementation level
 
         d3.csv("data/example_data.csv").then(function(data) {
@@ -39,14 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             updatePlot(selectedVariable);
 
-            document.querySelectorAll('.button-container button').forEach(button => {
-                button.addEventListener('click', function() {
-                    selectedVariable = this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost";
-                    console.log("Variable changed to:", selectedVariable);
-                    updatePlot(selectedVariable);
-                });
-            });
-
             document.querySelectorAll('input[name="gridFilter"]').forEach(input => {
                 input.addEventListener('change', function() {
                     gridFilter = this.value;
@@ -57,23 +49,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
-                    const scenario = this.getAttribute('data-field');
-                    console.log("Icon clicked, scenario filter toggled for:", scenario);
-                    if (scenarioFilters.has(scenario)) {
-                        scenarioFilters.delete(scenario); // Deselect scenario
+                    scenarioFilter = this.getAttribute('data-field');
+                    console.log("Icon clicked, scenario filter set to:", scenarioFilter);
+                    if (this.querySelector('.implementation-options')) {
+                        this.removeChild(this.querySelector('.implementation-options'));
                     } else {
-                        scenarioFilters.add(scenario); // Select scenario
+                        showImplementationOptions(this);
                     }
-                    updatePlot(selectedVariable);
                 });
             });
 
+            function showImplementationOptions(iconContainer) {
+                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
+                const container = document.createElement('div');
+                container.className = 'implementation-options';
+                ['baseline', 'partial', 'full'].forEach((level, index) => {
+                    const label = document.createElement('label');
+                    const radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.name = 'implementationFilter';
+                    radioButton.value = level;
+                    if (index === 0) radioButton.checked = true;
+                    radioButton.onchange = () => {
+                        implementationLevel = radioButton.value;
+                        console.log("Implementation level changed to:", implementationLevel);
+                        updatePlot(selectedVariable);
+                    };
+                    label.appendChild(radioButton);
+                    label.appendChild(document.createTextNode(level));
+                    container.appendChild(label);
+                });
+                iconContainer.appendChild(container);
+            }
+
             function updatePlot(variable) {
                 console.log("Updating plot for variable:", variable);
-                const filteredData = emissionsData.filter(d => {
-                    const isSelectedScenario = scenarioFilters.size === 0 || scenarioFilters.has(d.scenario);
-                    return (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && isSelectedScenario && d.implementation === implementationLevel;
-                });
+                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || (d.scenario === scenarioFilter && d.implementation === implementationLevel)));
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
@@ -120,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
+                    context.fillText(d, -70, -y (d) + 3); // Shift label left for more space
                 });
                 context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
@@ -146,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
-
 
 
 
