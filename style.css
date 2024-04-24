@@ -178,9 +178,14 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
-    opacity: 1;
+    opacity: 0; /* Initially hide the tooltip */
     pointer-events: none;
     font-size: 10px;
+    transition: opacity 0.3s ease; /* Add transition for smooth visibility */
+}
+
+.icon-container:hover .tooltip {
+    opacity: 1; /* Show the tooltip when hovering over the icon */
 }
 
 .pheasant-demure-button, .solid, .light {
