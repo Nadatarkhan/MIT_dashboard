@@ -75,6 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Updating plot");
                 const filteredData = emissionsData.filter(d => d.implementation === implementationLevel);
 
+                if (filteredData.length === 0) {
+                    console.log("No data found for the selected implementation level:", implementationLevel);
+                    return;
+                }
+
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d.emission)]);
 
@@ -97,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.restore();
                 drawAxis();
             }
+
 
             function drawAxis() {
                 console.log("Drawing axes");
