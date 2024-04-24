@@ -23,6 +23,20 @@
 </div>
 <div class="container">
     <div class="top-container">
+        <div class="controls">
+            <div class="toggle-wrapper">
+                <input type="radio" id="all" name="gridFilter" value="all" checked>
+                <label for="all">All</label>
+                <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
+                <label for="decarbonized">Decarbonized</label>
+                <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
+                <label for="notDecarbonized">Not Decarbonized</label>
+            </div>
+            <div class="button-container">
+                <button class="pheasant-demure-button solid light hover blink">Emissions</button>
+                <button class="pheasant-demure-button solid light hover blink">Cost</button>
+            </div>
+        </div>
         <div class="visual visual1">
             <div class="icon-description">
                 <h2>Technologies</h2>
@@ -36,25 +50,11 @@
                 <div class="icon-container" data-field="district"><img src="icons/2.png" alt="District Energy Systems"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="schedules"><img src="icons/3.png" alt="Temperature Control"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="lab"><img src="icons/4.png" alt="Energy-efficient labs"><span class="icon-label"></span></div>
-                <div class="icon-container" data-field="deepgeo"><img src="icons/5.png" alt="Deep Geothermal"><span class="icon-label"></span></div>
+                <div class="icon-container" data-field="deepgeo"><img src="icons/5.png" alt="Deep Geothermal"><span the="icon-label"></span></div>
                 <div class="icon-container" data-field="nuclear"><img src="icons/6.png" alt="Nuclear Batteries"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="ess"><img src="icons/7.png" alt="Energy storage + EVs"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="ccs"><img src="icons/8.png" alt="Local Carbon Capture"><span class="icon-label"></span></div>
                 <div class="icon-container" data-field="grid"><img src="icons/10.png" alt="Future grid emissions"><span class="icon-label"></span></div>
-            </div>
-            <div class="controls-container">
-                <div class="toggle-wrapper">
-                    <input type="radio" id="all" name="gridFilter" value="all" checked>
-                    <label for="all">All</label>
-                    <input type="radio" id="decarbonized" name="gridFilter" value="decarbonized">
-                    <label for="decarbonized">Decarbonized</label>
-                    <input type="radio" id="notDecarbonized" name="gridFilter" value="notDecarbonized">
-                    <label for="notDecarbonized">Not Decarbonized</label>
-                </div>
-                <div class="button-container">
-                    <button class="pheasant-demure-button solid light hover blink">Emissions</button>
-                    <button class="pheasant-demure-button solid light hover blink">Cost</button>
-                </div>
             </div>
             <div class="graph-container" id="lineChart"></div>
         </div>
@@ -105,7 +105,6 @@
 </script>
 </body>
 </html>
-
 
 
 
