@@ -41,8 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             function updatePlot(variable) {
-                x.domain(d3.extent(emissionsData, d => d.year));
-                y.domain([0, d3.max(emissionsData, d => d[variable])]);
+                // Filter the data based on the selected scenario
+                const filteredData = emissionsData.filter(d => {
+                    const selectedScenario = document.querySelector('input[name="filter"]:checked').value;
+                    return d.scenario === selectedScenario;
+                });
+
+                x.domain(d3.extent(filteredData, d => d.year));
+                y.domain([0, d3.max(filteredData, d => d[variable])]);
 
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 context.save();
@@ -54,14 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     .y(d => y(d[variable]))
                     .context(context);
 
-                const scenarioGroups = d3.groups(emissionsData, d => d.scenario);
-                scenarioGroups.forEach((group, index) => {
-                    context.beginPath();
-                    line(group[1]);
-                    context.lineWidth = 0.1;
-                    context.strokeStyle = color(index);
-                    context.stroke();
-                });
+                context.beginPath();
+                line(filteredData);
+                context.lineWidth = 0.1;
+                context.strokeStyle = color(0);
+                context.stroke();
 
                 context.restore();
                 drawAxis();
