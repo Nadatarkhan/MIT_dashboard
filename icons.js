@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const iconContainers = document.querySelectorAll('.icon-container');
 
     function createRadioButtons(container, selectedScenario) {
+        console.log("Creating radio buttons...");
+
         removeRadioButtons(); // Ensure no duplicates
 
         const radioContainer = document.createElement('div');
@@ -33,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Add event listener to each radio button
             radio.addEventListener('change', function() {
+                console.log("Radio button clicked:", radio.value);
                 const selectedValue = this.value;
                 updatePlot(selectedScenario, selectedValue);
             });
@@ -47,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function removeRadioButtons() {
+        console.log("Removing radio buttons...");
+
         const existingContainers = document.querySelectorAll('.radio-buttons-container');
         existingContainers.forEach(container => container.remove());
     }
@@ -54,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update the plot
     // Assumes `updatePlot` from line.js is accessible globally
     function updatePlot(field, value) {
+        console.log("Updating plot with:", field, value);
+
         // Assuming `data` is your dataset that you pass to the `updatePlot` function in line.js
         const filteredData = data.filter(row => row[field] === value);
         // Call the updatePlot from line.js with the filtered data
@@ -62,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
+            console.log("Icon container clicked:", container);
             const selectedScenario = container.getAttribute('data-field');
             if (container.contains(container.querySelector('.radio-buttons-container'))) {
                 removeRadioButtons();
