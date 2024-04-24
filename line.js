@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
             });
 
+
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[variable])]);
 
