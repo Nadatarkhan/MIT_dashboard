@@ -1,55 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     const iconContainers = document.querySelectorAll('.icon-container');
-    const statusMapping = {
-        'Business as usual': 'baseline',
-        'Partial implementation': 'partial',
-        'Full implementation': 'full'
-    };
 
-    function createCircles(container, selectedScenario) {
-        removeCircles(); // Ensure no duplicates
+    function createRadioButtons(container) {
+        removeRadioButtons(); // Ensure no duplicates
 
-        const circleContainer = document.createElement('div');
-        circleContainer.classList.add('circles-container');
-        circleContainer.style.position = 'absolute';
-        circleContainer.style.left = '0';
-        circleContainer.style.top = '100%';
+        const radioContainer = document.createElement('div');
+        radioContainer.classList.add('radio-buttons-container');
+        radioContainer.style.position = 'absolute';
+        radioContainer.style.left = '0';
+        radioContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
         const values = ["baseline", "partial", "full"];  // Filter values
 
         for (let i = 0; i < 3; i++) {
-            const circleLabelContainer = document.createElement('div');
-            circleLabelContainer.style.display = 'flex';
-            circleLabelContainer.style.alignItems = 'center';
-            circleLabelContainer.style.marginBottom = '5px';
+            const radioLabelContainer = document.createElement('label');
+            radioLabelContainer.style.display = 'flex';
+            radioLabelContainer.style.alignItems = 'center';
+            radioLabelContainer.style.marginBottom = '5px';
 
-            const circle = document.createElement('input');
-            circle.type = 'radio';
-            circle.name = 'filter';  // All radio buttons share the same name
-            circle.value = values[i];
-            circle.style.marginRight = '5px';
-
-            // If the current scenario matches the selected scenario, create a filled circle
-            if (values[i] === selectedScenario) {
-                circle.checked = true;
-            }
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'filter';  // All radio buttons share the same name
+            radio.value = values[i];
+            radio.style.marginRight = '5px';
 
             const text = document.createElement('span');
             text.textContent = labels[i];
             text.style.fontSize = '10px'; // Set the font size for the text labels
             text.style.fontFamily = 'Roboto, sans-serif'; // Set the font family to Roboto
 
-            circleLabelContainer.appendChild(circle);
-            circleLabelContainer.appendChild(text);
-            circleContainer.appendChild(circleLabelContainer);
+            radioLabelContainer.appendChild(radio);
+            radioLabelContainer.appendChild(text);
+            radioContainer.appendChild(radioLabelContainer);
         }
 
-        container.appendChild(circleContainer);
+        container.appendChild(radioContainer);
     }
 
-    function removeCircles() {
-        const existingContainers = document.querySelectorAll('.circles-container');
+    function removeRadioButtons() {
+        const existingContainers = document.querySelectorAll('.radio-buttons-container');
         existingContainers.forEach(container => container.remove());
     }
 
@@ -65,12 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
     iconContainers.forEach(container => {
         container.addEventListener('click', function() {
             const selectedScenario = container.getAttribute('data-field');
-            if (container.contains(container.querySelector('.circles-container'))) {
-                removeCircles();
+            if (container.contains(container.querySelector('.radio-buttons-container'))) {
+                removeRadioButtons();
             } else {
-                createCircles(container, selectedScenario);
+                createRadioButtons(container, selectedScenario);
             }
         });
     });
 });
+
 
