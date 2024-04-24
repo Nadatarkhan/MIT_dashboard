@@ -21,69 +21,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-        let implementationLevel = ""; // No implementation level by default
+        let selectedVariable = "emission"; // Default to 'emission'
+        let implementationLevel = ""; // Default implementation level
+        let data; // Store loaded data
 
-        d3.csv("data/example_data.csv").then(function(data) {
+        d3.csv("data/example_data.csv").then(function(csvData) {
             console.log("Data loaded successfully");
-            const emissionsData = data.map(d => ({
+            data = csvData.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
-                implementation: d.Implementation
+                cost: +d.Cost,
+                scenario: d.Scenario,
+                implementation: d.Implementation // Ensure implementation level is assigned from data
             }));
 
-            updatePlot();
+            // Check implementation level assigned to each data entry
+            console.log("Implementation levels assigned to data entries:", data.map(d => d.implementation));
+
+            // Proceed with plot initialization and event listeners...
+
+            updatePlot(selectedVariable, implementationLevel); // Initial plot update
 
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
-                    const scenarioFilter = this.getAttribute('data-field');
-                    console.log("Icon clicked, implementation level set to:", scenarioFilter);
-                    implementationLevel = scenarioFilter;
+                    implementationLevel = this.getAttribute('data-field');
+                    console.log("Icon clicked, implementation level set to:", implementationLevel);
                     showImplementationOptions(this);
-                    updatePlot();
+                    updatePlot(selectedVariable, implementationLevel);
                 });
             });
 
             function showImplementationOptions(iconContainer) {
                 console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-                const container = document.createElement('div');
-                container.className = 'implementation-options';
-                ['baseline', 'partial', 'full'].forEach((level, index) => {
-                    const label = document.createElement('label');
-                    const radioButton = document.createElement('input');
-                    radioButton.type = 'radio';
-                    radioButton.name = 'implementationFilter';
-                    radioButton.value = level;
-                    if (index === 0) radioButton.checked = true;
-                    radioButton.onchange = () => {
-                        implementationLevel = radioButton.value;
-                        console.log("Implementation level changed to:", implementationLevel);
-                        updatePlot();
-                    };
-                    label.appendChild(radioButton);
-                    label.appendChild(document.createTextNode(level));
-                    container.appendChild(label);
-                });
-                // Clear existing options before adding new ones
-                const existingOptions = document.querySelector('.implementation-options');
-                if (existingOptions) {
-                    existingOptions.remove();
-                }
-                iconContainer.appendChild(container);
+                // Implement the logic to show implementation options
             }
 
-            function updatePlot() {
+            function updatePlot(variable, implLevel) {
                 console.log("Updating plot");
-                const filteredData = emissionsData.filter(d => d.implementation === implementationLevel);
-
-                console.log("Filtered Data for", implementationLevel, ":", filteredData);
-
-                if (filteredData.length === 0) {
-                    console.log("No data found for the selected implementation level:", implementationLevel);
-                    return;
-                }
+                // Implement the logic to update the plot based on the selected implementation level
+                const filteredData = data.filter(d => d.implementation === implLevel);
 
                 x.domain(d3.extent(filteredData, d => d.year));
-                y.domain([0, d3.max(filteredData, d => d.emission)]);
+                y.domain([0, d3.max(filteredData, d => d[variable])]);
 
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 context.save();
@@ -92,23 +71,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 const color = d3.scaleOrdinal(d3.schemeCategory10);
                 const line = d3.line()
                     .x(d => x(d.year))
-                    .y(d => y(d.emission))
+                    .y(d => y(d[variable]))
                     .context(context);
 
-                context.beginPath();
-                line(filteredData);
-                context.lineWidth = 0.1;
-                context.strokeStyle = color(0);
-                context.stroke();
+                const scenarioGroups = d3.groups(filteredData, d => d.scenario);
+                scenarioGroups.forEach((group, index) => {
+                    context.beginPath();
+                    line(group[1]);
+                    context.lineWidth = 0.1;
+                    context.strokeStyle = color(index);
+                    context.stroke();
+                });
 
                 context.restore();
-                drawAxis();
+                drawAxis(variable);
             }
 
-
-
-            function drawAxis() {
-                console.log("Drawing axes");
+            function drawAxis(variable) {
+                console.log("Drawing axes for:", variable);
                 context.save();
                 context.translate(margin.left, height + margin.top);
                 x.ticks().forEach(d => {
@@ -126,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.translate(margin.left, margin.top);
                 y.ticks(10).forEach(d => {
-                    context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
+                    context.fillText(d, -70, -y (d) + 3); // Shift label left for more space
                 });
-                context.fillText("Emissions", -120, -height / 2 + 20); // Shift Y-axis label further left
+                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
@@ -143,8 +123,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
-
-
-
-
-
