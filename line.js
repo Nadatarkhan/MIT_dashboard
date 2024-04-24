@@ -41,13 +41,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             function updatePlot(variable) {
-                // Filter the data based on the selected scenario
+                // Get the selected scenario
                 const selectedScenarioInput = document.querySelector('input[name="filter"]:checked');
                 if (!selectedScenarioInput) {
                     console.error("No scenario selected");
                     return;
                 }
                 const selectedScenario = selectedScenarioInput.value;
+
+                // Filter the data based on the selected scenario
                 const filteredData = emissionsData.filter(d => d.scenario === selectedScenario);
 
                 x.domain(d3.extent(filteredData, d => d.year));
@@ -118,4 +120,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Controls container not found");
     }
 });
+
 
