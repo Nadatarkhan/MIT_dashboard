@@ -22,9 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
-        let gridFilter = "all";
-        let scenarioFilters = []; // Array to hold selected scenarios to be excluded
-        let implementationFilters = []; // Array to hold selected implementation levels to be excluded
+        let implementationLevel = "baseline"; // Default implementation level
 
         d3.csv("data/example_data.csv").then(function(data) {
             console.log("Data loaded successfully");
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
-                grid: d.grid,
                 implementation: d.Implementation
             }));
 
@@ -41,44 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
-                    const scenario = this.getAttribute('data-field');
-                    console.log("Icon clicked, scenario filter set to:", scenario);
-                    toggleScenarioFilter(scenario);
+                    implementationLevel = this.getAttribute('data-field');
+                    console.log("Icon clicked, implementation level set to:", implementationLevel);
                     updatePlot(selectedVariable);
                 });
             });
 
-            function toggleScenarioFilter(scenario) {
-                const index = scenarioFilters.indexOf(scenario);
-                if (index === -1) {
-                    // Scenario not found in filters, add it
-                    scenarioFilters.push(scenario);
-                } else {
-                    // Scenario found in filters, remove it
-                    scenarioFilters.splice(index, 1);
-                }
-            }
-
-            function toggleImplementationFilter(implementation) {
-                const index = implementationFilters.indexOf(implementation);
-                if (index === -1) {
-                    // Implementation not found in filters, add it
-                    implementationFilters.push(implementation);
-                } else {
-                    // Implementation found in filters, remove it
-                    implementationFilters.splice(index, 1);
-                }
-            }
-
             function updatePlot(variable) {
                 console.log("Updating plot for variable:", variable);
-                // Filter data based on grid and implementation level filters
-                let filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!implementationFilters.length || !implementationFilters.includes(d.implementation)));
-
-                // Remove data points corresponding to selected scenarios
-                scenarioFilters.forEach(scenario => {
-                    filteredData = filteredData.filter(d => d.scenario !== scenario);
-                });
+                const filteredData = emissionsData.filter(d => d.implementation === implementationLevel);
 
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
@@ -140,6 +108,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.error("Container not found");
+    }
+
+    const controlsContainer = document.querySelector('.controls-container');
+    if (controlsContainer) {
+        const graphContainer = document.querySelector('.graph-container');
+        graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
+        console.log("Controls moved under the plot");
+    } else {
+        console.error("Controls container not found");
     }
 });
 
