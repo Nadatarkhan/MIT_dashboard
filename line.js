@@ -20,29 +20,52 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all"; // Default grid filter
-        let emissionsData;
 
+        // Global state for current filters, assuming there is a direct mapping
+        window.currentFilters = {
+            grid: null,
+            retrofit: null,
+            schedules: null,
+            lab: null,
+            district: null,
+            nuclear: null,
+            deepgeo: null,
+            renovate: null,
+            ess: null,
+            ccs: null
+        };
+
+        // Load data and then apply initial filters and draw plot
         d3.csv("data/example_data.csv").then(function(data) {
-            emissionsData = data.map(d => ({
+            window.emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
-                grid: d.grid
+                grid: d.grid,
+                retrofit: d.retrofit,
+                schedules: d.schedules,
+                lab: d.lab,
+                district: d.district,
+                nuclear: d.nuclear,
+                deepgeo: d.deepgeo,
+                renovate: d.renovate,
+                ess: d.ess,
+                ccs: d.ccs
             }));
 
-            updatePlot(selectedVariable);
+            window.updatePlot(selectedVariable);
 
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
-                    updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
+                    window.updatePlot(this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost");
                 });
             });
 
             document.querySelectorAll('input[name="gridFilter"]').forEach((input) => {
                 input.addEventListener('change', function() {
                     gridFilter = this.value;
-                    updatePlot(selectedVariable);
+                    window.updatePlot(selectedVariable);
                 });
             });
 
@@ -50,42 +73,55 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Error loading or processing data:", error);
         });
 
-        function updatePlot(variable) {
+        // Update the plot with new variable and filters
+        window.updatePlot = function(variable) {
             selectedVariable = variable;
 
-            const filteredData = emissionsData.filter(d => {
-                if (gridFilter === "all") return true;
-                return gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization";
+            // Apply all current filters to the data
+            const filteredData = window.emissionsData.filter(d => {
+                return Object.keys(window.currentFilters).every(field => {
+                    const filterValue = window.currentFilters[field];
+                    return filterValue === null || d[field] === filterValue;
+                }) && (gridFilter === "all" ||
+                    (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "no decarbonization"));
             });
 
+            // Set the scales based on the filtered data
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d[selectedVariable])]);
 
+            // Remove the old axes
             svg.selectAll(".x-axis").remove();
             svg.selectAll(".y-axis").remove();
+
+            // Draw the new axes
             svg.append("g")
                 .attr("class", "x-axis")
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(x).tickPadding(15).tickSizeInner(-height))
                 .selectAll("text")
-                .style("font-size", "18px"); // Increased font size for axis numbers
+                .style("font-size", "18px");
 
             svg.append("g")
                 .attr("class", "y-axis")
                 .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
                 .selectAll("text")
-                .style("font-size", "18px"); // Increased font size for axis numbers
+                .style("font-size", "18px");
 
-            // Make inner lines light grey
+            // Style for the grid lines
             svg.selectAll(".x-axis line, .y-axis line")
-                .style("stroke", "#ddd"); // Very light grey for grid lines
+                .style("stroke", "#ddd");
 
+            // Remove the old line paths
             svg.selectAll(".line").remove();
+
+            // Draw the lines
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d[selectedVariable]));
 
+            // Group the data by scenario and draw lines
             const scenarioGroups = d3.groups(filteredData, d => d.scenario);
             scenarioGroups.forEach(([key, values]) => {
                 svg.append("path")
@@ -93,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 4) // Increased line weight even more
+                    .attr("stroke-width", 4)
                     .attr("d", line);
             });
-        }
+        };
     } else {
         console.error("Container not found");
     }

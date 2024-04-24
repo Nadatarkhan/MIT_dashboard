@@ -79,7 +79,7 @@ body, html {
     font-weight: bold;
     color: black;
     text-align: center;  /* Ensures text is centered if multiple lines are needed */
-    padding-bottom: 5px;  /* Add more padding if needed */
+    padding-bottom: 7px;  /* padding between icons and labels */
 }
 
 .circle {
