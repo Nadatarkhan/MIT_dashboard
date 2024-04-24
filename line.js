@@ -41,23 +41,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Proceed with plot initialization and event listeners...
             updatePlot(selectedVariable, implementationLevel); // Initial plot update
 
-            document.querySelectorAll('.icon-container').forEach(container => {
-                container.addEventListener('click', function() {
-                    implementationLevel = this.getAttribute('data-field');
-                    console.log("Icon clicked, implementation level set to:", implementationLevel);
-                    showImplementationOptions(this);
-                    updatePlot(selectedVariable, implementationLevel);
-                });
+            // Event listener for baseline button
+            document.getElementById('baseline-btn').addEventListener('click', function() {
+                implementationLevel = "baseline";
+                console.log("Baseline button clicked, implementation level set to:", implementationLevel);
+                updatePlot(selectedVariable, implementationLevel);
+            });
+
+            // Event listener for partial button
+            document.getElementById('partial-btn').addEventListener('click', function() {
+                implementationLevel = "partial";
+                console.log("Partial button clicked, implementation level set to:", implementationLevel);
+                updatePlot(selectedVariable, implementationLevel);
+            });
+
+            // Event listener for full button
+            document.getElementById('full-btn').addEventListener('click', function() {
+                implementationLevel = "full";
+                console.log("Full button clicked, implementation level set to:", implementationLevel);
+                updatePlot(selectedVariable, implementationLevel);
             });
 
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
-
-        function showImplementationOptions(iconContainer) {
-            console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-            // Implement the logic to show implementation options
-        }
 
         function updatePlot(variable, implLevel) {
             console.log("Updating plot");
@@ -127,5 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 });
+
 
 
