@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const radioContainer = document.createElement('div');
         radioContainer.classList.add('radio-buttons-container');
-        radioContainer.style.position = 'absolute';
-        radioContainer.style.left = '0';
-        radioContainer.style.top = '100%';
 
         const labels = ["Business as usual", "Partial implementation", "Full implementation"];
         const values = ["baseline", "partial", "full"];  // Filter values
@@ -41,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Position the radio buttons
+        radioContainer.style.position = 'absolute';
+        radioContainer.style.left = '0';
+        radioContainer.style.top = '100%';
+
         container.appendChild(radioContainer);
     }
 
@@ -69,4 +71,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
