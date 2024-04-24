@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.visual1');
     if (container) {
-        const containerWidth = container.clientWidth - 60; // Subtracting left and right margins
-        const containerHeight = container.clientHeight - 70; // Subtracting top and bottom margins
+        // Set explicit dimensions if needed
+        const containerWidth = container.clientWidth - 100; // Further reduce width
+        const containerHeight = container.clientHeight - 120; // Further reduce height
 
         // Create a canvas instead of SVG
         const canvas = d3.select(container)
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .attr("height", containerHeight);
         const context = canvas.node().getContext("2d");
 
-        const margin = { top: 20, right: 30, bottom: 50, left: 60 },
+        const margin = { top: 40, right: 40, bottom: 60, left: 80 }, // Increased margins
             width = containerWidth - margin.left - margin.right,
             height = containerHeight - margin.top - margin.bottom;
 
