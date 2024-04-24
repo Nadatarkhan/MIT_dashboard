@@ -20,13 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
         let gridFilter = "all"; // Default grid filter
+        let emissionsData;
 
-        // Load both CSV files and concatenate their data
-        Promise.all([
-            d3.csv("data/example_data_1.csv"),
-            d3.csv("data/example_data_2.csv")
-        ]).then(function(files) {
-            const emissionsData = files.flat().map(d => ({
+        d3.csv("data/example_data.csv").then(function(data) {
+            emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: d.grid
             }));
 
-            // Once data is loaded, set up the initial plot
             updatePlot(selectedVariable);
 
             document.querySelectorAll('.button-container button').forEach(button => {
@@ -50,6 +46,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
+
+        d3.csv("data/example_data.csv").then(function(data) {
+            console.log(data);  // Check the parsed data
+            emissionsData = data.map(d => ({
+                year: new Date(d.epw_year),
+                emission: +d.Emissions,
+                cost: +d.Cost,
+                scenario: d.Scenario,
+                grid: d.grid
+            }));
+            updatePlot(selectedVariable);
         }).catch(function(error) {
             console.error("Error loading or processing data:", error);
         });
@@ -79,6 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .call(d3.axisLeft(y).ticks(6).tickPadding(15).tickSizeInner(-width))
                 .selectAll("text")
                 .style("font-size", "18px"); // Increased font size for axis numbers
+
+            // Make inner lines light grey
+            svg.selectAll(".x-axis line, .y-axis line")
+                .style("stroke", "#ddd"); // Very light grey for grid lines
 
             svg.selectAll(".line").remove();
             const color = d3.scaleOrdinal(d3.schemeCategory10);
