@@ -22,66 +22,70 @@ document.addEventListener('DOMContentLoaded', function() {
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
-        let implementationLevel = ""; // Default implementation level
-        let data; // Store loaded data
+        let gridFilter = "all";
+        let scenarioFilter = ""; // No scenario filter by default
+        let implementationLevel = "baseline"; // Default implementation level
 
-        d3.csv("data/example_data.csv").then(function(csvData) {
+        d3.csv("data/example_data.csv").then(function(data) {
             console.log("Data loaded successfully");
-            data = csvData.map(d => ({
+            const emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
+                cost: +d.Cost,
                 scenario: d.Scenario,
-                baseline: d.baseline,
-                partial: d.partial,
-                full: d.full
+                grid: d.grid,
+                implementation: d.Implementation
             }));
 
-            // Check implementation levels assigned to each data entry
-            console.log("Implementation levels assigned to data entries:", data.map(d => d.baseline, d.partial, d.full));
+            updatePlot(selectedVariable);
 
-            // Proceed with plot initialization and event listeners...
-            updatePlot(selectedVariable, implementationLevel); // Initial plot update
+            document.querySelectorAll('input[name="gridFilter"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    gridFilter = this.value;
+                    console.log("Grid filter changed to:", gridFilter);
+                    updatePlot(selectedVariable);
+                });
+            });
 
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
-                    implementationLevel = this.getAttribute('data-field');
-                    console.log("Icon clicked, implementation level set to:", implementationLevel);
-                    showImplementationOptions(this);
-                    updatePlot(selectedVariable, implementationLevel);
+                    scenarioFilter = this.getAttribute('data-field');
+                    console.log("Icon clicked, scenario filter set to:", scenarioFilter);
+                    if (this.querySelector('.implementation-options')) {
+                        this.removeChild(this.querySelector('.implementation-options'));
+                    } else {
+                        showImplementationOptions(this);
+                    }
                 });
             });
 
             function showImplementationOptions(iconContainer) {
                 console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
-                // Implement the logic to show implementation options
-                const implementationOptions = ['baseline', 'partial', 'full'];
-                implementationOptions.forEach(option => {
+                const container = document.createElement('div');
+                container.className = 'implementation-options';
+                ['baseline', 'partial', 'full'].forEach((level, index) => {
                     const label = document.createElement('label');
                     const radioButton = document.createElement('input');
                     radioButton.type = 'radio';
-                    radioButton.name = 'implementationLevel';
-                    radioButton.value = option;
-                    radioButton.addEventListener('change', function() {
-                        implementationLevel = option;
+                    radioButton.name = 'implementationFilter';
+                    radioButton.value = level;
+                    if (index === 0) radioButton.checked = true;
+                    radioButton.onchange = () => {
+                        implementationLevel = radioButton.value;
                         console.log("Implementation level changed to:", implementationLevel);
-                        updatePlot(selectedVariable, implementationLevel);
-                    });
+                        updatePlot(selectedVariable);
+                    };
                     label.appendChild(radioButton);
-                    label.appendChild(document.createTextNode(option));
-                    iconContainer.appendChild(label);
+                    label.appendChild(document.createTextNode(level));
+                    container.appendChild(label);
                 });
+                iconContainer.appendChild(container);
             }
 
-        }).catch(function(error) {
-            console.error("Error loading or processing data:", error);
-        });
+            function updatePlot(variable) {
+                console.log("Updating plot for variable:", variable);
+                const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || (d.scenario === scenarioFilter && d.implementation === implementationLevel)));
 
-        function updatePlot(variable, implLevel) {
-            console.log("Updating plot");
-            // Implement the logic to update the plot based on the selected implementation level
-            const filteredData = data.filter(d => d[implLevel] === implLevel);
-
-            if (filteredData.length > 0) {
                 x.domain(d3.extent(filteredData, d => d.year));
                 y.domain([0, d3.max(filteredData, d => d[variable])]);
 
@@ -106,45 +110,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 context.restore();
                 drawAxis(variable);
-            } else {
-                console.log("No data found for the selected implementation level:", implLevel);
             }
-        }
 
-        function drawAxis(variable) {
-            console.log("Drawing axes for:", variable);
-            context.save();
-            context.translate(margin.left, height + margin.top);
-            x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
-            });
-            context.fillText("Year", width / 2, 40); // X-axis Label
-            context.beginPath();
-            context.moveTo(0,0);
-            context.lineTo(width, 0);
-            context.strokeStyle = 'black';
-            context.stroke();
-            context.restore();
+            function drawAxis(variable) {
+                console.log("Drawing axes for:", variable);
+                context.save();
+                context.translate(margin.left, height + margin.top);
+                x.ticks().forEach(d => {
+                    context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
+                });
+                context.fillText("Year", width / 2, 40); // X-axis Label
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(width, 0);
+                context.strokeStyle = 'black';
+                context.stroke();
+                context.restore();
 
-            // Y-axis
-            context.save();
-            context.translate(margin.left, margin.top);
-            y.ticks(10).forEach(d => {
-                context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
-            });
-            context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
-            context.beginPath();
-            context.moveTo(0, 0);
-            context.lineTo(0, -height);
-            context.strokeStyle = 'black';
-            context.stroke();
-            context.restore();
-        }
+                // Y-axis
+                context.save();
+                context.translate(margin.left, margin.top);
+                y.ticks(10).forEach(d => {
+                    context.fillText(d, -70, -y (d) + 3); // Shift label left for more space
+                });
+                context.fillText(variable.charAt(0).toUpperCase() + variable.slice(1), -120, -height / 2 + 20); // Shift Y-axis label further left
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(0, -height);
+                context.strokeStyle = 'black';
+                context.stroke();
+                context.restore();
+            }
+        }).catch(function(error) {
+            console.error("Error loading or processing data:", error);
+        });
     } else {
         console.error("Container not found");
     }
-});
 
+    const controlsContainer = document.querySelector('.controls-container');
+    if (controlsContainer) {
+        const graphContainer = document.querySelector('.graph-container');
+        graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
+        console.log("Controls moved under the plot");
+    } else {
+        console.error("Controls container not found");
+    }
+});
 
 
 
