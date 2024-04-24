@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.visual1');
     if (container) {
+        console.log("Container found");
         const dpi = window.devicePixelRatio;
         const containerWidth = container.clientWidth - 100;
         const containerHeight = container.clientHeight - 230;
@@ -13,10 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.node().getContext("2d");
         context.scale(dpi, dpi);
 
-        const margin = { top: 40, right: 40, bottom: 60, left: 200 },
-            width = containerWidth - margin.left - margin.right,
-            height = containerHeight - margin.top - margin.bottom;
-
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
         let selectedVariable = "emission"; // Default to 'emission'
@@ -25,13 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let implementationLevel = "baseline"; // Default implementation level
 
         d3.csv("data/example_data.csv").then(function(data) {
+            console.log("Data loaded successfully");
             const emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
                 cost: +d.Cost,
                 scenario: d.Scenario,
                 grid: d.grid,
-                implementation: d.Implementation // Assuming there is a field for implementation level
+                implementation: d.Implementation
             }));
 
             updatePlot(selectedVariable);
@@ -39,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.button-container button').forEach(button => {
                 button.addEventListener('click', function() {
                     selectedVariable = this.textContent.trim().toLowerCase() === "emissions" ? "emission" : "cost";
+                    console.log("Variable changed to:", selectedVariable);
                     updatePlot(selectedVariable);
                 });
             });
@@ -46,19 +46,21 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('input[name="gridFilter"]').forEach(input => {
                 input.addEventListener('change', function() {
                     gridFilter = this.value;
+                    console.log("Grid filter changed to:", gridFilter);
                     updatePlot(selectedVariable);
                 });
             });
 
-            // Setting up scenario filters
             document.querySelectorAll('.icon-container').forEach(container => {
                 container.addEventListener('click', function() {
                     scenarioFilter = this.getAttribute('data-field');
+                    console.log("Icon clicked, scenario filter set to:", scenarioFilter);
                     showImplementationOptions(this);
                 });
             });
 
             function showImplementationOptions(iconContainer) {
+                console.log("Showing implementation options for:", iconContainer.getAttribute('data-field'));
                 const container = document.createElement('div');
                 container.className = 'implementation-options';
                 ['baseline', 'partial', 'full'].forEach((level, index) => {
@@ -70,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (index === 0) radioButton.checked = true;
                     radioButton.onchange = () => {
                         implementationLevel = radioButton.value;
+                        console.log("Implementation level changed to:", implementationLevel);
                         updatePlot(selectedVariable);
                     };
                     label.appendChild(radioButton);
@@ -77,11 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     container.appendChild(label);
                 });
                 const currentOptions = iconContainer.parentNode.querySelector('.implementation-options');
-                if (currentOptions) iconContainer.parentNode.removeChild(currentOptions);
+                if (currentOptions) {
+                    console.log("Removing existing options");
+                    iconContainer.parentNode.removeChild(currentOptions);
+                }
                 iconContainer.appendChild(container);
             }
 
             function updatePlot(variable) {
+                console.log("Updating plot for variable:", variable);
                 const filteredData = emissionsData.filter(d => (gridFilter === "all" || (gridFilter === "decarbonized" ? d.grid === "decarbonization" : d.grid === "bau")) && (!scenarioFilter || (d.scenario === scenarioFilter && d.implementation === implementationLevel)));
 
                 x.domain(d3.extent(filteredData, d => d.year));
@@ -111,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             function drawAxis() {
+                console.log("Drawing axes");
                 context.save();
                 context.translate(margin.left, height + margin.top);
                 x.ticks().forEach(d => {
@@ -145,11 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Container not found");
     }
 
-    // Move buttons and toggles under the plot
     const controlsContainer = document.querySelector('.controls-container');
     if (controlsContainer) {
         const graphContainer = document.querySelector('.graph-container');
         graphContainer.parentNode.insertBefore(controlsContainer, graphContainer.nextSibling);
+        console.log("Controls moved under the plot");
     } else {
         console.error("Controls container not found");
     }
