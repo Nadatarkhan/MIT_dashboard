@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("class", "line")
                     .attr("fill", "none")
                     .attr("stroke", color(key))
-                    .attr("stroke-width", 4)
+                    .attr("stroke-width", 1)
                     .attr("d", line);
             });
         }
