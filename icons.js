@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
         radioContainer.style.top = '100%';
 
         container.appendChild(radioContainer);
+
+        console.log("Radio buttons created and appended to DOM:", radioContainer);
     }
 
     function removeRadioButtons() {
