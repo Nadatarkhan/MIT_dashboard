@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let gridFilter = "all"; // Default grid filter
         let emissionsData;
 
-        d3.csv("data/example_data.csv").then(function(data) {
+        d3.csv("data/example_data_s.csv").then(function(data) {
             emissionsData = data.map(d => ({
                 year: new Date(d.epw_year),
                 emission: +d.Emissions,
