@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createRadioButtons(container, selectedScenario) {
         console.log("Creating radio buttons...");
-
         removeRadioButtons(); // Ensure no duplicates
 
         const radioContainer = document.createElement('div');
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function removeRadioButtons() {
         console.log("Removing radio buttons...");
-
         const existingContainers = document.querySelectorAll('.radio-buttons-container');
         existingContainers.forEach(container => container.remove());
     }
@@ -62,11 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Assumes `updatePlot` from line.js is accessible globally
     function updatePlot(field, value) {
         console.log("Updating plot with:", field, value);
-
-        // Assuming `data` is your dataset that you pass to the `updatePlot` function in line.js
         const filteredData = data.filter(row => row[field] === value);
         // Call the updatePlot from line.js with the filtered data
-        window.updatePlot(filteredData); // This will depend on the implementation of your line.js
+        window.updatePlot(field, filteredData); // Pass the field along with filtered data
     }
 
     iconContainers.forEach(container => {
@@ -81,3 +77,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
