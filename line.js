@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 y.ticks(10).forEach(d => {
                     context.fillText(d, -70, -y(d) + 3); // Shift label left for more space
                 });
-                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -100, -height / 2 + 20); // Shift Y-axis label further left
+                context.fillText(selectedVariable.charAt(0).toUpperCase() + selectedVariable.slice(1), -150, -height / 2 + 20); // Shift Y-axis label further left
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(0, -height);
