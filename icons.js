@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
             radioContainer.appendChild(radioLabelContainer);
 
             // Add event listener to each radio button
-            radio.addEventListener('change', function() {
+            radio.addEventListener('change', function(event) {
+                event.stopPropagation();
                 const selectedValue = this.value;
                 updatePlot(selectedScenario, selectedValue);
             });
@@ -53,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     iconContainers.forEach(container => {
-        container.addEventListener('click', function() {
+        container.addEventListener('click', function(event) {
+            event.stopPropagation();
             const selectedScenario = container.getAttribute('data-field');
             if (container.contains(container.querySelector('.radio-buttons-container'))) {
                 removeRadioButtons();
@@ -63,5 +65,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
