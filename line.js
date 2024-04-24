@@ -4,21 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
+        // Create a smaller canvas for a better fit
         const canvas = d3.select(container)
             .append("canvas")
             .attr("width", containerWidth)
             .attr("height", containerHeight);
         const context = canvas.node().getContext("2d");
 
-        const margin = { top: 40, right: 20, bottom: 50, left: 60 },
+        const margin = { top: 40, right: 30, bottom: 50, left: 60 },
             width = containerWidth - margin.left - margin.right,
-            height = containerHeight - margin.top - margin.bottom;
+            height = containerHeight - margin.top - margin.bottom - 40; // Additional height adjustment
 
         const x = d3.scaleTime().range([0, width]);
         const y = d3.scaleLinear().range([height, 0]);
-
-        let selectedVariable = "emission";
-        let gridFilter = "all";
+        let selectedVariable = "emission"; // Default to 'emission'
+        let gridFilter = "all"; // Default grid filter
         let emissionsData;
 
         d3.csv("data/example_data.csv").then(function(data) {
@@ -49,11 +49,17 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
 
             const color = d3.scaleOrdinal(d3.schemeCategory10);
-            filteredData.forEach((d, i) => {
+            filteredData.forEach((group, index) => {
+                const values = group[1];
                 context.beginPath();
-                context.moveTo(x(d.year), y(d[variable]));
-                context.lineTo(x(d.year), y(d[variable]));
-                context.strokeStyle = color(i);
+                values.forEach((d, i) => {
+                    if (i === 0) {
+                        context.moveTo(x(d.year), y(d[variable]));
+                    } else {
+                        context.lineTo(x(d.year), y(d[variable]));
+                    }
+                });
+                context.strokeStyle = color(index);
                 context.stroke();
             });
 
