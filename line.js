@@ -29,18 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv', 'grid'];
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
-
-        updatePlot(); // Call to initial plot update
-        drawMedianLine(emissionsData); // Additional call to draw the median line
 
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
@@ -77,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             filters[field].splice(filterIndex, 1);
                         }
                         updatePlot();
-                        drawMedianLine(emissionsData); // Redraw median line after updating plot
                     });
                 });
                 iconContainer.appendChild(form);
@@ -85,32 +81,99 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`${field} icon container not found`);
             }
         });
+
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
+        }
+
+        function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
+
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
+
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.emission))
+                .context(context);
+
+            context.beginPath();
+            line(filteredData);
+            context.lineWidth = 0.2;
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
+            context.stroke();
+
+            context.restore();
+
+            drawAxis();
+        }
+
+        function drawAxis() {
+            context.save();
+            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
+
+            // Drawing the X-axis
+            context.font = "12px Arial";
+            x.ticks().forEach(d => {
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
+            });
+
+            context.fillText("Year", width / 2, 35);  // X-axis title
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(width, 0);
+            context.stroke();
+            context.restore();
+
+            // Drawing the Y-axis line, ticks, and labels
+            context.save();
+            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
+            context.font = "12px Arial";  // Font for Y-axis tick labels
+
+            // Y-axis line
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, height);  // Draw line downward to match the height of the plot
+            context.stroke();
+
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
+            y.ticks().forEach(d => {
+                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
+                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
+                // Draw tick marks
+                context.beginPath();
+                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
+                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
+                context.stroke();
+            });
+
+            context.restore();
+
+            // Rotate and position the Y-axis label
+            context.save();
+            context.font = "12px Arial";
+            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
+            context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
+            context.textAlign = "center";  // Center align text
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
+            context.restore();
+        }
+
+
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
-
-    function drawMedianLine(data) {
-        const groupedData = d3.group(data, d => d.year.getFullYear());
-        const medianData = Array.from(groupedData, ([year, values]) => ({
-            year: new Date(year, 0, 1),
-            emission: d3.median(values, v => v.emission)
-        }));
-
-        x.domain(d3.extent(medianData, d => d.year));
-        y.domain([0, d3.max(medianData, d => d.emission)]);
-
-        context.save();
-        context.translate(margin.left, margin.top);
-        context.beginPath();
-        const medianLine = d3.line()
-            .x(d => x(d.year))
-            .y(d => y(d.emission))
-            .context(context);
-        context.setLineDash([5, 5]); // Set dashed line style
-        context.strokeStyle = 'red'; // Set line color to red for visibility
-        context.lineWidth = 1.5; // Thicker line for the median
-        medianLine(medianData);
-        context.stroke();
-        context.restore();
-    }
 });
