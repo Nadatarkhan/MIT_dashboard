@@ -163,10 +163,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Rotate and position the Y-axis label
             context.save();
+            context.font = "12px Arial";
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions", 0, -120);  // Increased the offset to -120 to move label further left
+            context.fillText("Emissions- MT-CO2", 0, -90);  // Increased the offset to -120 to move label further left
             context.restore();
         }
 
