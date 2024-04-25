@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const dpi = window.devicePixelRatio;
     const containerWidth = container.clientWidth - 50;
-    const containerHeight = container.clientHeight - 220;
+    const containerHeight = container.clientHeight - 240;
     const canvas = d3.select(container)
         .append("canvas")
         .attr("width", containerWidth * dpi)
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 30);  // X-axis title
+            context.fillText("Year", width / 2, 35);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MT-CO2", 0, -90);  // Increased the offset to -90 to move label further left
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -90 to move label further left
             context.restore();
         }
 
