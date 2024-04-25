@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function drawAxis() {
             context.save();
-            context.translate(margin.left, margin.top + height);  // Move to the bottom left corner of the plot area
+            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
 
             // Drawing the X-axis
             context.font = "12px Arial";
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 35);  // X-axis title
+            context.fillText("Year", width / 2, 30);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
@@ -139,19 +139,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Drawing the Y-axis line, ticks, and labels
             context.save();
-            context.translate(margin.left, margin.top);  // Move to the top left corner of the plot area
+            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
             context.font = "12px Arial";  // Font for Y-axis tick labels
 
             // Y-axis line
             context.beginPath();
             context.moveTo(0, 0);
-            context.lineTo(0, -height);
+            context.lineTo(0, height);  // Draw line downward to match the height of the plot
             context.stroke();
 
-            // Y-axis ticks and labels (corrected for inversion and moved further left)
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
             y.ticks().forEach(d => {
-                const yPosition = height - y(d);  // Corrected position
-                context.fillText(d, -50, yPosition);  // Move labels further left
+                const yPosition = height - y(d);  // This accounts for the non-inverted, correct y position
+                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
                 // Draw tick marks
                 context.beginPath();
                 context.moveTo(-10, yPosition);  // Start of tick mark (further left)
@@ -166,10 +166,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MTCO2", 0, -100);  // Draw the label to the left of the axis
+            context.fillText("Emissions", 0, -120);  // Increased the offset to -120 to move label further left
             context.restore();
         }
-
 
 
 
