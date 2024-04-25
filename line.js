@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.save();
             context.translate(margin.left, margin.top);
+            context.font = "12px Arial";
             y.ticks().forEach(d => {
                 context.fillText(d, -70, y(d));
             });
