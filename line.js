@@ -29,13 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
-
-    let debounceTimer;
-    function debouncedUpdatePlot() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(updatePlot, 250);  // Debounce interval is 250 milliseconds
-    }
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
@@ -79,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else if (!this.checked && filterIndex !== -1) {
                             filters[field].splice(filterIndex, 1);
                         }
-                        debouncedUpdatePlot();
+                        updatePlot();
                     });
                 });
                 iconContainer.appendChild(form);
@@ -87,6 +81,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`${field} icon container not found`);
             }
         });
+
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
+        }
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
@@ -106,24 +107,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
-                .context(context);
+                .curve(d3.curveLinear); // Use the linear curve to ensure direct line drawing without additional points
 
-            context.beginPath();
-            line(filteredData);
-            context.lineWidth = 0.2;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke();
+            filteredData.forEach(data => {
+                const points = [{ x: x(data.year), y: y(data.emission) }];
+                const simplifiedPoints = simplify(points, 0.5); // Simplify the line
+                context.beginPath();
+                line(simplifiedPoints.map(p => ({ year: p.x, emission: p.y }))); // Convert points back to data format
+                context.lineWidth = 0.2;
+                context.strokeStyle = getColor(data.field, data.value);
+                context.stroke();
+            });
 
             context.restore();
 
             drawAxis();
-        }
-
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
         }
 
         function drawAxis() {
@@ -136,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 30);  // X-axis title
+            context.fillText("Year", width / 2, 35);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
@@ -154,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);  // Draw line downward to match the height of the plot
             context.stroke();
 
-            // Correct the Y-axis ticks and labels
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
             y.ticks().forEach(d => {
                 const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
                 context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
@@ -173,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MT-CO2", 0, -90);  // Adjusted position
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
     }).catch(function(error) {
