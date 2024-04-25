@@ -29,7 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv', 'grid'];
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
+
+    let debounceTimer;
+    function debouncedUpdatePlot() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updatePlot, 250);  // Debounce interval is 250 milliseconds
+    }
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
@@ -73,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else if (!this.checked && filterIndex !== -1) {
                             filters[field].splice(filterIndex, 1);
                         }
-                        updatePlot();
+                        debouncedUpdatePlot();
                     });
                 });
                 iconContainer.appendChild(form);
@@ -81,13 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`${field} icon container not found`);
             }
         });
-
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
-        }
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
@@ -120,6 +119,13 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
+        }
+
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
@@ -130,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 35);  // X-axis title
+            context.fillText("Year", width / 2, 30);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
@@ -148,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);  // Draw line downward to match the height of the plot
             context.stroke();
 
-            // Correct the Y-axis ticks and labels (not inverted, moved further left)
+            // Correct the Y-axis ticks and labels
             y.ticks().forEach(d => {
                 const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
                 context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
@@ -167,12 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
+            context.fillText("Emissions- MT-CO2", 0, -90);  // Adjusted position
             context.restore();
         }
-
-
-
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
