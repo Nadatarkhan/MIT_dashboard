@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
-            emission: +d.Emissions,
+            emission: +d.Emissions / 1000,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function drawAxis() {
             context.save();
             context.translate(margin.left, height + margin.top);
+            context.font = "12px Arial";
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
             });
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
             y.ticks().forEach(d => {
-                context.fillText(d, -50, y(d));
+                context.fillText(d, -70, y(d));
             });
             context.fillText("Emissions", -100, height / 2);
             context.beginPath();
