@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Correct the Y-axis ticks and labels (not inverted, moved further left)
             y.ticks().forEach(d => {
-                const yPosition = height - y(d);  // This accounts for the non-inverted, correct y position
+                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
                 context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
                 // Draw tick marks
                 context.beginPath();
