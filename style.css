@@ -81,7 +81,7 @@ background-color: #f4f4f4; // Light background color for active state
     bottom: 100%;  /* Position above the icon */
     left: 50%;  /* Center relative to the icon */
     transform: translateX(-50%);  /* Adjust horizontally to truly center */
-    font-size: 7px;
+    font-size: 8px;
     font-weight: bold;
     color: black;
     text-align: center;  /* Ensures text is centered if multiple lines are needed */
