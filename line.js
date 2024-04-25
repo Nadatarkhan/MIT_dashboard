@@ -123,34 +123,46 @@ document.addEventListener('DOMContentLoaded', function() {
         function drawAxis() {
             context.save();
             context.translate(margin.left, height + margin.top);
+
+            // Drawing the X-axis
             context.font = "12px Arial";
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
             });
-            context.fillText("Year", width / 2, 40);
+            context.fillText("Year", width / 2, 50);
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
             context.restore();
 
+            // Drawing the Y-axis line
+            context.save();
+            context.translate(margin.left, margin.top);
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, -height);
+            context.stroke();
+            context.restore();
+
+            // Drawing the Y-axis ticks
             context.save();
             context.translate(margin.left, margin.top);
             context.font = "12px Arial";
             y.ticks().forEach(d => {
                 context.fillText(d, -70, y(d));
             });
+            context.restore();
+
             // Rotate and position the Y-axis label
-            context.translate(-100, height / 2); // Move to the desired position
-            context.rotate(-Math.PI / 2); // Rotate 90 degrees
+            context.save();
+            context.translate(margin.left, margin.top + height / 2); // Move to the position of the label
+            context.rotate(-Math.PI / 2); // Rotate 90 degrees to make the text vertical
             context.textAlign = "center"; // Center align text
-            context.fillText("Emissions-MTCO2", 0, 0); // Draw the label at the new origin
-            context.beginPath();
-            context.moveTo(0, 0);
-            context.lineTo(0, -height);
-            context.stroke();
+            context.fillText("Emissions- MTCO2", 0, -100); // Draw the label to the left of the axis
             context.restore();
         }
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
