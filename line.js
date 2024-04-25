@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv', 'grid'];
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
@@ -107,17 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
-                .curve(d3.curveLinear); // Use the linear curve to ensure direct line drawing without additional points
+                .context(context);
 
-            filteredData.forEach(data => {
-                const points = [{ x: x(data.year), y: y(data.emission) }];
-                const simplifiedPoints = simplify(points, 0.5); // Simplify the line
-                context.beginPath();
-                line(simplifiedPoints.map(p => ({ year: p.x, emission: p.y }))); // Convert points back to data format
-                context.lineWidth = 0.2;
-                context.strokeStyle = getColor(data.field, data.value);
-                context.stroke();
-            });
+            context.beginPath();
+            line(filteredData);
+            context.lineWidth = 0.2;
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
+            context.stroke();
 
             context.restore();
 
@@ -174,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
+
+
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
