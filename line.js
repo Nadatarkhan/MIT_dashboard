@@ -82,18 +82,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
-        }
-
         function updatePlot() {
+            const activeFilters = Object.keys(filters).filter(field => filters[field].length > 0);
+            if (activeFilters.length === 0) {
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                return;
+            }
+
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
+                return activeFilters.every(field =>
+                    filters[field].includes(d[field])
                 );
             });
 
@@ -109,15 +108,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 .y(d => y(d.emission))
                 .context(context);
 
-            context.beginPath();
-            line(filteredData);
-            context.lineWidth = 0.7;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke();
+            filteredData.forEach(data => {
+                context.beginPath();
+                line([data]);
+                context.lineWidth = 0.6;
+                context.strokeStyle = getColor(data);
+                context.stroke();
+            });
 
             context.restore();
 
             drawAxis();
+        }
+
+        function getColor(data) {
+            if (data['district'] && ['baseline', 'partial', 'full'].includes(data['district'])) return 'purple';
+            if (data['nuclear'] && ['baseline', 'full'].includes(data['nuclear'])) return 'red';
+            if (data['deepgeo'] && ['baseline', 'partial', 'full'].includes(data['deepgeo'])) return 'green';
+            return 'steelblue';
         }
 
         function drawAxis() {
@@ -149,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Error loading or processing data:", error);
     });
 });
+
 
 
 
