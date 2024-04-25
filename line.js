@@ -20,29 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
-    // Add an SVG overlay for brushing
-    const svg = d3.select(container).append("svg")
-        .attr("width", containerWidth)
-        .attr("height", containerHeight)
-        .style("position", "absolute")
-        .style("top", "0px")
-        .style("left", "0px");
-
     const margin = {top: 30, right: 40, bottom: 50, left: 170},
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
-
-    const brush = d3.brushX()
-        .extent([[margin.left, margin.top], [width + margin.left, height + margin.top]])
-        .on("end", brushed);
-
-    svg.append("g")
-        .attr("class", "brush")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(brush);
 
     let filters = {}; // Object to hold the active filters for each technology
 
@@ -53,10 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
-
-        updatePlot(); // Initial plot
 
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
@@ -108,17 +89,20 @@ document.addEventListener('DOMContentLoaded', function() {
             return 'steelblue';
         }
 
-        function updatePlot(selectedRange = null) {
-            let filteredData = emissionsData;
-            if (selectedRange) {
-                filteredData = emissionsData.filter(d => d.year >= selectedRange[0] && d.year <= selectedRange[1]);
-            }
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            context.save();
-            context.translate(margin.left, margin.top);
+        function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
 
             const line = d3.line()
                 .x(d => x(d.year))
@@ -134,15 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
 
             drawAxis();
-        }
-
-        function brushed({selection}) {
-            if (selection) {
-                const [x0, x1] = selection.map(x.invert);
-                updatePlot([x0, x1]);
-            } else {
-                updatePlot(); // Reset plot if no selection
-            }
         }
 
         function drawAxis() {
@@ -195,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
+
+
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
