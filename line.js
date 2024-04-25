@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             y.ticks().forEach(d => {
                 context.fillText(d, -70, y(d));
             });
-            context.fillText("Emissions", -100, height / 2);
+            context.fillText("Emissions- MTCO2", -100, height / 2);
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(0, -height);
