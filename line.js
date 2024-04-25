@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Container found");
 
     const dpi = window.devicePixelRatio;
-    const containerWidth = container.clientWidth - 60;
-    const containerHeight = container.clientHeight - 210;
+    const containerWidth = container.clientWidth - 50;
+    const containerHeight = container.clientHeight - 190;
     const canvas = d3.select(container)
         .append("canvas")
         .attr("width", containerWidth * dpi)
