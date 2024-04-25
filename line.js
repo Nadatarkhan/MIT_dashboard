@@ -125,43 +125,50 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height);  // Move to the bottom left corner of the plot area
 
             // Drawing the X-axis
-            context.font = "10px Arial";
+            context.font = "12px Arial";
             x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
-            context.fillText("Year", width / 2, 35);
+
+            context.fillText("Year", width / 2, 30);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
             context.restore();
 
-            // Drawing the Y-axis line
+            // Drawing the Y-axis line and ticks
             context.save();
             context.translate(margin.left, margin.top);  // Move to the top left corner of the plot area
-            context.beginPath();
-            context.moveTo(0, height);  // Start at the bottom of the plot area
-            context.lineTo(0, 0);  // End at the top of the plot area
-            context.stroke();
-            context.restore();
+            context.font = "12px Arial";  // Font for Y-axis tick labels
 
-            // Drawing the Y-axis ticks
-            context.save();
-            context.translate(margin.left, margin.top);
-            context.font = "10px Arial";
+            // Y-axis line
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, -height);
+            context.stroke();
+
+            // Y-axis ticks and labels
             y.ticks().forEach(d => {
-                context.fillText(d, -70, y(d) - height);
+                context.fillText(d, -10, -y(d) + height);  // Adjust horizontal position of labels as needed
+                // Draw tick marks
+                context.beginPath();
+                context.moveTo(-5, -y(d) + height);  // Start of tick mark
+                context.lineTo(0, -y(d) + height);  // End of tick mark
+                context.stroke();
             });
+
             context.restore();
 
             // Rotate and position the Y-axis label
             context.save();
-            context.translate(margin.left, margin.top + height / 2);  // Move to the center along the Y-axis
+            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
             context.fillText("Emissions-MTCO2", 0, -100);  // Draw the label to the left of the axis
             context.restore();
         }
+
 
 
     }).catch(function(error) {
