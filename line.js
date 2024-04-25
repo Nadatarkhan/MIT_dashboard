@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, height + margin.top);
             context.font = "12px Arial";
             x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 10);
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
             });
             context.fillText("Year", width / 2, 40);
             context.beginPath();
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             y.ticks().forEach(d => {
                 context.fillText(d, -70, y(d));
             });
-            context.fillText("Emissions- MTCO2", -100, height / 2);
+            context.fillText("Emissions- MTCO2", -120, height / 2);
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(0, -height);
