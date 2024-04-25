@@ -142,7 +142,7 @@ background-color: #f4f4f4; // Light background color for active state
 }
 
 .bottom-visual img {
-    width: 60%;
+    width: 55%;
     height: auto;
     display: block;
     margin-top: 10px; /* Adds space between the text and the image */
