@@ -140,7 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
             y.ticks().forEach(d => {
                 context.fillText(d, -70, y(d));
             });
-            context.fillText("Emissions- MTCO2", -120, height / 2);
+            // Rotate and position the Y-axis label
+            context.translate(-100, height / 2); // Move to the desired position
+            context.rotate(-Math.PI / 2); // Rotate 90 degrees
+            context.textAlign = "center"; // Center align text
+            context.fillText("Emissions-MTCO2", 0, 0); // Draw the label at the new origin
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(0, -height);
