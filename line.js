@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv', 'grid'];
+    const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ess', 'ccs', 'pv'];
 
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
@@ -43,11 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
             if (iconContainer) {
                 const form = document.createElement('form');
-                let options = ['baseline', 'partial', 'full'];
-                if (field === 'grid') {
-                    options = ['bau', 'cheap_ng', 'decarbonization'];
-                }
-                options.forEach(value => {
+                ['baseline', 'partial', 'full'].forEach(value => {
                     const input = document.createElement('input');
                     input.type = 'checkbox';
                     input.id = `${field}-${value}`;
@@ -58,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const label = document.createElement('label');
                     label.htmlFor = `${field}-${value}`;
-                    label.textContent = field === 'grid' ? value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ') : value.charAt(0).toUpperCase() + value.slice(1);
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
                     label.style.fontSize = '12px';
 
                     form.appendChild(input);
@@ -83,16 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function updatePlot() {
-            const activeFilters = Object.keys(filters).filter(field => filters[field].length > 0);
-            if (activeFilters.length === 0) {
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                return;
-            }
-
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return activeFilters.every(field =>
-                    filters[field].includes(d[field])
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
 
@@ -108,24 +98,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 .y(d => y(d.emission))
                 .context(context);
 
-            filteredData.forEach(data => {
-                context.beginPath();
-                line([data]);
-                context.lineWidth = 0.6;
-                context.strokeStyle = getColor(data);
-                context.stroke();
-            });
+            context.beginPath();
+            line(filteredData);
+            context.lineWidth = 2;
+            context.strokeStyle = 'steelblue';
+            context.stroke();
 
             context.restore();
 
             drawAxis();
-        }
-
-        function getColor(data) {
-            if (data['district'] && ['baseline', 'partial', 'full'].includes(data['district'])) return 'purple';
-            if (data['nuclear'] && ['baseline', 'full'].includes(data['nuclear'])) return 'red';
-            if (data['deepgeo'] && ['baseline', 'partial', 'full'].includes(data['deepgeo'])) return 'green';
-            return 'steelblue';
         }
 
         function drawAxis() {
@@ -157,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Error loading or processing data:", error);
     });
 });
-
 
 
 
