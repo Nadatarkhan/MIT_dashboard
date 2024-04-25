@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Container found");
 
     const dpi = window.devicePixelRatio;
-    const containerWidth = container.clientWidth - 100;
-    const containerHeight = container.clientHeight - 230;
+    const containerWidth = container.clientWidth - 60;
+    const containerHeight = container.clientHeight - 210;
     const canvas = d3.select(container)
         .append("canvas")
         .attr("width", containerWidth * dpi)
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.beginPath();
             line(filteredData);
-            context.lineWidth = 2;
+            context.lineWidth = 0.6;
             context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke();
 
