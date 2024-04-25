@@ -130,14 +130,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 30);  // X-axis title
+            context.fillText("Year", width / 2, 35);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
             context.restore();
 
-            // Drawing the Y-axis line and ticks
+            // Drawing the Y-axis line, ticks, and labels
             context.save();
             context.translate(margin.left, margin.top);  // Move to the top left corner of the plot area
             context.font = "12px Arial";  // Font for Y-axis tick labels
@@ -148,13 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, -height);
             context.stroke();
 
-            // Y-axis ticks and labels
+            // Y-axis ticks and labels (corrected for inversion and moved further left)
             y.ticks().forEach(d => {
-                context.fillText(d, -10, -y(d) + height);  // Adjust horizontal position of labels as needed
+                const yPosition = height - y(d);  // Corrected position
+                context.fillText(d, -50, yPosition);  // Move labels further left
                 // Draw tick marks
                 context.beginPath();
-                context.moveTo(-5, -y(d) + height);  // Start of tick mark
-                context.lineTo(0, -y(d) + height);  // End of tick mark
+                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
+                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
                 context.stroke();
             });
 
@@ -165,9 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions-MTCO2", 0, -100);  // Draw the label to the left of the axis
+            context.fillText("Emissions- MTCO2", 0, -100);  // Draw the label to the left of the axis
             context.restore();
         }
+
 
 
 
