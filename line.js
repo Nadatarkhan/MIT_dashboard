@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
             });
-            context.fillText("Year", width / 2, 25);
+            context.fillText("Year", width / 2, 35);
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
@@ -156,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Rotate and position the Y-axis label
             context.save();
-            context.font = "10px Arial";
             context.translate(margin.left, margin.top + height / 2);  // Move to the center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
