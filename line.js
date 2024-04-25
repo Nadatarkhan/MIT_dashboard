@@ -39,19 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
-        // Calculate median emissions for each year
-        const yearMap = new Map();
-        emissionsData.forEach(d => {
-            const year = d.year.getFullYear();
-            if (!yearMap.has(year)) yearMap.set(year, []);
-            yearMap.get(year).push(d.emission);
-        });
-
-        const medianData = Array.from(yearMap, ([year, values]) => ({
-            year: new Date(year, 0, 1),
-            emission: d3.median(values)
-        }));
-
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
             if (iconContainer) {
@@ -110,36 +97,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             });
 
-            x.domain(d3.extent(emissionsData, d => d.year));
-            y.domain([0, Math.max(d3.max(filteredData, d => d.emission), d3.max(medianData, d => d.emission))]);
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            filteredData.forEach(data => {
-                context.beginPath();
-                const line = d3.line()
-                    .x(d => x(data.year))
-                    .y(d => y(data.emission))
-                    .context(context);
-                line([data]);
-                context.lineWidth = 0.2;
-                context.strokeStyle = getColor(data.field, data.value);
-                context.globalAlpha = 0.5; // Reduced opacity for individual lines
-                context.stroke();
-            });
-
-            // Draw the median line
-            context.beginPath();
-            const medianLine = d3.line()
+            const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
-            medianLine(medianData);
-            context.lineWidth = 2;
-            context.strokeStyle = 'black'; // Distinguish the median line
-            context.globalAlpha = 1; // Full opacity for the median line
+
+            context.beginPath();
+            line(filteredData);
+            context.lineWidth = 0.2;
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke();
 
             context.restore();
@@ -194,9 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
             context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
             context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -90 to move label further left
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
+
+
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
