@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                     .attr("height", d => height - y(d.length))
                     .style("fill", "#424242")
-                    .on("mouseover", function(event, d) {
+                    /*.on("mouseover", function(event, d) {
                         const tooltip = d3.select("body").append("div")
                             .attr("class", "tooltip")
                             .style("opacity", 0);
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .on("mouseout", function() {
                         d3.select(".tooltip").remove();
-                    });
+                    })*/;
 
                 // Add the x Axis
                 svg.append("g")
