@@ -1,46 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.visual1');
+
     if (!container) {
         console.error("Container not found");
         return;
     }
     console.log("Container found");
 
-    // Create a narrow left panel within the visual1 container for the "grid" icon
-    const leftPanel = document.createElement('div');
-    leftPanel.className = 'left-panel';
-    leftPanel.style.width = '100px';  // Set the width of the left panel
-    leftPanel.style.height = '100%';  // Full height of the container
-    leftPanel.style.position = 'absolute';
-    leftPanel.style.left = '0';
-    leftPanel.style.backgroundColor = '#f4f4f4';  // Background color for visibility
-    container.appendChild(leftPanel);
-
-    // Adjust canvas width to account for the new left panel
     const dpi = window.devicePixelRatio;
-    const canvasWidth = container.clientWidth - 100;  // Reduce canvas width by the width of the left panel
+    const containerWidth = container.clientWidth - 50;
     const containerHeight = container.clientHeight - 220;
     const canvas = d3.select(container)
         .append("canvas")
-        .attr("width", canvasWidth * dpi)
+        .attr("width", containerWidth * dpi)
         .attr("height", containerHeight * dpi)
-        .style("width", canvasWidth + "px")
-        .style("height", containerHeight + "px")
-        .style("position", "absolute")
-        .style("left", "100px");  // Shift the canvas to the right to make space for the panel
-
+        .style("width", containerWidth + "px")
+        .style("height", containerHeight + "px");
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
     const margin = {top: 30, right: 40, bottom: 50, left: 170},
-        width = canvasWidth - margin.left - margin.right,
+        width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
 
-    let filters = {};
+    let filters = {}; // Object to hold the active filters for each technology
+
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
@@ -48,65 +36,71 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
         fields.forEach(field => {
-            const targetContainer = field === 'grid' ? leftPanel : container;
-            const iconContainer = document.createElement('div');
-            iconContainer.className = 'icon-container';
-            iconContainer.setAttribute('data-field', field);
-            targetContainer.appendChild(iconContainer);
+            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+            if (iconContainer) {
+                const form = document.createElement('form');
+                let options = ['baseline', 'partial', 'full'];
+                if (field === 'grid') {
+                    options = ['bau', 'cheap_ng', 'decarbonization'];
+                }
+                options.forEach(value => {
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = `${field}-${value}`;
+                    input.name = `${field}Filter`;
+                    input.value = value;
+                    input.style.transform = 'scale(0.75)';
+                    input.style.marginRight = '5px';
 
-            const form = document.createElement('form');
-            let options = ['baseline', 'partial', 'full'];
-            if (field === 'grid') {
-                options = ['bau', 'cheap_ng', 'decarbonization'];
-            }
+                    const label = document.createElement('label');
+                    label.htmlFor = `${field}-${value}`;
+                    label.textContent = field === 'grid' ? value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ') : value.charAt(0).toUpperCase() + value.slice(1);
+                    label.style.fontSize = '12px';
 
-            options.forEach(value => {
-                const input = document.createElement('input');
-                input.type = 'checkbox';
-                input.id = `${field}-${value}`;
-                input.name = `${field}Filter`;
-                input.value = value;
-                input.style.transform = 'scale(0.75)';
-                input.style.marginRight = '5px';
+                    form.appendChild(input);
+                    form.appendChild(label);
+                    form.appendChild(document.createElement('br'));
 
-                const label = document.createElement('label');
-                label.htmlFor = `${field}-${value}`;
-                label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                label.style.fontSize = '12px';
-
-                form.appendChild(input);
-                form.appendChild(label);
-                form.appendChild(document.createElement('br'));
-
-                input.addEventListener('change', function() {
-                    if (!filters[field]) filters[field] = [];
-                    const filterIndex = filters[field].indexOf(value);
-                    if (this.checked && filterIndex === -1) {
-                        filters[field].push(value);
-                    } else if (!this.checked && filterIndex !== -1) {
-                        filters[field].splice(filterIndex, 1);
-                    }
-                    updatePlot();
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
+                        const filterIndex = filters[field].indexOf(value);
+                        if (this.checked && filterIndex === -1) {
+                            filters[field].push(value);
+                        } else if (!this.checked && filterIndex !== -1) {
+                            filters[field].splice(filterIndex, 1);
+                        }
+                        updatePlot();
+                    });
                 });
-            });
-            iconContainer.appendChild(form);
+                iconContainer.appendChild(form);
+            } else {
+                console.log(`${field} icon container not found`);
+            }
         });
 
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
+        }
+
         function updatePlot() {
-            const filteredData = emissionsData.filter(d =>
-                Object.keys(filters).every(field =>
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
-                )
-            );
+                );
+            });
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            context.clearRect(0, 0, canvasWidth * dpi, containerHeight * dpi);
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
@@ -126,50 +120,59 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
-        }
-
         function drawAxis() {
             context.save();
-            context.translate(margin.left, margin.top + height);
+            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
 
+            // Drawing the X-axis
             context.font = "12px Arial";
             x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
 
-            context.fillText("Year", width / 2, 35);
+            context.fillText("Year", width / 2, 35);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
             context.restore();
 
+            // Drawing the Y-axis line, ticks, and labels
             context.save();
-            context.translate(margin.left, margin.top);
+            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
+            context.font = "12px Arial";  // Font for Y-axis tick labels
 
-            context.font = "12px Arial";
+            // Y-axis line
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, height);  // Draw line downward to match the height of the plot
+            context.stroke();
+
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
             y.ticks().forEach(d => {
-                context.fillText(d, -50, y(d) + 3);
+                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
+                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
+                // Draw tick marks
                 context.beginPath();
-                context.moveTo(-10, y(d));
-                context.lineTo(0, y(d));
+                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
+                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
                 context.stroke();
             });
 
             context.restore();
 
+            // Rotate and position the Y-axis label
             context.save();
-            context.translate(margin.left, margin.top + height / 2);
-            context.rotate(-Math.PI / 2);
-            context.textAlign = "center";
-            context.fillText("Emissions- MT-CO2", 0, -70);
+            context.font = "12px Arial";
+            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
+            context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
+            context.textAlign = "center";  // Center align text
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
+
+
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
