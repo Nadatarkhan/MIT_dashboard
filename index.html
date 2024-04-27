@@ -19,8 +19,8 @@
 <div class="header">
     <h1>Decarbonizing the MIT Campus</h1>
     <div class="header-buttons">
-        <button onclick="window.location.href='https://web.mit.edu/SustainableDesignLab/projects/MITCampusDecarbonization/report/'">About</button>
-        <button onclick="window.location.href='https://web.mit.edu/SustainableDesignLab/projects/MITCampusDecarbonization/report/'">Executive Summary</button>
+        <button onclick="window.location.href=' https://web.mit.edu/SustainableDesignLab/projects/MITCampusDecarbonization/report/ '">About</button>
+        <button onclick="window.location.href=' https://web.mit.edu/SustainableDesignLab/projects/MITCampusDecarbonization/report/ '">Executive Summary</button>
     </div>
 </div>
 <div class="container">
@@ -30,51 +30,55 @@
                 <h2>Technologies</h2>
                 <p>Click the icons to choose the implementation pathways</p>
             </div>
-            <div class="left-panel"></div>
-            <div class="right-content">
-                    <div class="icon-container" data-field="retrofit">
-                        <img src="icons/1.png" alt="Envelope & lighting">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Added insulation and LED lighting</div>
-                    </div>
-                    <div class="icon-container" data-field="schedules">
-                        <img src="icons/3.png" alt="Smart Control">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Introduce temperature controls across campus)</div>
-                    </div>
-                    <div class="icon-container" data-field="lab">
-                        <img src="icons/4.png" alt="Energy-efficient labs">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Control lab ventilation and equipment</div>
-                    </div>
-                    <div class="icon-container" data-field="pv">
-                        <img src="icons/2.png" alt="Rooftop PV">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Install rooftop photovoltaics</div>
-                    </div>
-                    <div class="icon-container" data-field="district">
-                        <img src="icons/2.png" alt="District Systems">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Move from steam to hot water or ambient temperature loop</div>
-                    </div>
-                    <div class="icon-container" data-field="deepgeo">
-                        <img src="icons/5.png" alt="Deep Geothermal">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Harvest geothermal heat from >2km depth</div>
-                    </div>
-                    <div class="icon-container" data-field="nuclear">
-                        <img src="icons/6.png" alt="Nuclear Battery">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Provide electricity and heat form nuclear energy</div>
-                    </div>
-                    <div class="icon-container" data-field="ccs">
-                        <img src="icons/8.png" alt="Local Carbon Capture">
-                        <span class="icon-label"></span>
-                        <div class="tooltip">Capture and sequester residual on-site emissions</div>
-                    </div>
+            <div class="icon-row">
+                <!-- Icon instances -->
+                <div class="icon-container" data-field="grid">
+                    <img src="icons/10.png" alt="Future grid emissions">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Future grid emissions</div>
                 </div>
-                <div class="graph-container" id="lineChart"></div>
+                <div class="icon-container" data-field="retrofit">
+                    <img src="icons/1.png" alt="Envelope & lighting">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Added insulation and LED lighting</div>
+                </div>
+                <div class="icon-container" data-field="schedules">
+                    <img src="icons/3.png" alt="Smart Control">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Introduce temperature controls across campus)</div>
+                </div>
+                <div class="icon-container" data-field="lab">
+                    <img src="icons/4.png" alt="Energy-efficient labs">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Control lab ventilation and equipment</div>
+                </div>
+                <div class="icon-container" data-field="pv">
+                    <img src="icons/2.png" alt="Rooftop PV">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Install rooftop photovoltaics</div>
+                </div>
+                <div class="icon-container" data-field="district">
+                    <img src="icons/2.png" alt="District Systems">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Move from steam to hot water or ambient temperature loop</div>
+                </div>
+                <div class="icon-container" data-field="deepgeo">
+                    <img src="icons/5.png" alt="Deep Geothermal">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Harvest geothermal heat from >2km depth</div>
+                </div>
+                <div class="icon-container" data-field="nuclear">
+                    <img src="icons/6.png" alt="Nuclear Battery">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Provide electricity and heat form nuclear energy</div>
+                </div>
+                <div class="icon-container" data-field="ccs">
+                    <img src="icons/8.png" alt="Local Carbon Capture">
+                    <span class="icon-label"></span>
+                    <div class="tooltip">Capture and sequester residual on-site emissions</div>
+                </div>
             </div>
+            <div class="graph-container" id="lineChart"></div>
         </div>
         <div class="visual visual2" id="innovation_plot">
             <div class="icon-description">
@@ -91,6 +95,7 @@
         <img src="images/diagram.png" alt="Diagram" class="scaled-image">
     </div>
 </div>
+
 <div id="popupOverlay">
     <div id="popupBox">
         <img src="images/cover.png" alt="Welcome Image" style="max-width: 100%; height: auto;">
@@ -98,6 +103,7 @@
         <button onclick="closePopup()">Explore Pathways!</button>
     </div>
 </div>
+
 <script src="line.js" defer></script>
 <script src="filter.js" defer></script>
 <script src="icons.js" defer></script>
