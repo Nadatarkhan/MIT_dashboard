@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const y = d3.scaleLinear().range([height, 0]);
 
     let filters = {}; // Object to hold the active filters for each technology
+
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
@@ -35,16 +36,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
-
-        updatePlot(); // Call to update the plot based on filters
 
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
             if (iconContainer) {
                 const form = document.createElement('form');
-                const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
+                let options = ['baseline', 'partial', 'full'];
+                if (field === 'grid') {
+                    options = ['bau', 'cheap_ng', 'decarbonization'];
+                }
                 options.forEach(value => {
                     const input = document.createElement('input');
                     input.type = 'checkbox';
@@ -53,100 +55,125 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.value = value;
                     input.style.transform = 'scale(0.75)';
                     input.style.marginRight = '5px';
+
                     const label = document.createElement('label');
                     label.htmlFor = `${field}-${value}`;
-                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                    label.textContent = field === 'grid' ? value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ') : value.charAt(0).toUpperCase() + value.slice(1);
                     label.style.fontSize = '12px';
+
                     form.appendChild(input);
                     form.appendChild(label);
                     form.appendChild(document.createElement('br'));
-                    input.addEventListener('change', () => {
-                        filters[field] = filters[field] || [];
+
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
                         const filterIndex = filters[field].indexOf(value);
-                        if (input.checked && filterIndex === -1) {
+                        if (this.checked && filterIndex === -1) {
                             filters[field].push(value);
-                        } else if (!input.checked && filterIndex !== -1) {
+                        } else if (!this.checked && filterIndex !== -1) {
                             filters[field].splice(filterIndex, 1);
                         }
                         updatePlot();
                     });
                 });
                 iconContainer.appendChild(form);
+            } else {
+                console.log(`${field} icon container not found`);
             }
         });
-    }).catch(error => console.error("Error loading or processing data:", error));
 
-    function updatePlot() {
-        const filteredData = emissionsData.filter(d =>
-            Object.keys(filters).every(field =>
-                filters[field].length === 0 || filters[field].includes(d[field])
-            )
-        );
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
+        }
 
-        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.save();
-        context.translate(margin.left, margin.top);
+        function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
 
-        x.domain(d3.extent(filteredData, d => d.year));
-        y.domain([0, d3.max(filteredData, d => d.emission)]);
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-        // Ensure separate paths for each line
-        filteredData.forEach(data => {
-            context.beginPath();
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
+
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
-            line([data]);  // Draw each data point as its own line segment
-            context.lineWidth = 0.2;
-            context.strokeStyle = getColor(data);
-            context.stroke();
-        });
 
-        context.restore();
-        drawAxis();
-    }
-
-    function getColor(data) {
-        const field = data.field; // Ensure field is correctly assigned
-        const value = data.value; // Ensure value is correctly assigned
-        if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-        if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-        if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-        return 'steelblue';
-    }
-
-    function drawAxis() {
-        context.save();
-        context.translate(margin.left, margin.top + height);
-        context.font = "12px Arial";
-        x.ticks().forEach(d => {
-            context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
-        });
-        context.fillText("Year", width / 2, 35);
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(width, 0);
-        context.stroke();
-        context.restore();
-
-        context.save();
-        context.translate(margin.left, margin.top);
-        context.font = "12px Arial";
-        y.ticks().forEach(d => {
-            context.fillText(d, -50, y(d) + 3);
             context.beginPath();
-            context.moveTo(-10, y(d));
-            context.lineTo(0, y(d));
+            line(filteredData);
+            context.lineWidth = 0.2;
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke();
-        });
-        context.restore();
 
-        context.save();
-        context.translate(margin.left, margin.top + height / 2);
-        context.rotate(-Math.PI / 2);
-        context.textAlign = "center";
-        context.fillText("Emissions- MT-CO2", 0, -70);
-        context.restore();
-    }
+            context.restore();
+
+            drawAxis();
+        }
+
+        function drawAxis() {
+            context.save();
+            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
+
+            // Drawing the X-axis
+            context.font = "12px Arial";
+            x.ticks().forEach(d => {
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
+            });
+
+            context.fillText("Year", width / 2, 35);  // X-axis title
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(width, 0);
+            context.stroke();
+            context.restore();
+
+            // Drawing the Y-axis line, ticks, and labels
+            context.save();
+            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
+            context.font = "12px Arial";  // Font for Y-axis tick labels
+
+            // Y-axis line
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, height);  // Draw line downward to match the height of the plot
+            context.stroke();
+
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
+            y.ticks().forEach(d => {
+                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
+                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
+                // Draw tick marks
+                context.beginPath();
+                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
+                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
+                context.stroke();
+            });
+
+            context.restore();
+
+            // Rotate and position the Y-axis label
+            context.save();
+            context.font = "12px Arial";
+            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
+            context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
+            context.textAlign = "center";  // Center align text
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
+            context.restore();
+        }
+
+
+
+    }).catch(function(error) {
+        console.error("Error loading or processing data:", error);
+    });
 });
