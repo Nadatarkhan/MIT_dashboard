@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
 
         updatePlot(); // Call to update the plot based on filters
@@ -76,13 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }).catch(error => console.error("Error loading or processing data:", error));
 
-    function getColor(field, value) {
-        if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-        if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-        if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-        return 'steelblue';
-    }
-
     function updatePlot() {
         const filteredData = emissionsData.filter(d =>
             Object.keys(filters).every(field =>
@@ -93,21 +86,34 @@ document.addEventListener('DOMContentLoaded', function() {
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
         context.save();
         context.translate(margin.left, margin.top);
+
         x.domain(d3.extent(filteredData, d => d.year));
         y.domain([0, d3.max(filteredData, d => d.emission)]);
-        const line = d3.line().x(d => x(d.year)).y(d => y(d.emission)).context(context);
 
-        // Draw each line separately
-        filteredData.forEach((data, index) => {
+        // Ensure separate paths for each line
+        filteredData.forEach(data => {
             context.beginPath();
-            line([data]);  // Ensure each data point is handled as a discrete line
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.emission))
+                .context(context);
+            line([data]);  // Draw each data point as its own line segment
             context.lineWidth = 0.2;
-            context.strokeStyle = getColor(data.field, data[field]);
+            context.strokeStyle = getColor(data);
             context.stroke();
         });
 
         context.restore();
         drawAxis();
+    }
+
+    function getColor(data) {
+        const field = data.field; // Ensure field is correctly assigned
+        const value = data.value; // Ensure value is correctly assigned
+        if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+        if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+        if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+        return 'steelblue';
     }
 
     function drawAxis() {
