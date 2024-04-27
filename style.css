@@ -25,26 +25,6 @@ body, html {
     overflow: hidden; /* Ensures no content spills out */
 }
 
-.technology-container {
-    display: flex;
-    width: 100%;
-    align-items: start;  /* Align items at the start of the flex container */
-}
-
-.left-panel {
-    width: 100px; /* Adjust width as needed */
-    background-color: #f4f4f4; /* Example background color */
-    border-right: 1px solid #ccc; /* Visual separation */
-    padding: 10px;
-    overflow-y: auto; /* Enable scrolling if content overflows */
-}
-
-.right-content {
-    flex-grow: 1; /* Fill the remaining space */
-    padding: 10px;
-    overflow: hidden;
-}
-
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
     display: flex;
