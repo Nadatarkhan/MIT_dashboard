@@ -20,7 +20,7 @@ body, html {
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
 }
@@ -40,7 +40,7 @@ body, html {
     flex: 4; /* Remaining space */
     display: flex;
     flex-direction: column;
-    background-color: #ae8db7;
+    background-color: #a6b78d;
 }
 
 .visual2 {
@@ -64,7 +64,6 @@ body, html {
     flex-wrap: wrap;
     justify-content: start;
     align-items: flex-start;
-    width : 100%;
 }
 
 .icon-description h2 {
