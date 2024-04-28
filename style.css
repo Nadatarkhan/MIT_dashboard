@@ -20,28 +20,45 @@ body, html {
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* Change to column to stack children vertically */
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
 }
 
 .flex-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Keeps the left pane and icon/graph container side by side */
+    width: 100%; /* Full width to align children properly */
 }
 
 .left-pane {
-    flex: 1; /* Take up 20% of the container width, adjust as needed */
+    flex: 1; /* Take up 20% of the flex-container width, adjust as needed */
     max-width: 20%;
-    background-color: #646464;
+    background-color: #646464; /* Example background color */
+    padding: 10px; /* Padding for internal content */
 }
 
 .icon-and-graph {
     flex: 4; /* Remaining space */
     display: flex;
-    flex-direction: column;
-    background-color: #a6b78d;
+    flex-direction: column; /* Keeps the icon row and graph container stacked */
+    background-color: #a6b78d; /* Example background color */
 }
+
+.icon-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: flex-start;
+    width: 100%; /* Full width */
+}
+
+.graph-container {
+    flex-grow: 1;
+    width: 100%; /* Ensures SVG uses the maximum available width */
+    overflow: visible; /* Changed to visible to test overflow issues */
+}
+
 
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
@@ -59,12 +76,6 @@ body, html {
 }
 
 
-.icon-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    align-items: flex-start;
-}
 
 .icon-description h2 {
     background-color: #c9c9c9;
@@ -143,11 +154,6 @@ body, html {
     height: 50px;
 }
 
-.graph-container {
-    flex-grow: 1;
-    width: 100%; /* Ensures SVG uses the maximum available width */
-    overflow: visible; /* Changed to visible to test overflow issues */
-}
 
 .bottom-visual {
     flex: 4; /* Bottom container takes 45% of the screen height */
