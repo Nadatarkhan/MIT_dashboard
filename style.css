@@ -101,6 +101,13 @@ body, html {
     text-align: left; /* Centers the content within the icon container */
 }
 
+.icon-container-2 {
+    position: relative;
+    margin: 10px; /* Provides spacing around icons */
+    margin-top: 20px;
+    text-align: center; /* Centers the content within the icon container */
+}
+
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
     background-color: #f4f4f4; // Light background color for active state
