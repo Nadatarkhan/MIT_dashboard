@@ -20,7 +20,7 @@ body, html {
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
 }
