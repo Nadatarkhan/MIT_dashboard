@@ -28,7 +28,7 @@ body, html {
 .left-pane {
     flex: 1; /* Takes 20% of the visual1's width */
     width: 20%;
-    padding: 10px; /* Optional for spacing */
+    padding: 10px; /* spacing */
     border-right: 1px solid #ccc; /* Optional for visual separation */
     height: auto; /* Adjust height as needed */
     background-color: #646464;
@@ -75,11 +75,14 @@ body, html {
 
 .icon-container {
     position: relative;
+    width: calc(25% - 20px); /* Adjust the width of each icon container */
+    margin: 10px; /* Provides spacing around icons */
+    text-align: center; /* Centers the content within the icon container */
 }
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
-background-color: #f4f4f4; // Light background color for active state
+    background-color: #f4f4f4; // Light background color for active state
 }
 
 .icon-label {
