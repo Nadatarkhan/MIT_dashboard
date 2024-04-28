@@ -116,6 +116,15 @@ body, html {
     margin-left: 10px; /* Space between the icon and the checkboxes */
 }
 
+.icon-container-2 label {
+    display: flex;
+    align-items: center; /* Align checkbox and label vertically */
+    margin-bottom: 5px; /* Space between each checkbox */
+}
+
+.icon-container-2 input[type="checkbox"] {
+    margin-right: 5px; /* Space between checkbox and label */
+}
 
 
 .icon-container.active {
