@@ -20,9 +20,18 @@ body, html {
 .visual1 {
     flex: 6; /* Takes 60% of the width within its container */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
+}
+
+.left-pane {
+    flex: 1; /* Takes 20% of the visual1's width */
+    width: 20%;
+    padding: 10px; /* Optional for spacing */
+    border-right: 1px solid #ccc; /* Optional for visual separation */
+    height: auto; /* Adjust height as needed */
+    background-color: #646464;
 }
 
 .visual2 {
@@ -72,7 +81,6 @@ body, html {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
 background-color: #f4f4f4; // Light background color for active state
 }
-
 
 .icon-label {
     position: absolute;
