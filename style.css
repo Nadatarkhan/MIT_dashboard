@@ -36,7 +36,7 @@ body, html {
 .left-pane {
     flex: 1; /* Take up 20% of the flex-container width, adjust as needed */
     max-width: 20%;
-    background-color: #bbbbbb; /* Example background color */
+    background-color: #dadada; /* Example background color */
     padding: 10px; /* Padding for internal content */
     height: 100%; /* Full height within flex-container */
 }
@@ -78,8 +78,6 @@ body, html {
     margin: 5px; /* Adjust this as needed */
     overflow: hidden; /* Hide overflow to prevent clipping */
 }
-
-
 
 .icon-description h2 {
     background-color: #c9c9c9;
