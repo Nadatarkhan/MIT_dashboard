@@ -102,11 +102,35 @@ body, html {
 }
 
 .icon-container-2 {
-    position: relative;
-    margin: 10px; /* Provides spacing around icons */
-    margin-top: 20px;
-    text-align: center; /* Centers the content within the icon container */
+    display: flex;
+    flex-direction: row; /* Horizontally align icon and checkboxes */
+    align-items: center; /* Vertical alignment in the center */
+    padding: 10px; /* Adds padding around each icon container */
+    margin-bottom: 10px; /* Space between this container and others, if any */
 }
+
+.icon-container-2 img {
+    width: 50px;
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Space between the icon and checkboxes */
+}
+
+.icon-container-2 .icon-label {
+    margin-right: 10px; /* Space after the label if needed */
+}
+
+.icon-container-2 .tooltip {
+    position: absolute;
+    top: 100%; /* Position below the icon */
+    left: 50%; /* Start from the middle of the icon */
+    transform: translateX(-50%); /* Center the tooltip */
+    width: 200px; /* Adjust width based on content */
+}
+
+.icon-container-2 input[type="checkbox"] {
+    margin-right: 5px; /* Space between checkboxes */
+}
+
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
