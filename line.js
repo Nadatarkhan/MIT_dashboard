@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
 
         fields.forEach(field => {
-            // Select the icon container, adjust the selector to consider both classes
-            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"], .icon-container-2[data-field="${field}"]`);
+            // Select the icon container, adjust the selector to specifically target only the 'grid' field in the left pane
+            const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
             if (iconContainer) {
                 const form = document.createElement('form');
                 form.style.display = 'flex'; // Ensures form elements are aligned in a row
@@ -68,10 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     form.appendChild(input);
                     form.appendChild(label);
-                    if (field !== 'grid') {
-                        // Add line break for non-grid fields if you are using the same class for others
-                        form.appendChild(document.createElement('br'));
-                    }
 
                     input.addEventListener('change', function() {
                         if (!filters[field]) filters[field] = [];
@@ -85,8 +81,42 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
                 iconContainer.appendChild(form);
-            } else {
-                console.log(`${field} icon container not found`);
+            } else if (field !== 'grid') {
+                // For all other fields, use the regular 'icon-container' class
+                const regularIconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+                if (regularIconContainer) {
+                    // Similar handling as above but without flex styling
+                    const form = document.createElement('form');
+                    let options = ['baseline', 'partial', 'full'];
+                    options.forEach(value => {
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = `${field}-${value}`;
+                        input.name = `${field}Filter`;
+                        input.value = value;
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `${field}-${value}`;
+                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                        label.style.fontSize = '12px';
+
+                        form.appendChild(input);
+                        form.appendChild(label);
+                        form.appendChild(document.createElement('br'));
+
+                        input.addEventListener('change', function() {
+                            if (!filters[field]) filters[field] = [];
+                            const filterIndex = filters[field].indexOf(value);
+                            if (this.checked && filterIndex === -1) {
+                                filters[field].push(value);
+                            } else if (!this.checked && filterIndex !== -1) {
+                                filters[field].splice(filterIndex, 1);
+                            }
+                            updatePlot();
+                        });
+                    });
+                    regularIconContainer.appendChild(form);
+                }
             }
         });
 
