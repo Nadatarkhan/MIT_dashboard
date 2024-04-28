@@ -100,6 +100,7 @@ body, html {
     position: relative;
     width: calc(25% - 20px); /* Adjust the width of each icon container */
     margin: 10px; /* Provides spacing around icons */
+    margin-top: 20px;
     text-align: center; /* Centers the content within the icon container */
 }
 
