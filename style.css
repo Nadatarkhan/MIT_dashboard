@@ -36,7 +36,7 @@ body, html {
 .left-pane {
     flex: 1; /* Take up 20% of the flex-container width, adjust as needed */
     max-width: 20%;
-    background-color: #646464; /* Example background color */
+    background-color: #bbbbbb; /* Example background color */
     padding: 10px; /* Padding for internal content */
     height: 100%; /* Full height within flex-container */
 }
@@ -45,7 +45,6 @@ body, html {
     flex: 4; /* Remaining space */
     display: flex;
     flex-direction: column; /* Keeps the icon row and graph container stacked */
-    background-color: #ad8db7; /* Example background color */
     height: 100%; /* Full height within flex-container */
 }
 
