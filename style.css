@@ -23,12 +23,14 @@ body, html {
     flex-direction: column; /* Stacks children vertically */
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
+    height: 100%; /* Ensure it takes full available height */
 }
 
 .flex-container {
     display: flex;
     flex-direction: row; /* Keeps the left pane and icon/graph container side by side */
     width: 100%; /* Full width to align children properly */
+    flex-grow: 1; /* Takes up all available space after icon-description */
 }
 
 .left-pane {
@@ -36,13 +38,15 @@ body, html {
     max-width: 20%;
     background-color: #646464; /* Example background color */
     padding: 10px; /* Padding for internal content */
+    height: 100%; /* Full height within flex-container */
 }
 
 .icon-and-graph {
     flex: 4; /* Remaining space */
     display: flex;
     flex-direction: column; /* Keeps the icon row and graph container stacked */
-    background-color: #a6b78d; /* Example background color */
+    background-color: #ad8db7; /* Example background color */
+    height: 100%; /* Full height within flex-container */
 }
 
 .icon-row {
@@ -53,12 +57,12 @@ body, html {
     width: 100%; /* Full width */
 }
 
-
 .graph-container {
     flex-grow: 1;
     width: 100%; /* Ensures SVG uses the maximum available width */
     overflow: visible; /* Changed to visible to test overflow issues */
 }
+
 
 
 .visual2 {
