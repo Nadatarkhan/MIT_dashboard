@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Container found");
 
     const dpi = window.devicePixelRatio;
-    const containerWidth = container.clientWidth - 50;
-    const containerHeight = container.clientHeight - 220;
+    const containerWidth = container.clientWidth - 10;
+    const containerHeight = container.clientHeight - 20;
     const canvas = d3.select(container)
         .append("canvas")
         .attr("width", containerWidth * dpi)
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
-    const margin = {top: 30, right: 40, bottom: 50, left: 170},
+    const margin = {top: 30, right: 40, bottom: 50, left: 20},
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
