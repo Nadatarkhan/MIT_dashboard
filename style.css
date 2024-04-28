@@ -60,11 +60,9 @@ body, html {
 
 .icon-row {
     display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    padding-top: 30px;
-    padding-left: 40px;
-    padding-right: 40px;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: flex-start;
 }
 
 .icon-description h2 {
