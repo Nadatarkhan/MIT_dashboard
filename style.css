@@ -103,9 +103,7 @@ body, html {
 
 .icon-container-2 {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
+    align-items: center; /* Align items vertically center */
 }
 
 .icon-container-2 img {
@@ -114,8 +112,8 @@ body, html {
 
 .icon-container-2 form {
     display: flex;
-    flex-wrap: nowrap; // Ensures all form elements are in one row
-    align-items: center; // Centers items vertically
+    flex-direction: column; /* Stack checkboxes vertically */
+    margin-left: 10px; /* Space between the icon and the checkboxes */
 }
 
 
