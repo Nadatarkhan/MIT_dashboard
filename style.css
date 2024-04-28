@@ -53,9 +53,6 @@ body, html {
     width: 100%; /* Full width */
 }
 
-.icon-container {
-    margin-right: 10px; /* Adds space between icons */
-}
 
 .graph-container {
     flex-grow: 1;
@@ -96,6 +93,12 @@ body, html {
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
 
+.icon-container {
+    position: relative;
+    width: calc(25% - 20px); /* Adjust the width of each icon container */
+    margin: 10px; /* Provides spacing around icons */
+    text-align: center; /* Centers the content within the icon container */
+}
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
