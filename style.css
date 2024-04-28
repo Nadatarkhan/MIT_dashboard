@@ -58,7 +58,7 @@ body, html {
 
 .icon-description p {
     background-color: #c9c9c9;
-    padding: 5px;
+    padding: 2px;
     font-size: 14px;
     font-style: italic;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
