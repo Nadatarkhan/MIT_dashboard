@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded and parsed");
-    const container = document.querySelector('.visual1');
+    const container = document.querySelector('.icon-and-graph');
 
     if (!container) {
         console.error("Container not found");
