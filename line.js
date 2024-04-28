@@ -40,9 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
 
         fields.forEach(field => {
-            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+            // Select the icon container, adjust the selector to consider both classes
+            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"], .icon-container-2[data-field="${field}"]`);
             if (iconContainer) {
                 const form = document.createElement('form');
+                form.style.display = 'flex'; // Ensures form elements are aligned in a row
+                form.style.flexWrap = 'nowrap'; // Prevents wrapping to keep elements in one line
+                form.style.alignItems = 'center'; // Vertically centers the form elements
+
                 let options = ['baseline', 'partial', 'full'];
                 if (field === 'grid') {
                     options = ['bau', 'cheap_ng', 'decarbonization'];
@@ -54,16 +59,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.name = `${field}Filter`;
                     input.value = value;
                     input.style.transform = 'scale(0.75)';
-                    input.style.marginRight = '5px';
+                    input.style.marginRight = '5px'; // Space between checkboxes
 
                     const label = document.createElement('label');
                     label.htmlFor = `${field}-${value}`;
-                    label.textContent = field === 'grid' ? value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ') : value.charAt(0).toUpperCase() + value.slice(1);
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
                     label.style.fontSize = '12px';
 
                     form.appendChild(input);
                     form.appendChild(label);
-                    form.appendChild(document.createElement('br'));
+                    if (field !== 'grid') {
+                        // Add line break for non-grid fields if you are using the same class for others
+                        form.appendChild(document.createElement('br'));
+                    }
 
                     input.addEventListener('change', function() {
                         if (!filters[field]) filters[field] = [];
@@ -81,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`${field} icon container not found`);
             }
         });
+
 
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
