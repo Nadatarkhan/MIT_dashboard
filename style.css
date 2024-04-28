@@ -115,7 +115,7 @@ body, html {
 .icon-container-2 form {
     display: flex;
     flex-wrap: nowrap; // Ensures all form elements are in one row
-align-items: center; // Centers items vertically
+    align-items: center; // Centers items vertically
 }
 
 
