@@ -132,30 +132,6 @@ body, html {
 }
 
 
-input[type='checkbox'] {
-    position: absolute;
-    opacity: 0;
-    z-index: -1;
-}
-
-/* Custom checkbox appearance */
-input[type="checkbox"] {
-    -webkit-appearance: none; /* Removes default styles for WebKit browsers */
-    appearance: none;
-    background-color: #f0f0f0; /* Default background */
-    border: 2px solid #ccc; /* Default border */
-    padding: 9px; /* Size of the checkbox */
-    border-radius: 3px; /* Optional: for rounded corners */
-}
-
-/* Style when the checkbox is checked */
-input[type="checkbox"]:checked {
-    background-color: #505050; /* Color when checked */
-    border-color: darkgrey; /* Border color when checked */
-}
-
-/* end of custom checkboxes */
-
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
