@@ -516,7 +516,7 @@ input[type='radio']:checked + label {
 }
 
 .pheasant-demure-button:hover {
-    background-color: #0056b3;
+    background-color: #b937b8;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
