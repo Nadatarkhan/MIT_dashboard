@@ -530,11 +530,31 @@ input[type='radio']:checked + label {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.pheasant-demure-button:active {
-    background-color: #b937b8;
+/* Active state colors for each button */
+.baseline:active {
+    background-color: #b937b8; /* Purple */
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
     transform: translateY(2px);
 }
+
+.scenario1:active {
+    background-color: #00897b; /* Teal */
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateY(2px);
+}
+
+.scenario2:active {
+    background-color: #864040; /* Red */
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateY(2px);
+}
+
+.scenario3:active {
+    background-color: #4f5e3a; /* Amber */
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateY(2px);
+}
+
 
 /* Adjusting spacing for the toggle switch */
 .toggle-wrapper {
