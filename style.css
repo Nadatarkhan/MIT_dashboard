@@ -500,6 +500,7 @@ input[type='radio']:checked + label {
     color: #b937b8;
 }
 
+/* Buttons */
 
 .pheasant-demure-button {
     padding: 10px 20px;
@@ -519,6 +520,7 @@ input[type='radio']:checked + label {
 }
 
 .pheasant-demure-button:active {
-    background-color: #004085;
+    background-color: #6abe6a;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateY(2px);
 }
