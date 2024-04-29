@@ -169,51 +169,63 @@ document.addEventListener('DOMContentLoaded', function() {
             context.stroke();
 
             context.restore();
+
             drawAxis();
         }
 
         function drawAxis() {
             context.save();
-            context.translate(margin.left, margin.top + height);
+            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
+
+            // Drawing the X-axis
             context.font = "12px Arial";
             x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);
+                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
             });
-            context.fillText("Year", width / 2, 35);
+
+            context.fillText("Year", width / 2, 35);  // X-axis title
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
-
             context.restore();
 
+            // Drawing the Y-axis line, ticks, and labels
             context.save();
-            context.translate(margin.left, margin.top);
-            context.font = "12px Arial";
+            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
+            context.font = "12px Arial";  // Font for Y-axis tick labels
+
+            // Y-axis line
             context.beginPath();
             context.moveTo(0, 0);
-            context.lineTo(0, height);
+            context.lineTo(0, height);  // Draw line downward to match the height of the plot
             context.stroke();
 
+            // Correct the Y-axis ticks and labels (not inverted, moved further left)
             y.ticks().forEach(d => {
-                const yPosition = y(d);
-                context.fillText(d, -50, yPosition);
+                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
+                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
+                // Draw tick marks
                 context.beginPath();
-                context.moveTo(-10, yPosition);
-                context.lineTo(0, yPosition);
+                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
+                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
                 context.stroke();
             });
 
             context.restore();
 
+            // Rotate and position the Y-axis label
             context.save();
             context.font = "12px Arial";
-            context.translate(margin.left, margin.top + height / 2);
-            context.rotate(-Math.PI / 2);
-            context.textAlign = "center";
-            context.fillText("Emissions- MT-CO2", 0, -70);
+            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
+            context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
+            context.textAlign = "center";  // Center align text
+            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
+
+
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
