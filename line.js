@@ -24,11 +24,43 @@ document.addEventListener('DOMContentLoaded', function() {
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
+    // Setup SVG for brushing directly over the canvas drawing area
+    const svg = d3.select(container)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("position", "absolute")
+        .style("left", `${margin.left}px`)
+        .style("top", `${margin.top}px`);
+
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
 
-    let filters = {}; // Object to hold the active filters for each technology
+    const brush = d3.brush()
+        .extent([[0, 0], [width, height]])
+        .on("start brush", brushed)
+        .on("end", brushended);
 
+    svg.append("g")
+        .attr("class", "brush")
+        .call(brush);
+
+    function brushed({selection}) {
+        if (selection) {
+            const [[x0, y0], [x1, y1]] = selection;
+            const newScaleX = x.copy().domain([x0, x1].map(x.invert, x));
+            const newScaleY = y.copy().domain([y1, y0].map(y.invert, y));
+            updatePlot(newScaleX, newScaleY);
+        }
+    }
+
+    function brushended({selection}) {
+        if (!selection) {
+            updatePlot(x, y);
+        }
+    }
+
+    let filters = {}; // Object to hold the active filters for each technology
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
     d3.csv("data/example_data.csv").then(function(data) {
@@ -36,91 +68,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
 
         fields.forEach(field => {
-            if (field === 'grid') {
-                // Special handling for the 'grid' field in the left pane using icon-container-2
-                const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
-                if (iconContainer) {
-                    const form = document.createElement('form');
-                    form.style.display = 'flex'; // Flex container to hold the checkboxes
-                    form.style.flexDirection = 'column'; // Align checkboxes vertically
+            const iconContainerSelector = field === 'grid' ? `.icon-container-2[data-field="${field}"]` : `.icon-container[data-field="${field}"]`;
+            const iconContainer = document.querySelector(iconContainerSelector);
+            if (iconContainer) {
+                const form = document.createElement('form');
+                form.style.display = 'flex';
+                form.style.flexDirection = 'column';
+                const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
+                options.forEach(value => {
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.style.display = 'flex';
+                    checkboxContainer.style.alignItems = 'center';
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = `${field}-${value}`;
+                    input.name = `${field}Filter`;
+                    input.value = value;
+                    input.style.transform = 'scale(0.75)';
+                    input.style.marginRight = '5px';
+                    const label = document.createElement('label');
+                    label.htmlFor = `${field}-${value}`;
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                    label.style.fontSize = '12px';
+                    checkboxContainer.appendChild(input);
+                    checkboxContainer.appendChild(label);
+                    form.appendChild(checkboxContainer);
 
-                    const options = ['bau', 'cheap_ng', 'decarbonization'];
-                    options.forEach(value => {
-                        const checkboxContainer = document.createElement('div');
-                        checkboxContainer.style.display = 'flex';
-                        checkboxContainer.style.alignItems = 'center'; // Align checkbox and label
-
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.id = `${field}-${value}`;
-                        input.name = `${field}Filter`;
-                        input.value = value;
-                        input.style.transform = 'scale(0.75)';
-                        input.style.marginRight = '5px';
-
-                        const label = document.createElement('label');
-                        label.htmlFor = `${field}-${value}`;
-                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                        label.style.fontSize = '12px';
-
-                        checkboxContainer.appendChild(input);
-                        checkboxContainer.appendChild(label);
-                        form.appendChild(checkboxContainer); // Append each pair to the form
-
-                        input.addEventListener('change', function() {
-                            if (!filters[field]) filters[field] = [];
-                            const filterIndex = filters[field].indexOf(value);
-                            if (this.checked && filterIndex === -1) {
-                                filters[field].push(value);
-                            } else if (!this.checked && filterIndex !== -1) {
-                                filters[field].splice(filterIndex, 1);
-                            }
-                            updatePlot();
-                        });
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
+                        const filterIndex = filters[field].indexOf(value);
+                        if (this.checked && filterIndex === -1) {
+                            filters[field].push(value);
+                        } else if (!this.checked && filterIndex !== -1) {
+                            filters[field].splice(filterIndex, 1);
+                        }
+                        updatePlot(x, y); // Reset to original scale if no selection
                     });
-                    iconContainer.appendChild(form);
-                }
-            } else {
-                // Handle other fields using regular 'icon-container'
-                const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
-                if (iconContainer) {
-                    const form = document.createElement('form');
-                    let options = ['baseline', 'partial', 'full'];
-                    options.forEach(value => {
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.id = `${field}-${value}`;
-                        input.name = `${field}Filter`;
-                        input.value = value;
-                        input.style.transform = 'scale(0.75)';
-                        input.style.marginRight = '5px';
-
-                        const label = document.createElement('label');
-                        label.htmlFor = `${field}-${value}`;
-                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
-                        label.style.fontSize = '12px';
-
-                        form.appendChild(input);
-                        form.appendChild(label);
-                        form.appendChild(document.createElement('br'));
-
-                        input.addEventListener('change', function() {
-                            if (!filters[field]) filters[field] = [];
-                            const filterIndex = filters[field].indexOf(value);
-                            if (this.checked && filterIndex === -1) {
-                                filters[field].push(value);
-                            } else if (!this.checked && filterIndex !== -1) {
-                                filters[field].splice(filterIndex, 1);
-                            }
-                            updatePlot();
-                        });
-                    });
-                    iconContainer.appendChild(form);
-                }
+                });
+                iconContainer.appendChild(form);
             }
         });
 
@@ -129,26 +118,53 @@ document.addEventListener('DOMContentLoaded', function() {
         if (baselineCheckbox) {
             baselineCheckbox.addEventListener('change', function() {
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = this.checked; // Set all baseline checkboxes to match the main baseline checkbox state
-                    const field = checkbox.id.split('-')[0]; // Assuming your ID is structured as field-value
-
-                    // Update the filters object
+                    checkbox.checked = this.checked;
+                    const field = checkbox.id.split('-')[0];
                     if (!filters[field]) {
                         filters[field] = [];
                     }
-
                     const baselineIndex = filters[field].indexOf('baseline');
                     if (this.checked && baselineIndex === -1) {
-                        filters[field].push('baseline'); // Add 'baseline' if it's checked and not already in the filter
+                        filters[field].push('baseline');
                     } else if (!this.checked && baselineIndex !== -1) {
-                        filters[field].splice(baselineIndex, 1); // Remove 'baseline' if it's unchecked
+                        filters[field].splice(baselineIndex, 1);
                     }
+                    updatePlot(x, y); // Reset to original scale if no selection
                 });
-
-                updatePlot(); // Update the plot after changing the filters
             });
         }
 
+        updatePlot(x, y); // Initial plot draw
+
+        function updatePlot(scaleX, scaleY) {
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
+
+            scaleX.domain(d3.extent(filteredData, d => d.year));
+            scaleY.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
+
+            const line = d3.line()
+                .x(d => scaleX(d.year))
+                .y(d => scaleY(d.emission))
+                .context(context);
+
+            context.beginPath();
+            line(filteredData);
+            context.lineWidth = 2; // Increase for visibility
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
+            context.stroke();
+
+            context.restore();
+            drawAxis(scaleX, scaleY);
+        }
 
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
@@ -157,89 +173,29 @@ document.addEventListener('DOMContentLoaded', function() {
             return 'steelblue';
         }
 
-        function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
-            const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
-            });
-
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
-
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+        function drawAxis(scaleX, scaleY) {
             context.save();
-            context.translate(margin.left, margin.top);
-
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
-
-            context.beginPath();
-            line(filteredData);
-            context.lineWidth = 0.2;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke();
-
-            context.restore();
-
-            drawAxis();
-        }
-
-        function drawAxis() {
-            context.save();
-            context.translate(margin.left, margin.top + height);  // Ensure we're starting from the bottom left
-
-            // Drawing the X-axis
+            context.translate(margin.left, margin.top + height);
             context.font = "12px Arial";
-            x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), 20);  // X-axis tick labels
+            scaleX.ticks().forEach(d => {
+                context.fillText(d3.timeFormat("%Y")(d), scaleX(d), 20);
             });
-
-            context.fillText("Year", width / 2, 35);  // X-axis title
+            context.fillText("Year", width / 2, 35);
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(width, 0);
             context.stroke();
-            context.restore();
 
-            // Drawing the Y-axis line, ticks, and labels
-            context.save();
-            context.translate(margin.left, margin.top);  // Start from the top left corner of the plot area
-            context.font = "12px Arial";  // Font for Y-axis tick labels
-
-            // Y-axis line
-            context.beginPath();
-            context.moveTo(0, 0);
-            context.lineTo(0, height);  // Draw line downward to match the height of the plot
-            context.stroke();
-
-            // Correct the Y-axis ticks and labels (not inverted, moved further left)
-            y.ticks().forEach(d => {
-                const yPosition = y(d);  // This directly uses the D3 scale to calculate the position, ensuring correct orientation.
-                context.fillText(d, -50, yPosition);  // Increased offset to -50 to move labels further left
-                // Draw tick marks
+            context.translate(-margin.left, -margin.top);
+            scaleY.ticks().forEach(d => {
+                context.fillText(d, -50, scaleY(d));
                 context.beginPath();
-                context.moveTo(-10, yPosition);  // Start of tick mark (further left)
-                context.lineTo(0, yPosition);  // End of tick mark (on the axis line)
+                context.moveTo(-10, scaleY(d));
+                context.lineTo(0, scaleY(d));
                 context.stroke();
             });
-
-            context.restore();
-
-            // Rotate and position the Y-axis label
-            context.save();
-            context.font = "12px Arial";
-            context.translate(margin.left, margin.top + height / 2);  // Center along the Y-axis
-            context.rotate(-Math.PI / 2);  // Rotate 90 degrees to make the text vertical
-            context.textAlign = "center";  // Center align text
-            context.fillText("Emissions- MT-CO2", 0, -70);  // Increased the offset to -120 to move label further left
             context.restore();
         }
-
-
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
