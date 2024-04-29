@@ -33,6 +33,7 @@
             <div class="flex-container">
                 <div class="left-pane">
                     <div class="icon-row">
+                        <!-- Existing content -->
                         <div class="icon-container-2" data-field="grid">
                             <img src="icons/10.png" alt="Future grid emissions">
                             <span class="icon-label">Future grid emissions</span>
@@ -45,7 +46,21 @@
                             </form>
                         </div>
                     </div>
+                    <!-- New buttons and toggle -->
+                    <div class="controls">
+                        <button class="pheasant-demure-button solid">Baseline</button>
+                        <button class="pheasant-demure-button solid">Scenario 1</button>
+                        <button class="pheasant-demure-button solid">Scenario 2</button>
+                        <div class="toggle-wrapper">
+                            <input type="checkbox" id="onOffToggle" class="toggleCheckbox">
+                            <label for="onOffToggle" class="toggleContainer">
+                                <div>On</div>
+                                <div>Off</div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="icon-and-graph">
                     <div class="icon-row">
                         <!-- Icon instances -->
@@ -143,7 +158,6 @@
         });
     });
 </script>
-
 
 </body>
 </html>
