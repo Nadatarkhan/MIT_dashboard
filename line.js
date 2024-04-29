@@ -160,13 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                // Ensure each field in filters has a matching entry in the data
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
-            }).filter(d => {
-                // Additionally, make sure the data is valid
-                return d.year != null && d.emission != null;
             });
 
             if (filteredData.length === 0) {
@@ -181,11 +177,10 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Begin a new path for the line plot
+            // Ensure to start a new path for drawing the line chart
             context.beginPath();
 
             const line = d3.line()
-                .defined(d => d.emission != null) // Only use points where emission is not null
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
@@ -195,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineWidth = 0.2;
             context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke(); // Apply the stroke to draw the line
+
+            // Ensure to close the path after drawing
+            context.closePath();
 
             context.restore();
 
@@ -248,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions- MT-CO2", 0, 0);
             context.restore();
         }
-
 
 
     }).catch(function(error) {
