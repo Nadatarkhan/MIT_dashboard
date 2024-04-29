@@ -165,39 +165,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             });
 
+            console.log("Filtered data points:", filteredData); // Log the data being used for the plot
+
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                return; // Exit if no data to plot after filtering
+                return; // Exit if no data to plot
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            context.save();
-            context.translate(margin.left, margin.top);
-
-            // Ensure to start a new path for drawing the line chart
             context.beginPath();
 
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
-
-            line(filteredData); // Draw the line
+            filteredData.forEach((d, i) => { // Log each coordinate being plotted
+                console.log(`Data ${i}: Year = ${d.year}, Emission = ${d.emission}, X = ${x(d.year)}, Y = ${y(d.emission)}`);
+                if (i === 0) context.moveTo(x(d.year), y(d.emission));
+                else context.lineTo(x(d.year), y(d.emission));
+            });
 
             context.lineWidth = 0.2;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke(); // Apply the stroke to draw the line
-
-            // Ensure to close the path after drawing
+            context.strokeStyle = 'steelblue';
+            context.stroke();
             context.closePath();
-
-            context.restore();
-
-            drawAxis(); // Ensure axes are drawn after the line
         }
+
 
         function drawAxis() {
             context.save();
