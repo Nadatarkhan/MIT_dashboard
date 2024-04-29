@@ -230,7 +230,7 @@ body, html {
 .bottom-visual .text-content {
     flex: 1; /* Allows text content to fill the available space */
     padding-right: 10px; /* Adds some spacing between the text and the image */
-    padding-left: 10px; 
+    padding-left: 10px;
     max-width: 35%; /* Limits the text width */
 }
 
@@ -289,16 +289,6 @@ h2 {
 
 .icon-container:hover .tooltip {
     opacity: 1; /* Show the tooltip when hovering over the icon */
-}
-
-.pheasant-demure-button, .solid, .light {
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-    color: #333;
 }
 
 .hover:hover {
@@ -508,4 +498,27 @@ input[type='radio']:checked + label {
 
 .implementation-options input[type="radio"]:checked + label {
     color: #b937b8;
+}
+
+
+.pheasant-demure-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.pheasant-demure-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.pheasant-demure-button:active {
+    background-color: #004085;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
 }
