@@ -230,7 +230,7 @@ body, html {
 .bottom-visual .text-content {
     flex: 1; /* Allows text content to fill the available space */
     padding-right: 20px; /* Adds some spacing between the text and the image */
-    max-width: 45%; /* Limits the text width */
+    max-width: 35%; /* Limits the text width */
 }
 
 .bottom-visual img {
