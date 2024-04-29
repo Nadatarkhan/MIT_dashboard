@@ -124,6 +124,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Baseline checkbox logic
+        const baselineCheckbox = document.getElementById('select-all-baseline');
+        if (baselineCheckbox) {
+            baselineCheckbox.addEventListener('change', function() {
+                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                updatePlot();
+            });
+        }
+
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
             if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
