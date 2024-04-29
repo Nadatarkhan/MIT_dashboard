@@ -125,6 +125,16 @@ body, html {
     margin-top: 5px;  /* Adds space between the image and the label */
 }
 
+.icon-container-2 .icon-label {
+    display: block;  /* Ensures the label is treated as a block element, making it easier to position */
+    color: black;  /* Sets the text color for visibility */
+    text-align: center;  /* Centers the text within the label */
+    width: 100%;  /* Makes the label span the full width of the container */
+    margin-top: 5px;  /* Adds space between the image and the label */
+    font-size: 12px; /* Ensure the font size is adequate */
+}
+
+
 .icon-container-2 input[type="checkbox"] {
     margin-right: 5px; /* Space between checkbox and label */
 }
