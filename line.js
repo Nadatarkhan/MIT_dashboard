@@ -40,52 +40,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
 
         fields.forEach(field => {
-            // Select the icon container, adjust the selector to specifically target only the 'grid' field in the left pane
-            const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
-            if (iconContainer) {
-                const form = document.createElement('form');
-                form.style.display = 'flex'; // Ensures form elements are aligned in a row
-                form.style.flexWrap = 'nowrap'; // Prevents wrapping to keep elements in one line
-                form.style.alignItems = 'center'; // Vertically centers the form elements
+            if (field === 'grid') {
+                // Special handling for the 'grid' field in the left pane using icon-container-2
+                const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
+                if (iconContainer) {
+                    const form = document.createElement('form');
+                    form.style.display = 'flex'; // Flex container to hold the checkboxes
+                    form.style.flexDirection = 'column'; // Align checkboxes vertically
 
-                let options = ['baseline', 'partial', 'full'];
-                if (field === 'grid') {
-                    options = ['bau', 'cheap_ng', 'decarbonization'];
-                }
-                options.forEach(value => {
-                    const input = document.createElement('input');
-                    input.type = 'checkbox';
-                    input.id = `${field}-${value}`;
-                    input.name = `${field}Filter`;
-                    input.value = value;
-                    input.style.transform = 'scale(0.75)';
-                    input.style.marginRight = '5px'; // Space between checkboxes
+                    const options = ['bau', 'cheap_ng', 'decarbonization'];
+                    options.forEach(value => {
+                        const checkboxContainer = document.createElement('div');
+                        checkboxContainer.style.display = 'flex';
+                        checkboxContainer.style.alignItems = 'center'; // Align checkbox and label
 
-                    const label = document.createElement('label');
-                    label.htmlFor = `${field}-${value}`;
-                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                    label.style.fontSize = '12px';
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = `${field}-${value}`;
+                        input.name = `${field}Filter`;
+                        input.value = value;
+                        input.style.transform = 'scale(0.75)';
+                        input.style.marginRight = '5px';
 
-                    form.appendChild(input);
-                    form.appendChild(label);
+                        const label = document.createElement('label');
+                        label.htmlFor = `${field}-${value}`;
+                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                        label.style.fontSize = '12px';
 
-                    input.addEventListener('change', function() {
-                        if (!filters[field]) filters[field] = [];
-                        const filterIndex = filters[field].indexOf(value);
-                        if (this.checked && filterIndex === -1) {
-                            filters[field].push(value);
-                        } else if (!this.checked && filterIndex !== -1) {
-                            filters[field].splice(filterIndex, 1);
-                        }
-                        updatePlot();
+                        checkboxContainer.appendChild(input);
+                        checkboxContainer.appendChild(label);
+                        form.appendChild(checkboxContainer); // Append each pair to the form
+
+                        input.addEventListener('change', function() {
+                            if (!filters[field]) filters[field] = [];
+                            const filterIndex = filters[field].indexOf(value);
+                            if (this.checked && filterIndex === -1) {
+                                filters[field].push(value);
+                            } else if (!this.checked && filterIndex !== -1) {
+                                filters[field].splice(filterIndex, 1);
+                            }
+                            updatePlot();
+                        });
                     });
-                });
-                iconContainer.appendChild(form);
-            } else if (field !== 'grid') {
-                // For all other fields, use the regular 'icon-container' class
-                const regularIconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
-                if (regularIconContainer) {
-                    // Similar handling as above but without flex styling
+                    iconContainer.appendChild(form);
+                }
+            } else {
+                // Handle other fields using regular 'icon-container'
+                const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+                if (iconContainer) {
                     const form = document.createElement('form');
                     let options = ['baseline', 'partial', 'full'];
                     options.forEach(value => {
@@ -94,6 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         input.id = `${field}-${value}`;
                         input.name = `${field}Filter`;
                         input.value = value;
+                        input.style.transform = 'scale(0.75)';
+                        input.style.marginRight = '5px';
 
                         const label = document.createElement('label');
                         label.htmlFor = `${field}-${value}`;
@@ -115,10 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             updatePlot();
                         });
                     });
-                    regularIconContainer.appendChild(form);
+                    iconContainer.appendChild(form);
                 }
             }
         });
+
 
 
         function getColor(field, value) {
