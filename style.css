@@ -132,51 +132,29 @@ body, html {
 }
 
 
-
-
 input[type='checkbox'] {
     position: absolute;
     opacity: 0;
     z-index: -1;
 }
 
-/* Create a custom styled checkbox using the label */
-input[type='checkbox'] + label::before {
-    content: '';
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    margin-right: 5px;
-    border: 1px solid #aaa;
-    background-color: #fff;
-    cursor: pointer;
+/* Custom checkbox appearance */
+input[type="checkbox"] {
+    -webkit-appearance: none; /* Removes default styles for WebKit browsers */
+    appearance: none;
+    background-color: #f0f0f0; /* Default background */
+    border: 2px solid #ccc; /* Default border */
+    padding: 9px; /* Size of the checkbox */
+    border-radius: 3px; /* Optional: for rounded corners */
 }
 
-/* Style the custom checkbox when the hidden checkbox is checked */
-input[type='checkbox'] + label::before {
-    content: '';
-    display: inline-block;
-    vertical-align: middle;
-    width: 12px;
-    height: 12px; /* Reduced from 16px */
-    margin-right: 5px;
-    border: 1px solid #aaa;
-    background-color: #444444;
-    cursor: pointer;
+/* Style when the checkbox is checked */
+input[type="checkbox"]:checked {
+    background-color: #505050; /* Color when checked */
+    border-color: darkgrey; /* Border color when checked */
 }
 
-
-/* Adjust label padding and display to align with custom checkbox */
-input[type='checkbox'] + label {
-    padding-left: 2px;
-    cursor: pointer;
-    display: flex;
-    align-items: center; /* Center label text with custom checkbox */
-}
-
-
-
+/* end of custom checkboxes */
 
 
 .icon-container.active {
