@@ -116,14 +116,6 @@ body, html {
     margin-left: 10px; /* Space between the icon and the checkboxes */
 }
 
-.icon-container-2 label {
-    display: block;  /* Ensures the label is treated as a block element, making it easier to position */
-    color: white;  /* Sets the text color */
-    background-color: rgba(0, 0, 0, 0.5);  /* Optional: adds background color for visibility */
-    text-align: left;  /* Centers the text within the label */
-    width: 100%;  /* Makes the label span the full width of the container */
-    margin-top: 5px;  /* Adds space between the image and the label */
-}
 
 .icon-container-2 .icon-label {
     display: block;  /* Ensures the label is treated as a block element, making it easier to position */
