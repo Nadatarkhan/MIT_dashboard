@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const baselineCheckboxes = document.querySelectorAll('.icon-container:not(.icon-container-2) input[name="baselineFilter"]');
             baselineCheckboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
+                // Manually trigger the change event to update the plot
+                checkbox.dispatchEvent(new Event('change'));
             });
         });
     }
