@@ -132,9 +132,8 @@ body, html {
 }
 
 
-/*Make checkboxes dark grey */
 
-/* Hide the default checkbox but make it functional */
+
 input[type='checkbox'] {
     position: absolute;
     opacity: 0;
@@ -159,11 +158,11 @@ input[type='checkbox'] + label::before {
     content: '';
     display: inline-block;
     vertical-align: middle;
-    width: 12px;  /* Reduced from 16px */
+    width: 12px;
     height: 12px; /* Reduced from 16px */
     margin-right: 5px;
     border: 1px solid #aaa;
-    background-color: #fff;
+    background-color: #444444;
     cursor: pointer;
 }
 
@@ -175,6 +174,9 @@ input[type='checkbox'] + label {
     display: flex;
     align-items: center; /* Center label text with custom checkbox */
 }
+
+
+
 
 
 .icon-container.active {
