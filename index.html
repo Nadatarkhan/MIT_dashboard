@@ -124,12 +124,19 @@
         };
         document.getElementById('popupOverlay').style.display = 'flex';
 
-        // Set icon labels based on alt text
+        // Set icon labels based on alt text for standard icon containers
         document.querySelectorAll('.icon-container img').forEach(img => {
+            const label = img.nextElementSibling;
+            label.textContent = img.alt; // Set the icon label text
+        });
+
+        // Set icon labels based on alt text for icons in container-2 (left-pane)
+        document.querySelectorAll('.icon-container-2 img').forEach(img => {
             const label = img.nextElementSibling;
             label.textContent = img.alt; // Set the icon label text
         });
     });
 </script>
+
 </body>
 </html>
