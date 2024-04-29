@@ -214,6 +214,37 @@ body, html {
     margin-top: 10px; /* Adds space between the text and the image */
 }
 
+.scaled-image {
+    width: 100%;
+    height: auto;
+}
+
+.bottom-visual .bottom-content {
+    display: flex;
+    width: 100%; /* Ensures full container width usage */
+    align-items: center; /* Aligns the text and the image vertically */
+    justify-content: space-around; /* Distributes space evenly around items */
+    padding: 20px 0; /* Padding above and below the content */
+}
+
+.bottom-visual .text-content {
+    flex: 1; /* Allows text content to fill the available space */
+    padding-right: 20px; /* Adds some spacing between the text and the image */
+    max-width: 45%; /* Limits the text width */
+}
+
+.bottom-visual img {
+    max-width: 50%; /* Adjusts maximum width to allow space for text */
+    height: auto; /* Keeps the image aspect ratio intact */
+    display: block; /* Ensures the image is treated as a block-level element */
+    margin-top: 10px; /* Adds space between the text and the image */
+}
+
+/* To override any other specific styles for images within .bottom-visual */
+.bottom-visual .scaled-image {
+    width: auto; /* Overrides the 100% width setting */
+}
+
 .icon-description {
     text-align: left; /* Center aligns the text */
     width: 100%; /* Ensures the description spans the full width of the container */
@@ -222,10 +253,6 @@ body, html {
 }
 
 
-.scaled-image {
-    width: 100%;
-    height: auto;
-}
 
 h1 {
     text-align: left;
