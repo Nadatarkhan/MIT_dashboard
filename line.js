@@ -62,6 +62,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         input.style.transform = 'scale(0.75)';
                         input.style.marginRight = '5px';
 
+                        // Add custom styles for the checkbox when checked
+                        input.addEventListener('change', function() {
+                            if(this.checked) {
+                                this.style.backgroundColor = '#646464'; // Dark grey background
+                                this.style.color = 'white'; // White text color for the check symbol
+                            } else {
+                                this.style.backgroundColor = ''; // Reset to default
+                                this.style.color = ''; // Reset text color
+                            }
+                        });
+
                         const label = document.createElement('label');
                         label.htmlFor = `${field}-${value}`;
                         label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
@@ -123,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-
 
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
