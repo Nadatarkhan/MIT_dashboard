@@ -152,6 +152,13 @@ body, html {
     padding-bottom: 7px;  /* padding between icons and labels */
 }
 
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;  // Add margin for spacing from the icon
+}
+
+
 .circle {
     width: 15px;
     height: 15px;
