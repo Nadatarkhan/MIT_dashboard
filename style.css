@@ -117,9 +117,17 @@ body, html {
 }
 
 .icon-container-2 label {
-    display: flex;
-    align-items: center; /* Align checkbox and label vertically */
-    margin-bottom: 5px; /* Space between each checkbox */
+    position: absolute;
+    width: auto;  /* Allows the label to take only as much width as needed */
+    white-space: nowrap;  /* Ensures the label stays on one line */
+    bottom: 100%;  /* Position above the icon */
+    left: 50%;  /* Center relative to the icon */
+    transform: translateX(-50%);  /* Adjust horizontally to truly center */
+    font-size: 10px;
+    font-weight: bold;
+    color: black;
+    text-align: center;  /* Ensures text is centered if multiple lines are needed */
+    padding-bottom: 7px;  /* padding between icons and labels */
 }
 
 .icon-container-2 input[type="checkbox"] {
