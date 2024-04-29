@@ -103,8 +103,14 @@ body, html {
 
 .icon-container-2 {
     display: flex;
-    align-items: center; /* Align items vertically center */
+    flex-direction: column; /* Aligns children (icon, label, form) in a column */
+    align-items: center; /* Centers the children */
 }
+
+.checkbox-form {
+    margin-top: 10px; /* Adds some space between the icon and the checkbox */
+}
+
 
 .icon-container-2 img {
     margin-right: 10px; // Space between the icon and the checkboxes
