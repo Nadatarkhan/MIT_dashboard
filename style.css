@@ -106,21 +106,6 @@ body, html {
     align-items: center; /* Align items vertically center */
 }
 
-.subcontainers {
-    width: 100%;  /* Takes the full width of the icon-container-2 */
-    display: flex;
-    flex-direction: column; /* Stacks subcontainers vertically */
-    align-items: center;  /* Centers the subcontainers */
-}
-
-.subcontainer-1, .subcontainer-2 {
-    width: 90%;  /* Each subcontainer takes 90% of the parent width */
-    padding: 5px;  /* Padding for some space inside the subcontainers */
-    margin-top: 5px;  /* Space between subcontainers and the rest of the content */
-    background-color: #f4f4f4;  /* Light grey background for visibility */
-    border: 1px solid #ccc;  /* Grey border around subcontainers */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* Optional shadow for better visibility */
-}
 
 .icon-container-2 img {
     margin-right: 10px; // Space between the icon and the checkboxes
