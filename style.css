@@ -117,17 +117,12 @@ body, html {
 }
 
 .icon-container-2 label {
-    position: absolute;
-    width: auto;  /* Allows the label to take only as much width as needed */
-    white-space: nowrap;  /* Ensures the label stays on one line */
-    bottom: 100%;  /* Position above the icon */
-    left: 50%;  /* Center relative to the icon */
-    transform: translateX(-50%);  /* Adjust horizontally to truly center */
-    font-size: 10px;
-    font-weight: bold;
-    color: black;
-    text-align: center;  /* Ensures text is centered if multiple lines are needed */
-    padding-bottom: 7px;  /* padding between icons and labels */
+    display: block;  /* Ensures the label is treated as a block element, making it easier to position */
+    color: white;  /* Sets the text color */
+    background-color: rgba(0, 0, 0, 0.5);  /* Optional: adds background color for visibility */
+    text-align: center;  /* Centers the text within the label */
+    width: 100%;  /* Makes the label span the full width of the container */
+    margin-top: 5px;  /* Adds space between the image and the label */
 }
 
 .icon-container-2 input[type="checkbox"] {
