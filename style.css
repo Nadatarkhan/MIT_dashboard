@@ -132,6 +132,43 @@ body, html {
 }
 
 
+/*Make checkboxes dark grey */
+
+/* Hide the default checkbox but make it functional */
+input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+/* Create a custom styled checkbox using the label */
+input[type='checkbox'] + label::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* Style the custom checkbox when the hidden checkbox is checked */
+input[type='checkbox']:checked + label::before {
+    background-color: #444; /* Dark grey */
+    border-color: #444; /* Optional: if you want the border color to match */
+}
+
+/* Adjust label padding and display to align with custom checkbox */
+input[type='checkbox'] + label {
+    padding-left: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Center label text with custom checkbox */
+}
+
+
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
     background-color: #f4f4f4; // Light background color for active state
