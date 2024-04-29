@@ -129,11 +129,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (baselineCheckbox) {
             baselineCheckbox.addEventListener('change', function() {
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = this.checked;
+                    checkbox.checked = this.checked; // Set all baseline checkboxes to match the main baseline checkbox state
+                    const field = checkbox.id.split('-')[0]; // Assuming your ID is structured as field-value
+
+                    // Update the filters object
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
+                    const baselineIndex = filters[field].indexOf('baseline');
+                    if (this.checked && baselineIndex === -1) {
+                        filters[field].push('baseline'); // Add 'baseline' if it's checked and not already in the filter
+                    } else if (!this.checked && baselineIndex !== -1) {
+                        filters[field].splice(baselineIndex, 1); // Remove 'baseline' if it's unchecked
+                    }
                 });
-                updatePlot();
+
+                updatePlot(); // Update the plot after changing the filters
             });
         }
+
 
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
