@@ -170,6 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Exit if no data to plot after filtering
             }
 
+            console.log("Filtered data points:", filteredData);  // Log the data that is being used to plot
+
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
@@ -177,12 +179,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Ensure to start a new path for drawing the line chart
-            context.beginPath();
+            context.beginPath(); // Start a new path for the line chart
 
             const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
+                .x(d => {
+                    console.log('X coordinate:', x(d.year));  // Log the x coordinate for each data point
+                    return x(d.year);
+                })
+                .y(d => {
+                    console.log('Y coordinate:', y(d.emission));  // Log the y coordinate for each data point
+                    return y(d.emission);
+                })
                 .context(context);
 
             line(filteredData); // Draw the line
@@ -191,9 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke(); // Apply the stroke to draw the line
 
-            // Ensure to close the path after drawing
-            context.closePath();
-
+            context.closePath(); // Close the path after drawing
             context.restore();
 
             drawAxis(); // Ensure axes are drawn after the line
@@ -203,26 +208,23 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw the X-axis
-            context.beginPath();
+            context.beginPath(); // Start a new path for the X-axis
             context.moveTo(0, height);
             context.lineTo(width, height);
             context.strokeStyle = 'black';
             context.stroke();
 
-            // Draw the Y-axis
-            context.beginPath();
+            context.beginPath(); // Start a new path for the Y-axis
             context.moveTo(0, 0);
             context.lineTo(0, height);
             context.stroke();
 
-            // Axis labels and ticks
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
             y.ticks().forEach(d => {
                 context.fillText(d, -10, y(d));
-                context.beginPath();
+                context.beginPath(); // Start a new path for each tick to ensure clean lines
                 context.moveTo(-10, y(d));
                 context.lineTo(0, y(d));
                 context.stroke();
@@ -238,14 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
 
-            // Y-axis label
-            context.save();
+            context.save(); // Prepare to draw the Y-axis label
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
             context.textAlign = "center";
             context.fillText("Emissions- MT-CO2", 0, 0);
             context.restore();
         }
+
 
 
     }).catch(function(error) {
