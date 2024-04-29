@@ -160,30 +160,37 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
+                // Ensure each field in filters has a matching entry in the data
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
+            }).filter(d => {
+                // Additionally, make sure the data is valid
+                return d.year != null && d.emission != null;
             });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                return; // Exit if no data to plot after filtering
+            }
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            // Clear the entire canvas and reset transformations
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Start a new path for the line to ensure it does not connect back to the starting point
+            // Begin a new path for the line plot
             context.beginPath();
 
-            // Define the line generator
-            const lineGenerator = d3.line()
+            const line = d3.line()
+                .defined(d => d.emission != null) // Only use points where emission is not null
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
-                .curve(d3.curveLinear) // This ensures that the line is drawn with a linear path without any unintended curves
                 .context(context);
 
-            lineGenerator(filteredData); // Draw the line with the filtered data
+            line(filteredData); // Draw the line
 
             context.lineWidth = 0.2;
             context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
@@ -191,65 +198,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
 
-            drawAxis(); // Redraw the axes after the line
+            drawAxis(); // Ensure axes are drawn after the line
         }
-
 
         function drawAxis() {
             context.save();
-            context.translate(margin.left, margin.top); // Adjust the context to the plot area for the axes
+            context.translate(margin.left, margin.top);
 
-            // Drawing the X-axis at the bottom of the plot
-            context.beginPath(); // Start a new path for the X-axis
-            context.moveTo(0, height); // Start from the left bottom corner of the plot
-            context.lineTo(width, height); // Draw line to the right bottom corner
-            context.strokeStyle = 'black'; // Set color for the axis
-            context.stroke(); // Apply the drawing stroke
+            // Draw the X-axis
+            context.beginPath();
+            context.moveTo(0, height);
+            context.lineTo(width, height);
+            context.strokeStyle = 'black';
+            context.stroke();
 
-            // Adding X-axis labels
+            // Draw the Y-axis
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(0, height);
+            context.stroke();
+
+            // Axis labels and ticks
             context.font = "12px Arial";
+            context.textAlign = 'right';
+            context.textBaseline = 'middle';
+            y.ticks().forEach(d => {
+                context.fillText(d, -10, y(d));
+                context.beginPath();
+                context.moveTo(-10, y(d));
+                context.lineTo(0, y(d));
+                context.stroke();
+            });
+
             context.textAlign = 'center';
             context.textBaseline = 'top';
             x.ticks().forEach(d => {
                 context.fillText(d3.timeFormat("%Y")(d), x(d), height + 5);
             });
 
-            // Add X-axis title
-            context.fillText("Year", width / 2, height + 20); // Positioning the axis title a bit lower than the tick labels
-
-            // Drawing the Y-axis on the left side of the plot
-            context.beginPath(); // Start a new path for the Y-axis
-            context.moveTo(0, 0); // Start from the top left corner of the plot
-            context.lineTo(0, height); // Draw line to the bottom left corner
-            context.stroke(); // Apply the stroke
-
-            // Adding Y-axis labels
-            context.textAlign = 'right';
-            context.textBaseline = 'middle';
-            y.ticks(10).forEach(d => {
-                context.fillText(d, -10, y(d)); // Position the labels to the left of the axis
-            });
-
-            // Draw tick marks for the Y-axis
-            y.ticks(10).forEach(d => {
-                context.beginPath(); // Start a new path for each tick mark to ensure they are not connected
-                context.moveTo(-10, y(d)); // Start from a bit left of the axis
-                context.lineTo(0, y(d)); // Draw to the axis line
-                context.stroke(); // Apply the stroke
-            });
+            context.fillText("Year", width / 2, height + 20);
 
             context.restore();
 
-            // Rotate and position the Y-axis label
+            // Y-axis label
             context.save();
-            context.translate(margin.left - 60, margin.top + height / 2); // Move context to the center of the y-axis
-            context.rotate(-Math.PI / 2); // Rotate context to make the text vertical
-            context.font = "12px Arial";
+            context.translate(margin.left - 60, margin.top + height / 2);
+            context.rotate(-Math.PI / 2);
             context.textAlign = "center";
-            context.fillText("Emissions- MT-CO2", 0, 0); // Center the text at the rotated origin
+            context.fillText("Emissions- MT-CO2", 0, 0);
             context.restore();
         }
-        
+
+
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
