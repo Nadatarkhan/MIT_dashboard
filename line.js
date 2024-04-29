@@ -147,17 +147,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Adding button functionality
-        const baselineButton = document.querySelector('.controls button:nth-child(1)'); // Assuming it's the first button
+        // Baseline button functionality
+        const baselineButton = document.getElementById('baselineButton');
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                // Check if the button should activate baseline
-                const isActive = this.textContent === "Baseline";
+                // Toggle the state of the baseline
+                const currentText = this.textContent;
+                const activate = currentText === "Baseline"; // Determine whether to activate or deactivate
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = isActive; // Toggle state
+                    checkbox.checked = activate;
                 });
-                this.textContent = isActive ? "Remove Baseline" : "Baseline"; // Update button text
-                updatePlot();
+                this.textContent = activate ? "Remove Baseline" : "Baseline"; // Update button text
+                updatePlot(); // Call to update the plot
             });
         }
 
