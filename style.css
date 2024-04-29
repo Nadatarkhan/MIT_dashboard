@@ -155,10 +155,18 @@ input[type='checkbox'] + label::before {
 }
 
 /* Style the custom checkbox when the hidden checkbox is checked */
-input[type='checkbox']:checked + label::before {
-    background-color: #444; /* Dark grey */
-    border-color: #444; /* Optional: if you want the border color to match */
+input[type='checkbox'] + label::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;  /* Reduced from 16px */
+    height: 12px; /* Reduced from 16px */
+    margin-right: 5px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    cursor: pointer;
 }
+
 
 /* Adjust label padding and display to align with custom checkbox */
 input[type='checkbox'] + label {
