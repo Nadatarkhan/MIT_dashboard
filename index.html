@@ -35,7 +35,7 @@
                     <div class="icon-row">
                         <div class="icon-container-2" data-field="grid">
                             <img src="icons/10.png" alt="Future grid emissions">
-                            <span class="icon-label">Grid</span>
+                            <span class="icon-label">Future grid emissions</span>
                             <div class="tooltip">Future grid emissions</div>
                         </div>
                     </div>
@@ -124,19 +124,14 @@
         };
         document.getElementById('popupOverlay').style.display = 'flex';
 
-        // Set icon labels based on alt text for standard icon containers
-        document.querySelectorAll('.icon-container img').forEach(img => {
+        // Set icon labels based on alt text for both container types
+        document.querySelectorAll('.icon-container img, .icon-container-2 img').forEach(img => {
             const label = img.nextElementSibling;
-            label.textContent = img.alt; // Set the icon label text
-        });
-
-        // Set icon labels based on alt text for icons in container-2 (left-pane)
-        document.querySelectorAll('.icon-container-2 img').forEach(img => {
-            const label = img.nextElementSibling;
-            label.textContent = img.alt; // Set the icon label text
+            label.textContent = img.alt;  // Set the icon label text
         });
     });
 </script>
+
 
 </body>
 </html>
