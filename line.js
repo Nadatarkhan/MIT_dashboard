@@ -172,21 +172,25 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            const line = d3.line()
+            // Define the line generator
+            const lineGenerator = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
 
+            // Start a new path
             context.beginPath();
-            line(filteredData);
+            lineGenerator(filteredData); // Generate the line path
             context.lineWidth = 0.2;
             context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke();
+            context.stroke(); // Stroke the path
+
+            // Close the path
+            context.closePath(); // This ensures the path is closed and no extra line is drawn
 
             context.restore();
-
-            drawAxis();
         }
+
 
         function drawAxis() {
             context.save();
