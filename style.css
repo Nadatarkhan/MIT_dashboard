@@ -502,6 +502,15 @@ input[type='radio']:checked + label {
 
 /* Buttons */
 
+/* Titles within controls */
+.controls-title {
+    font-size: 10px; /* Smaller font size for the titles */
+    text-align: left; /* Left align the titles */
+    margin-bottom: 10px; /* Space below the title */
+    color: #424242; /* Optional: match the button color or choose another */
+    font-family: Arial, sans-serif; /* Consistent font with the buttons */
+}
+
 .pheasant-demure-button {
     padding: 8px 25px;
     margin-bottom: 20px;
