@@ -41,18 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fields.forEach(field => {
             if (field === 'grid') {
-                // Special handling for the 'grid' field in the left pane using icon-container-2
                 const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
                 if (iconContainer) {
                     const form = document.createElement('form');
-                    form.style.display = 'flex'; // Flex container to hold the checkboxes
-                    form.style.flexDirection = 'column'; // Align checkboxes vertically
+                    form.style.display = 'flex';
+                    form.style.flexDirection = 'column';
 
                     const options = ['bau', 'cheap_ng', 'decarbonization'];
                     options.forEach(value => {
                         const checkboxContainer = document.createElement('div');
                         checkboxContainer.style.display = 'flex';
-                        checkboxContainer.style.alignItems = 'center'; // Align checkbox and label
+                        checkboxContainer.style.alignItems = 'center';
 
                         const input = document.createElement('input');
                         input.type = 'checkbox';
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         checkboxContainer.appendChild(input);
                         checkboxContainer.appendChild(label);
-                        form.appendChild(checkboxContainer); // Append each pair to the form
+                        form.appendChild(checkboxContainer);
 
                         input.addEventListener('change', function() {
                             if (!filters[field]) filters[field] = [];
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     iconContainer.appendChild(form);
                 }
             } else {
-                // Handle other fields using regular 'icon-container'
                 const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
                 if (iconContainer) {
                     const form = document.createElement('form');
@@ -149,6 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Adding button functionality
+        const baselineButton = document.querySelector('.controls button:nth-child(1)'); // Assuming it's the first button
+        if (baselineButton) {
+            baselineButton.addEventListener('click', function() {
+                // Check if the button should activate baseline
+                const isActive = this.textContent === "Baseline";
+                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                    checkbox.checked = isActive; // Toggle state
+                });
+                this.textContent = isActive ? "Remove Baseline" : "Baseline"; // Update button text
+                updatePlot();
+            });
+        }
 
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
@@ -247,9 +258,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
         }
 
-
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
 });
+
 
