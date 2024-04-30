@@ -133,38 +133,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Baseline button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Consider renaming the ID to reflect its purpose
+// Scenario button functionality
+        const scenarioButton = document.getElementById('baselineButton');  // Example ID, ensure this matches your actual button ID
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
-                // Toggle the scenario active state based on the current button text
-                const activate = this.textContent === "Activate Scenario";
+                // Toggle the scenario active state based on whether it currently has the 'active' class
+                const isActive = this.classList.contains('active');
+                this.classList.toggle('active', !isActive);
 
-                // Loop over all checkboxes related to the 'baseline' filter, replicating the toggle behavior
+                // Update the text based on activation state
+                this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
+
+                // Example: toggle scenario filters, replace 'baseline' with the actual scenario field
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = activate;  // Set the state based on the button
-                    const field = checkbox.id.split('-')[0];  // Extract the field from ID
+                    checkbox.checked = !isActive; // Toggle checkbox state
+                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
 
-                    // Ensure the filters object is up-to-date
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
                     // Update or clear the filter based on the button state
                     const baselineIndex = filters[field].indexOf('baseline');
-                    if (activate && baselineIndex === -1) {
+                    if (!isActive && baselineIndex === -1) {
                         filters[field].push('baseline');
-                    } else if (!activate && baselineIndex !== -1) {
+                    } else if (isActive && baselineIndex !== -1) {
                         filters[field].splice(baselineIndex, 1);
                     }
                 });
 
-                // Update the button text based on its current state
-                this.textContent = activate ? "Deactivate Scenario" : "Activate Scenario";
-
-                updatePlot();  // Call to update the plot
+                updatePlot(); // Call to update the plot
             });
         }
+
 
 
 
