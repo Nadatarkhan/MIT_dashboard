@@ -143,7 +143,7 @@ body, html {
     width: auto;  /* Allows the label to take only as much width as needed */
     white-space: nowrap;  /* Ensures the label stays on one line */
     bottom: 100%;  /* Position above the icon */
-    left: 50%;  /* Center relative to the icon */
+    left: 30%;  /* Center relative to the icon */
     transform: translateX(-50%);  /* Adjust horizontally to truly center */
     font-size: 10px;
     font-weight: bold;
