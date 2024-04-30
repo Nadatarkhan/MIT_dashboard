@@ -134,23 +134,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Baseline button functionality
-        const baselineButton = document.getElementById('baselineButton');
-        if (baselineButton) {
-            baselineButton.addEventListener('click', function() {
-                // Determine whether to activate or deactivate based on the button text
-                const activate = this.textContent === "Baseline";
+        const scenarioButton = document.getElementById('baselineButton');  // Consider renaming the ID to reflect its purpose
+        if (scenarioButton) {
+            scenarioButton.addEventListener('click', function() {
+                // Toggle the scenario active state based on the current button text
+                const activate = this.textContent === "Activate Scenario";
 
-                // Loop over all checkboxes related to the 'baseline' filter, replicating the checkbox behavior
+                // Loop over all checkboxes related to the 'baseline' filter, replicating the toggle behavior
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = activate; // Set the state based on the button
-                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
+                    checkbox.checked = activate;  // Set the state based on the button
+                    const field = checkbox.id.split('-')[0];  // Extract the field from ID
 
                     // Ensure the filters object is up-to-date
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
-                    // Update or clear the filter based on button state
+                    // Update or clear the filter based on the button state
                     const baselineIndex = filters[field].indexOf('baseline');
                     if (activate && baselineIndex === -1) {
                         filters[field].push('baseline');
@@ -160,11 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 // Update the button text based on its current state
-                this.textContent = activate ? "Remove Baseline" : "Baseline";
+                this.textContent = activate ? "Deactivate Scenario" : "Activate Scenario";
 
-                updatePlot(); // Call to update the plot
+                updatePlot();  // Call to update the plot
             });
         }
+
 
 
         //Scenario 1 Function
