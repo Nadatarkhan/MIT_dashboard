@@ -233,29 +233,26 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Draw each line segment independently
-            filteredData.forEach((d, i) => {
-                if (i > 0) { // Ensure there is a previous point to connect
-                    context.beginPath(); // Begin a new path for each segment
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 0.2;
-                    context.strokeStyle = scenario1Active ? '#00897b' : getColor(d.field, d.value);
-                    context.stroke(); // Draw the current segment
-                }
-            });
+            for (let i = 1; i < filteredData.length; i++) { // Start from the second element
+                context.beginPath(); // Start a new path
+                context.moveTo(x(filteredData[i-1].year), y(filteredData[i-1].emission)); // Move to the start point
+                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission)); // Draw a line to the end point
+                context.lineWidth = 0.2;
+                context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[i].field, filteredData[i].value);
+                context.stroke(); // Render the line
+            }
 
             context.restore();
-            drawAxis(); // Ensure axes are drawn after the line
+            drawAxis(); // Redraw the axis on top
         }
 
         function getColor(field, value) {
-            if (scenario1Active) {
+            if (scenario1Active && (field === 'nuclear' && ['full', 'partial'].includes(value))) {
                 return '#00897b'; // Teal color for Scenario 1
             }
             return '#565656'; // Default color for all other cases
         }
-
-
+        
 
 
         function drawAxis() {
