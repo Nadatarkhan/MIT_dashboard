@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                const scenarioValue = 'baseline';
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
@@ -156,16 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         filters[field].push(scenarioValue);
                     } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
-                        if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up if no more filters
-                        }
                     }
                 });
 
+                console.log("Filters after toggle:", filters);
                 updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 
         //Scenario 1 Function
@@ -200,12 +197,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
+            console.log("Current filters:", filters);
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
+
+            console.log("Filtered data length:", filteredData.length);
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -239,12 +238,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
         function getColor(field, value) {
             // Check if the baseline scenario is active and the current data point belongs to it
             if (baselineActive && filters[field] && filters[field].includes(value) && value === 'baseline') {
                 return '#b937b8'; // Purple color for the baseline scenario
             }
-            return '#565656'; // Default gray color for all other cases
+            return '#8c8c8c'; // Default gray color for all other cases
         }
 
 
