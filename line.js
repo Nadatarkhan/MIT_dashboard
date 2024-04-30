@@ -232,21 +232,26 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Drawing the line chart
-            context.beginPath();
+            // Begin drawing operations
+            context.beginPath();  // Start a new path for the line chart
+
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
-            line(filteredData); // Draw the line
+
+            line(filteredData);  // Draw the line based on filtered data
+
             context.lineWidth = 0.2;
             context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke(); // Apply the stroke to draw the line
-            context.closePath();
+            context.stroke();  // Apply the stroke to draw the line
+
+            context.closePath();  // Close the path after drawing
             context.restore();
 
-            drawAxis(); // Ensure axes are drawn after the line
+            drawAxis();  // Ensure axes are drawn after the line
         }
+
 
         function getColor(field, value) {
             if (scenario1Active) {
