@@ -134,37 +134,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Scenario button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Example ID, ensure this matches your actual button ID
+        const scenarioButton = document.getElementById('scenarioButton');  // Adjust ID as needed
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
-                // Toggle the scenario active state based on whether it currently has the 'active' class
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
-
-                // Update the text based on activation state
                 this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Example: toggle scenario filters, replace 'baseline' with the actual scenario field
-                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = !isActive; // Toggle checkbox state
-                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
-
-                    if (!filters[field]) {
-                        filters[field] = [];
+                // Toggle the filter values based on scenario
+                const scenarioType = this.dataset.scenarioType; // Assuming each button has a data attribute like 'data-scenario-type="nuclear"'
+                if (!isActive) {
+                    // If activating, ensure the scenario is added to the filters
+                    if (!filters[scenarioType]) {
+                        filters[scenarioType] = ['full', 'partial'];  // Or whichever values are pertinent to the scenario
                     }
+                } else {
+                    // If deactivating, remove the scenario from the filters
+                    filters[scenarioType] = [];
+                }
 
-                    // Update or clear the filter based on the button state
-                    const baselineIndex = filters[field].indexOf('baseline');
-                    if (!isActive && baselineIndex === -1) {
-                        filters[field].push('baseline');
-                    } else if (isActive && baselineIndex !== -1) {
-                        filters[field].splice(baselineIndex, 1);
-                    }
+                // Update which checkboxes are checked based on the active scenario
+                document.querySelectorAll(`.icon-container[data-field="${scenarioType}"] input`).forEach(checkbox => {
+                    checkbox.checked = !isActive && ['full', 'partial'].includes(checkbox.value); // Adjust based on your scenario logic
                 });
 
-                updatePlot(); // Call to update the plot
+                updatePlot(); // Redraw the plot with updated filters
             });
         }
+
 
 
 
