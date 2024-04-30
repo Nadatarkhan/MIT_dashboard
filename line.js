@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Baseline button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
+// Scenario button functionality
+        const scenarioButton = document.getElementById('baselineButton');
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
                 const isActive = this.classList.contains('active');
@@ -143,29 +143,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update the text based on activation state
                 this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Toggle the checkboxes and filters for the 'baseline' scenario
-                const scenarioValue = 'baseline';  // This should match the actual value you use in the data
+                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = !isActive; // Toggle checkbox state
+                    checkbox.checked = !isActive;
                     const field = checkbox.id.split('-')[0];
+
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
 
                     if (!isActive) {
                         // Activating the scenario
-                        if (!filters[field]) {
-                            filters[field] = [];
-                        }
                         if (!filters[field].includes(scenarioValue)) {
                             filters[field].push(scenarioValue);
                         }
                     } else {
                         // Deactivating the scenario
-                        if (filters[field]) {
-                            filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        if (filters[field].length === 0) {
+                            delete filters[field];  // Clean up to avoid empty arrays hanging around
                         }
                     }
                 });
 
-                updatePlot(); // Call to update the plot
+                updatePlot();  // Update the plot to reflect changes
             });
         }
 
@@ -213,8 +214,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                drawAxis(); // Still draw axes
-                return; // Exit if no data to plot
+                drawAxis(); // Draw axes even if no data
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -224,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw each line segment independently
             filteredData.forEach((d, i) => {
                 if (i > 0) {
                     context.beginPath();
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-
+        
 
         function getColor(field, value) {
             if (scenario1Active) {
