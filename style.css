@@ -231,8 +231,8 @@ body, html {
     flex: 1; /* Allows text content to fill the available space */
     padding-right: 10px; /* Adds some spacing between the text and the image */
     padding-left: 10px;
-    max-width: 35%; /* Limits the text width */
-    font-size: 11px;
+    max-width: 25%; /* Limits the text width */
+    font-size: 12px;
 }
 
 .bottom-visual img {
