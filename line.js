@@ -197,15 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function getColor(field, value) {
-            if (field === 'nuclear' && (value === 'Full' || value === 'Partial')) {
-                return '#00897b'; // Specific color for Scenario 1
-            }
-            // Add other conditions or default color
-            return 'steelblue'; // Default color
-        }
-
-
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
