@@ -106,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
+        prepareLineData();  // Initialize line data right after data is loaded
+
         fields.forEach(field => {
             if (field === 'grid') {
                 const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
