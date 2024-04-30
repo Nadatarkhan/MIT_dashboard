@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
 
         fields.forEach(field => {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (iconContainer) {
                 const form = document.createElement('form');
                 form.style.display = 'flex';
-                form.style.flexDirection = field === 'grid' ? 'column' : 'row';
+                form.style.flexDirection = 'column'; // Ensure vertical stacking for all fields
 
                 const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
                 options.forEach(value => {
@@ -88,15 +88,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
                 const isActive = this.classList.contains('active');
-                this.classList.toggle('active'); // Toggle the active class on the button
+                this.classList.toggle('active');
                 this.textContent = isActive ? "Baseline" : "Remove Baseline";
-                toggleBaseline(!isActive); // Pass the opposite of current state
+                toggleBaseline(!isActive);
             });
         }
 
         function toggleBaseline(activate) {
             document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                checkbox.checked = activate; // Set all baseline checkboxes to match the button's new state
+                checkbox.checked = activate;
                 const field = checkbox.id.split('-')[0];
                 if (!filters[field]) {
                     filters[field] = [];
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                return; // Exit if no data to plot after filtering
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -195,10 +195,10 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions- MT-CO2", 0, 0);
             context.restore();
         }
+
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
     });
 });
-
 
 
