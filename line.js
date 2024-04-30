@@ -133,32 +133,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Baseline button functionality
-        const baselineButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
+// Scenario button functionality
+        const baselineButton = document.getElementById('baselineButton');  // Example ID
+        let baselineActive = false;  // Track the activation state of the baseline scenario
+
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                const isActive = this.classList.contains('active');
-                this.classList.toggle('active', !isActive);
+                baselineActive = !baselineActive;  // Toggle the activation state
+                this.classList.toggle('active', baselineActive);
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                // Update the text based on activation state
-                this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
-
-                // Toggle baseline scenario filters
-                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = !isActive; // Toggle checkbox state
+                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
+                    checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
 
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
-                    // Adjust the filters based on the button state
-                    if (!isActive && !filters[field].includes('baseline')) {
-                        filters[field].push('baseline');
-                    } else if (isActive) {
-                        filters[field] = filters[field].filter(v => v !== 'baseline');
+                    if (baselineActive && !filters[field].includes(scenarioValue)) {
+                        filters[field].push(scenarioValue);
+                    } else if (!baselineActive) {
+                        filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up to avoid empty arrays
+                            delete filters[field];  // Clean up if no more filters
                         }
                     }
                 });
@@ -166,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 
 
@@ -212,8 +210,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                drawAxis(); // Still draw axes
-                return; // Exit if no data to plot
+                drawAxis();
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -240,12 +238,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+
         function getColor(field, value) {
-            // This assumes that the 'baseline' scenario activation controls this specific color
-            if (baselineButton && baselineButton.classList.contains('active')) {
-                return '#b937b8'; // Apply specific purple color when baseline is active
+            // Apply specific color if the baseline scenario is active and the current data point belongs to it
+            if (baselineActive && filters[field] && filters[field].includes('baseline')) {
+                return '#b937b8'; // Specific color for active scenario
             }
-            return '#565656'; // Default color for all other cases
+            return '#565656'; // Default color for all other cases or additional lines toggled after activation
         }
 
 
