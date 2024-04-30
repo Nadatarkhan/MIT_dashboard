@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return '#565656'; // Default color for all other cases
         }
 
-        
+
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);

@@ -88,7 +88,7 @@ body, html {
 .icon-description p {
     background-color: #c9c9c9;
     padding: 2px;
-    font-size: 11px;
+    font-size: 13px;
     font-style: italic;
     margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
 }
@@ -232,6 +232,7 @@ body, html {
     padding-right: 10px; /* Adds some spacing between the text and the image */
     padding-left: 10px;
     max-width: 35%; /* Limits the text width */
+    font-size: 11px;
 }
 
 .bottom-visual img {
@@ -407,7 +408,7 @@ h2 {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
     width: 80%;
-    max-width: 600px; /* Adjust size as needed */
+    max-width: 700px; /* Adjust size as needed */
     text-align: center;
 }
 
