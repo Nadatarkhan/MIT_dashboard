@@ -31,20 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-    //Line selector- new
-
-    let selectedLineId = null;  // ID of the selected line
-    const lineData = [];  // Store bounds and metadata for each line
-
-    function prepareLineData() {
-        emissionsData.forEach((d, index) => {
-            const x1 = x(d.startYear);
-            const y1 = y(d.startEmission);
-            const x2 = x(d.endYear);
-            const y2 = y(d.endEmission);
-            lineData.push({id: index, x1, y1, x2, y2, data: d});
-        });
-    }
 
     function onCanvasClick(event) {
         const rect = canvas.getBoundingClientRect();
@@ -278,6 +264,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 }
+            });
+        }
+
+        //Line selector- new
+
+        let selectedLineId = null;  // ID of the selected line
+        const lineData = [];  // Store bounds and metadata for each line
+
+        function prepareLineData() {
+            emissionsData.forEach((d, index) => {
+                const x1 = x(d.startYear);
+                const y1 = y(d.startEmission);
+                const x2 = x(d.endYear);
+                const y2 = y(d.endEmission);
+                lineData.push({id: index, x1, y1, x2, y2, data: d});
             });
         }
 
