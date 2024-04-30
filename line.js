@@ -133,42 +133,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Baseline button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Confirm this ID matches your actual button ID
+// Scenario button functionality
+        const scenarioButton = document.getElementById('baselineButton');
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
-                // Check if the scenario is currently active
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
 
-                // Update the button text based on the scenario state
-                this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
+                // Update the text based on activation state
+                this.textContent = !isActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                // Manage filters based on the scenario activation state
+                // Toggle the filters based on whether the button is active
+                const scenario = 'baseline'; // Adjust this to your specific scenario field name
                 if (!isActive) {
-                    // Scenario activated, add the filter
-                    document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                        checkbox.checked = true;
-                        const field = checkbox.id.split('-')[0];
-                        if (!filters[field]) {
-                            filters[field] = [];
-                        }
-                        if (filters[field].indexOf('baseline') === -1) {
-                            filters[field].push('baseline');
-                        }
-                    });
+                    // Activate the scenario: include these filters
+                    filters[scenario] = ['baseline'];
                 } else {
-                    // Scenario deactivated, remove the filter
-                    document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                        checkbox.checked = false;
-                        const field = checkbox.id.split('-')[0];
-                        filters[field] = filters[field].filter(f => f !== 'baseline');  // Remove 'baseline' from filters
-                    });
+                    // Deactivate the scenario: clear these filters
+                    filters[scenario] = [];
                 }
 
-                updatePlot(); // Redraw the plot with the updated filters
+                updatePlot(); // Call to update the plot
             });
         }
+
 
 
         //Scenario 1 Function
@@ -210,13 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             });
 
-            // Clear the canvas first
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                drawAxis(); // Still draw the axes even if no data
-                return; // Exit if no data to plot after filtering
+                drawAxis(); // Draw axes even if no data is present
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -225,25 +211,22 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Begin a new path for drawing lines
-            context.beginPath();
-
-            // Since the data is presumably sorted by year, we can draw continuous lines
+            // Draw each line
             filteredData.forEach((d, i) => {
-                if (i === 0) {
-                    context.moveTo(x(d.year), y(d.emission)); // Move to start point without drawing
-                } else {
-                    context.lineTo(x(d.year), y(d.emission)); // Draw to the next point
+                if (i > 0) {
+                    context.beginPath();
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.lineWidth = 0.2;
+                    context.strokeStyle = getColor(d.field, d.value);
+                    context.stroke();
                 }
             });
 
-            context.lineWidth = 0.2;
-            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke(); // Apply the stroke to draw the line
             context.restore();
-
-            drawAxis(); // Ensure axes are drawn after the line
+            drawAxis();
         }
+
 
 
         function getColor(field, value) {
