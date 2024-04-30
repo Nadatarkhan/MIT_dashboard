@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const label = document.createElement('label');
                         label.htmlFor = `${field}-${value}`;
                         label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                        label.style.fontSize = '12px';
+                        label.style.fontSize = '10px';
 
                         // Change the label text based on the value
                         if (value === "bau") {
