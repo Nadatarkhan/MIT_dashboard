@@ -180,12 +180,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
+
+        // Scenario 1 button functionality
+        const scenario1Button = document.getElementById('scenario1Button');
+        if (scenario1Button) {
+            scenario1Button.addEventListener('click', function() {
+                const activate = this.textContent === "Scenario 1";
+                document.querySelectorAll('.nuclear-filter').forEach(checkbox => {
+                    if (checkbox.value === "Full" || checkbox.value === "Partial") {
+                        checkbox.checked = activate;
+                        updateFilters('nuclear', checkbox.value, activate);
+                    }
+                });
+                this.textContent = activate ? "Reset Scenario 1" : "Scenario 1";
+                updatePlot(); // Re-draw the plot with new filters
+            });
         }
+
+        function getColor(field, value) {
+            if (field === 'nuclear' && (value === 'Full' || value === 'Partial')) {
+                return '#00897b'; // Specific color for Scenario 1
+            }
+            // Add other conditions or default color
+            return 'steelblue'; // Default color
+        }
+
+
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
@@ -210,16 +230,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ensure to start a new path for drawing the line chart
             context.beginPath();
 
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
+            filteredData.forEach(data => {
+                const line = d3.line()
+                    .x(d => x(data.year))
+                    .y(d => y(data.emission))
+                    .context(context);
 
-            line(filteredData); // Draw the line
+                line([data]); // Draw the line for each data point
 
-            context.lineWidth = 0.2;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
-            context.stroke(); // Apply the stroke to draw the line
+                // Conditionally set the stroke color based on the 'nuclear' field
+                context.strokeStyle = (data.nuclear === "Full" || data.nuclear === "Partial") ? "#00897b" : getColor(data.field, data[data.field]);
+                context.stroke();
+            });
 
             // Ensure to close the path after drawing
             context.closePath();
@@ -228,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             drawAxis(); // Ensure axes are drawn after the line
         }
+
 
         function drawAxis() {
             context.save();
