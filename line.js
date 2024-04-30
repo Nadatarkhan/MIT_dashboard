@@ -31,59 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-
-    function onCanvasClick(event) {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = (event.clientX - rect.left) * dpi;
-        const mouseY = (event.clientY - rect.top) * dpi;
-        let minDistance = Infinity;
-        let closestLine = null;
-
-        lineData.forEach(line => {
-            const distance = pointToLineDist(mouseX, mouseY, line.x1, line.y1, line.x2, line.y2);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestLine = line;
-            }
-        });
-
-        if (minDistance < 10) {  // Threshold to select a line
-            selectedLineId = closestLine.id;
-            updatePlot();
-        }
-    }
-
-    canvas.addEventListener('click', onCanvasClick);
-
-    function pointToLineDist(x, y, x1, y1, x2, y2) {
-        // Calculate the distance of (x, y) from line segment (x1, y1)-(x2, y2)
-        const A = x - x1;
-        const B = y - y1;
-        const C = x2 - x1;
-        const D = y2 - y1;
-        const dot = A * C + B * D;
-        const len_sq = C * C + D * D;
-        const param = len_sq !== 0 ? dot / len_sq : -1;
-        let xx, yy;
-
-        if (param < 0) {
-            xx = x1;
-            yy = y1;
-        } else if (param > 1) {
-            xx = x2;
-            yy = y2;
-        } else {
-            xx = x1 + param * C;
-            yy = y1 + param * D;
-        }
-
-        const dx = x - xx;
-        const dy = y - yy;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-
-
     d3.csv("data/example_data.csv").then(function(data) {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
@@ -91,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
             emission: +d.Emissions / 1000,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
-
-        prepareLineData();  // Initialize line data right after data is loaded
 
         fields.forEach(field => {
             if (field === 'grid') {
@@ -133,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             } else if (!this.checked && filterIndex !== -1) {
                                 filters[field].splice(filterIndex, 1);
                             }
-                            prepareLineData(); // Call to prepare line data for interaction
                             updatePlot();
                         });
                     });
@@ -267,21 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        //Line selector- new
-
-        let selectedLineId = null;  // ID of the selected line
-        const lineData = [];  // Store bounds and metadata for each line
-
-        function prepareLineData() {
-            emissionsData.forEach((d, index) => {
-                const x1 = x(d.startYear);
-                const y1 = y(d.startEmission);
-                const x2 = x(d.endYear);
-                const y2 = y(d.endEmission);
-                lineData.push({id: index, x1, y1, x2, y2, data: d});
-            });
-        }
-
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
@@ -304,28 +233,26 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Drawing the line chart
-            filteredData.forEach((d, index) => {
-                context.beginPath();
-                const line = d3.line()
-                    .x(d => x(d.year))
-                    .y(d => y(d.emission))
-                    .context(context);
-                line([d]); // Draw each line individually
-                context.lineWidth = selectedLineId === index ? 2 : 0.2; // Highlight selected line
-                context.strokeStyle = selectedLineId === index ? 'black' : getColor(d.field, d.value);
-                context.stroke();
-                context.closePath();
-            });
-
+            context.beginPath();
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.emission))
+                .context(context);
+            line(filteredData); // Draw the line
+            context.lineWidth = 0.2;
+            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
+            context.stroke(); // Apply the stroke to draw the line
+            context.closePath();
             context.restore();
+
             drawAxis(); // Ensure axes are drawn after the line
         }
 
         function getColor(field, value) {
-            if (scenario1Active && (field === 'nuclear' && (value === 'full' || value === 'partial'))) {
-                return '#00897b'; // Teal color for Scenario 1 when active
+            if (scenario1Active) {
+                return '#00897b'; // Teal color for Scenario 1
             }
-            return selectedLineId !== null ? '#ccc' : '#565656'; // Grey out lines if one is selected, otherwise use default color
+            return '#565656'; // Default color for all other cases
         }
 
 
