@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.icon-and-graph');
     if (!container) {
         console.error("Container not found");
         return;
     }
-    console.log("Container found");
 
     const dpi = window.devicePixelRatio;
     const containerWidth = container.clientWidth - 50;
@@ -30,8 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-    d3.csv("data/example_data.csv").then(function(data) {
-        console.log("Data loaded successfully");
+    d3.csv("data/example_data.csv", function(data) {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
@@ -39,90 +36,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
 
         fields.forEach(field => {
-            const iconContainer = document.querySelector(`.icon-container${field === 'grid' ? '-2' : ''}[data-field="${field}"]`);
+            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
             if (iconContainer) {
-                const form = document.createElement('form');
-                form.style.display = 'flex';
-                form.style.flexDirection = 'column'; // Ensure vertical stacking for all fields
-
-                const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
-                options.forEach(value => {
-                    const checkboxContainer = document.createElement('div');
-                    checkboxContainer.style.display = 'flex';
-                    checkboxContainer.style.alignItems = 'center';
-
-                    const input = document.createElement('input');
-                    input.type = 'checkbox';
-                    input.id = `${field}-${value}`;
-                    input.name = `${field}Filter`;
-                    input.value = value;
-                    input.style.transform = 'scale(0.75)';
-                    input.style.marginRight = '5px';
-
-                    const label = document.createElement('label');
-                    label.htmlFor = `${field}-${value}`;
-                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                    label.style.fontSize = '12px';
-
-                    checkboxContainer.appendChild(input);
-                    checkboxContainer.appendChild(label);
-                    form.appendChild(checkboxContainer);
-
-                    input.addEventListener('change', function() {
-                        if (!filters[field]) filters[field] = [];
-                        const filterIndex = filters[field].indexOf(value);
-                        if (this.checked && filterIndex === -1) {
-                            filters[field].push(value);
-                        } else if (!this.checked && filterIndex !== -1) {
-                            filters[field].splice(filterIndex, 1);
-                        }
-                        updatePlot();
+                const checkboxes = iconContainer.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        updateFilters(field, checkbox.value, checkbox.checked);
                     });
                 });
-                iconContainer.appendChild(form);
             }
         });
 
-        // Baseline button functionality
         const baselineButton = document.getElementById('baselineButton');
-        if (baselineButton) {
-            baselineButton.addEventListener('click', function() {
-                const isActive = this.classList.contains('active');
-                this.classList.toggle('active');
-                this.textContent = isActive ? "Baseline" : "Remove Baseline";
-                toggleBaseline(!isActive);
+        baselineButton.addEventListener('click', function() {
+            const active = this.classList.toggle('active');
+            document.querySelectorAll('input[type="checkbox"][value="baseline"]').forEach(checkbox => {
+                checkbox.checked = active;
+                updateFilters(checkbox.getAttribute('data-field'), 'baseline', active);
             });
-        }
+        });
 
-        function toggleBaseline(activate) {
-            document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                checkbox.checked = activate;
-                const field = checkbox.id.split('-')[0];
-                if (!filters[field]) {
-                    filters[field] = [];
-                }
-                const baselineIndex = filters[field].indexOf('baseline');
-                if (activate && baselineIndex === -1) {
-                    filters[field].push('baseline');
-                } else if (!activate && baselineIndex !== -1) {
-                    filters[field].splice(baselineIndex, 1);
-                }
-            });
+        function updateFilters(field, value, active) {
+            if (!filters[field]) {
+                filters[field] = [];
+            }
+            const index = filters[field].indexOf(value);
+            if (active && index === -1) {
+                filters[field].push(value);
+            } else if (!active && index !== -1) {
+                filters[field].splice(index, 1);
+            }
             updatePlot();
         }
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
+                return fields.every(field => filters[field].length === 0 || filters[field].includes(d[field]));
             });
-
-            if (filteredData.length === 0) {
-                console.log("No data to display.");
-                return;
-            }
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
@@ -131,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            context.beginPath();
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
@@ -142,8 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineWidth = 0.2;
             context.strokeStyle = 'steelblue';
             context.stroke();
-            context.closePath();
-
             context.restore();
             drawAxis();
         }
