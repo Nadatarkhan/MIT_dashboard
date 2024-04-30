@@ -232,18 +232,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            context.beginPath(); // Start a new path for the entire plot
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
-
-            line(filteredData); // Draw the line for filtered data
-            context.lineWidth = 0.2;
-            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke(); // Apply the stroke to draw the line
-
-            // Do not close the path here with context.closePath()
+            // Draw each line segment independently
+            filteredData.forEach((d, i) => {
+                if (i > 0) { // Ensure there is a previous point to connect
+                    context.beginPath(); // Begin a new path for each segment
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.lineWidth = 0.2;
+                    context.strokeStyle = scenario1Active ? '#00897b' : getColor(d.field, d.value);
+                    context.stroke(); // Draw the current segment
+                }
+            });
 
             context.restore();
             drawAxis(); // Ensure axes are drawn after the line
@@ -255,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return '#565656'; // Default color for all other cases
         }
+
 
 
 
