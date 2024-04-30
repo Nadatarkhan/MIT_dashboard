@@ -134,33 +134,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');
+        const baselineButton = document.getElementById('baselineButton');  // Example ID
+        let baselineActive = false;  // Track the activation state of the baseline scenario
+
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;  // Toggle the active state of the scenario
+                baselineActive = !baselineActive;  // Toggle the activation state
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';  // Adjust this as needed to match your data
+                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive; // Set checkbox according to the scenario state
+                    checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
 
-                    if (!filters[field]) filters[field] = [];
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
                     if (baselineActive && !filters[field].includes(scenarioValue)) {
                         filters[field].push(scenarioValue);
                     } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up to avoid empty arrays hanging around
+                            delete filters[field];  // Clean up if no more filters
                         }
                     }
                 });
 
-                updatePlot(); // Re-draw the plot with the current filters
+                updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 
 
@@ -196,36 +200,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
 
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                drawAxis(); // Always draw the axis
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                drawAxis();
                 return;
             }
 
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
+
             filteredData.forEach((d, i) => {
                 if (i > 0) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+                    context.lineWidth = 0.2;
                     context.strokeStyle = getColor(d.field, d.value);
-                    context.lineWidth = 2; // Make the line thicker for visibility
                     context.stroke();
                     context.closePath();
                 }
             });
+
             context.restore();
             drawAxis();
         }
-
 
 
 
