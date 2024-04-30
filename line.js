@@ -232,24 +232,19 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw each line segment independently
-            filteredData.forEach((dataPoint, index) => {
-                context.beginPath(); // Start a new path for each segment
-                context.moveTo(x(dataPoint.year), y(dataPoint.emission)); // Move to the start of this point
-
-                // Check if there's a next point and draw line to it
-                if (index < filteredData.length - 1) {
-                    const nextPoint = filteredData[index + 1];
-                    context.lineTo(x(nextPoint.year), y(nextPoint.emission));
-                }
-
-                context.lineWidth = 0.2;
-                context.strokeStyle = scenario1Active ? '#00897b' : getColor(dataPoint.field, dataPoint.value);
-                context.stroke(); // Apply the stroke to draw the line
-                context.closePath(); // Close the path after drawing each segment
-            });
-
+            // Drawing the line chart
+            context.beginPath();
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.emission))
+                .context(context);
+            line(filteredData); // Draw the line
+            context.lineWidth = 0.2;
+            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
+            context.stroke(); // Apply the stroke to draw the line
+            // Removed context.closePath();
             context.restore();
+
             drawAxis(); // Ensure axes are drawn after the line
         }
 
