@@ -232,20 +232,25 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Ensure each segment is drawn separately
-            for (let i = 1; i < filteredData.length; i++) {
-                // Start a new path for each segment
-                context.beginPath();
-                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
-                context.lineWidth = 0.2;
-                context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[i].field, filteredData[i].value);
-                context.stroke();  // Draw the line
-                context.closePath(); // Explicitly close the current path
-            }
+            // Clear any existing path before starting to draw new lines
+            context.beginPath();
+
+            filteredData.forEach((d, i) => {
+                if (i > 0) {
+                    // Move to the start point of the current segment without drawing
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    // Draw to the end point of the current segment
+                    context.lineTo(x(d.year), y(d.emission));
+                }
+            });
+
+            context.lineWidth = 0.2;
+            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
+            context.stroke();
+            context.closePath(); // Close the path after drawing all segments
 
             context.restore();
-            drawAxis(); // Ensure axes are drawn after the line
+            drawAxis(); // Draw axes
         }
 
         function getColor(field, value) {
