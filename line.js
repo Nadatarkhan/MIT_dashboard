@@ -180,6 +180,29 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+
+        //Scenario 1 Function
+
+        const scenario1Button = document.getElementById('scenario1Button');
+        let scenario1Active = false;  // Track the state of Scenario 1 activation
+
+        if (scenario1Button) {
+            scenario1Button.addEventListener('click', function() {
+                scenario1Active = !scenario1Active;  // Toggle the active state
+                this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1"; // Update button text
+                updateFiltersForScenario1(scenario1Active);  // Update the filters based on new state
+                updatePlot();  // Re-draw the plot with updated filters
+            });
+        }
+
+        function updateFiltersForScenario1(active) {
+            fields.forEach(field => {
+                if (field === 'nuclear') {
+                    filters[field] = active ? ['full', 'partial'] : [];  // Set or clear the nuclear filters
+                }
+            });
+        }
+
         function getColor(field, value) {
             if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
             if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
@@ -207,27 +230,30 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Ensure to start a new path for drawing the line chart
+            // Drawing the line chart
             context.beginPath();
-
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
-
             line(filteredData); // Draw the line
-
             context.lineWidth = 0.2;
-            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
+            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
             context.stroke(); // Apply the stroke to draw the line
-
-            // Ensure to close the path after drawing
             context.closePath();
-
             context.restore();
 
             drawAxis(); // Ensure axes are drawn after the line
         }
+
+        function getColor(field, value) {
+            if (scenario1Active) {
+                return '#00897b'; // Teal color for Scenario 1
+            }
+            return '#565656'; // Default color for all other cases
+        }
+
+
 
         function drawAxis() {
             context.save();
