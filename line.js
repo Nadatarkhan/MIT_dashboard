@@ -133,18 +133,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Scenario button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
-        if (scenarioButton) {
-            scenarioButton.addEventListener('click', function() {
-                // Toggle the scenario active state based on whether it currently has the 'active' class
+// Baseline button functionality
+        const baselineButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
+        if (baselineButton) {
+            baselineButton.addEventListener('click', function() {
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
 
                 // Update the text based on activation state
                 this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Scenario filter logic (assuming 'baseline' is the filter term)
+                // Toggle baseline scenario filters
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
                     checkbox.checked = !isActive; // Toggle checkbox state
                     const field = checkbox.id.split('-')[0];
@@ -167,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 
 
@@ -242,16 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
-
-
-
         function getColor(field, value) {
-            if (scenario1Active) {
-                return '#00897b'; // Teal color for Scenario 1
+            // This assumes that the 'baseline' scenario activation controls this specific color
+            if (baselineButton && baselineButton.classList.contains('active')) {
+                return '#b937b8'; // Apply specific purple color when baseline is active
             }
             return '#565656'; // Default color for all other cases
         }
+
 
 
         function drawAxis() {
