@@ -255,6 +255,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+        function getColor(field, value) {
+            if (scenario1Active) {
+                return '#00897b'; // Teal color for Scenario 1
+            }
+            return '#565656'; // Default color for all other cases
+        }
+
+
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
