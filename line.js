@@ -133,40 +133,43 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Scenario button functionality
-        const scenarioButton = document.getElementById('baselineButton');  // Example ID, ensure this matches your actual button ID
+// Baseline button functionality
+        const scenarioButton = document.getElementById('baselineButton');  // Confirm this ID matches your actual button ID
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
-                // Toggle the scenario active state based on whether it currently has the 'active' class
+                // Check if the scenario is currently active
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
 
-                // Update the text based on activation state
+                // Update the button text based on the scenario state
                 this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Example: toggle scenario filters, replace 'baseline' with the actual scenario field
-                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = !isActive; // Toggle checkbox state
-                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
+                // Manage filters based on the scenario activation state
+                if (!isActive) {
+                    // Scenario activated, add the filter
+                    document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                        checkbox.checked = true;
+                        const field = checkbox.id.split('-')[0];
+                        if (!filters[field]) {
+                            filters[field] = [];
+                        }
+                        if (filters[field].indexOf('baseline') === -1) {
+                            filters[field].push('baseline');
+                        }
+                    });
+                } else {
+                    // Scenario deactivated, remove the filter
+                    document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                        checkbox.checked = false;
+                        const field = checkbox.id.split('-')[0];
+                        filters[field] = filters[field].filter(f => f !== 'baseline');  // Remove 'baseline' from filters
+                    });
+                }
 
-                    if (!filters[field]) {
-                        filters[field] = [];
-                    }
-
-                    // Update or clear the filter based on the button state
-                    const baselineIndex = filters[field].indexOf('baseline');
-                    if (!isActive && baselineIndex === -1) {
-                        filters[field].push('baseline');
-                    } else if (isActive && baselineIndex !== -1) {
-                        filters[field].splice(baselineIndex, 1);
-                    }
-                });
-
-                updatePlot(); // Call to update the plot
+                updatePlot(); // Redraw the plot with the updated filters
             });
         }
 
-        
 
         //Scenario 1 Function
 
