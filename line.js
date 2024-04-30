@@ -210,38 +210,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             });
 
+            // Clear the canvas first
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+
             if (filteredData.length === 0) {
                 console.log("No data to display.");
+                drawAxis(); // Still draw the axes even if no data
                 return; // Exit if no data to plot after filtering
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Clear any existing path before starting to draw new lines
+            // Begin a new path for drawing lines
             context.beginPath();
 
+            // Since the data is presumably sorted by year, we can draw continuous lines
             filteredData.forEach((d, i) => {
-                if (i > 0) {
-                    // Move to the start point of the current segment without drawing
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    // Draw to the end point of the current segment
-                    context.lineTo(x(d.year), y(d.emission));
+                if (i === 0) {
+                    context.moveTo(x(d.year), y(d.emission)); // Move to start point without drawing
+                } else {
+                    context.lineTo(x(d.year), y(d.emission)); // Draw to the next point
                 }
             });
 
             context.lineWidth = 0.2;
             context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke();
-            context.closePath(); // Close the path after drawing all segments
-
+            context.stroke(); // Apply the stroke to draw the line
             context.restore();
-            drawAxis(); // Draw axes
+
+            drawAxis(); // Ensure axes are drawn after the line
         }
+
 
         function getColor(field, value) {
             if (scenario1Active) {
