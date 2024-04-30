@@ -198,11 +198,19 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateFiltersForScenario1(active) {
             fields.forEach(field => {
                 if (field === 'nuclear') {
-                    filters[field] = active ? ['full', 'partial'] : [];  // Set or clear the nuclear filters
+                    // Update the filters based on whether Scenario 1 is active
+                    filters[field] = active ? ['full', 'partial'] : [];
+
+                    // Select all checkboxes related to the 'nuclear' field that match 'full' or 'partial'
+                    document.querySelectorAll(`.icon-container[data-field="${field}"] input`).forEach(checkbox => {
+                        if (['full', 'partial'].includes(checkbox.value)) {
+                            checkbox.checked = active; // Set checkbox state based on Scenario 1 activation
+                        }
+                    });
                 }
             });
         }
-        
+
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
