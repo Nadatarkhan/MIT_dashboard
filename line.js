@@ -202,13 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
-        function getColor(field, value) {
-            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
-            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
-            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
-            return 'steelblue';
-        }
+        
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
