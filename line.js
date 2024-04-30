@@ -133,29 +133,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-// Scenario button functionality
-        const scenarioButton = document.getElementById('baselineButton');
+// Baseline button functionality
+        const scenarioButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
 
                 // Update the text based on activation state
-                this.textContent = !isActive ? "Deactivate Scenario" : "Activate Scenario";
+                this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Toggle the filters based on whether the button is active
-                const scenario = 'baseline'; // Adjust this to your specific scenario field name
+                // Adjust the scenario specific logic
+                const scenario = 'baseline';  // Adjust this to your specific scenario field name
                 if (!isActive) {
-                    // Activate the scenario: include these filters
-                    filters[scenario] = ['baseline'];
+                    // Activate the scenario: show only this scenario's lines
+                    Object.keys(filters).forEach(field => {
+                        if (field === scenario) {
+                            filters[field] = ['baseline'];  // Add scenario specific condition
+                        } else {
+                            filters[field] = [];  // Hide other scenarios
+                        }
+                    });
                 } else {
-                    // Deactivate the scenario: clear these filters
+                    // Deactivate the scenario: clear filters to hide these lines
                     filters[scenario] = [];
                 }
 
                 updatePlot(); // Call to update the plot
             });
         }
+
 
 
 
@@ -201,8 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                drawAxis(); // Draw axes even if no data is present
-                return;
+                drawAxis(); // Still draw axes
+                return; // Exit if no data to plot after filtering
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -211,14 +218,13 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw each line
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.beginPath();
+                    context.beginPath(); // Begin a new path for each segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     context.lineWidth = 0.2;
-                    context.strokeStyle = getColor(d.field, d.value);
+                    context.strokeStyle = scenario1Active ? '#00897b' : getColor(d.field, d.value);
                     context.stroke();
                 }
             });
@@ -226,8 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
-
+        
 
         function getColor(field, value) {
             if (scenario1Active) {
