@@ -122,31 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Baseline checkbox logic
-        const baselineCheckbox = document.getElementById('select-all-baseline');
-        if (baselineCheckbox) {
-            baselineCheckbox.addEventListener('change', function() {
-                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = this.checked; // Set all baseline checkboxes to match the main baseline checkbox state
-                    const field = checkbox.id.split('-')[0]; // Assuming your ID is structured as field-value
-
-                    // Update the filters object
-                    if (!filters[field]) {
-                        filters[field] = [];
-                    }
-
-                    const baselineIndex = filters[field].indexOf('baseline');
-                    if (this.checked && baselineIndex === -1) {
-                        filters[field].push('baseline'); // Add 'baseline' if it's checked and not already in the filter
-                    } else if (!this.checked && baselineIndex !== -1) {
-                        filters[field].splice(baselineIndex, 1); // Remove 'baseline' if it's unchecked
-                    }
-                });
-
-                updatePlot(); // Update the plot after changing the filters
-            });
-        }
-
 // Baseline button functionality
         const baselineButton = document.getElementById('baselineButton');
         if (baselineButton) {
@@ -259,8 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return '#565656'; // Default color for all other cases
         }
-
-
 
 
         function drawAxis() {
