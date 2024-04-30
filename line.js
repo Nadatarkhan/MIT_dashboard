@@ -77,10 +77,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Baseline checkbox logic
+        const baselineCheckbox = document.getElementById('select-all-baseline');
+        baselineCheckbox.addEventListener('change', function() {
+            const isChecked = this.checked;
+            document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+                const field = checkbox.getAttribute('data-field');
+                updateFilters(field, 'baseline', isChecked);
+            });
+        });
+
+        // Baseline button functionality
         const baselineButton = document.getElementById('baselineButton');
         baselineButton.addEventListener('click', function() {
             const isActive = this.textContent === "Baseline";
-            this.classList.toggle('active', isActive);
             this.textContent = isActive ? "Remove Baseline" : "Baseline";
             document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
                 checkbox.checked = isActive;
@@ -90,9 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function updateFilters(field, value, active) {
-            if (!filters[field]) {
-                filters[field] = [];
-            }
+            if (!filters[field]) filters[field] = [];
             const index = filters[field].indexOf(value);
             if (active && index === -1) {
                 filters[field].push(value);
@@ -103,7 +112,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updatePlot() {
-            const filteredData = emissionsData.filter(d => fields.every(field => !filters[field] || filters[field].includes(d[field])));
+            console.log("Updating plot with current filters:", filters);
+            const filteredData = emissionsData.filter(d => {
+                return fields.every(field => filters[field].length === 0 || filters[field].includes(d[field]));
+            });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                return; // Exit if no data to plot after filtering
+            }
+
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
@@ -119,11 +137,18 @@ document.addEventListener('DOMContentLoaded', function() {
             line(filteredData);
 
             context.lineWidth = 0.2;
-            context.strokeStyle = 'steelblue';
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
             context.stroke();
 
             context.restore();
             drawAxis();
+        }
+
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
         }
 
         function drawAxis() {
