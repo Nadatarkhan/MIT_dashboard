@@ -66,6 +66,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
                         label.style.fontSize = '12px';
 
+                        // Change the label text based on the value
+                        if (value === "bau") {
+                            label.textContent = "Business as usual"; // Changed to more descriptive text
+                        } else if (value === "cheap_ng") {
+                            label.textContent = "Cheap Natural Gas"; // Change for "cheap_ng"
+                        } else if (value === "decarbonization") {
+                            label.textContent = "95% Decarbonization"; // Change for "decarbonization"
+                        } else {
+                            label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                        }
+
                         checkboxContainer.appendChild(input);
                         checkboxContainer.appendChild(label);
                         form.appendChild(checkboxContainer);
