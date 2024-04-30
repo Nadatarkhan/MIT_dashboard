@@ -134,37 +134,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Scenario button functionality
-        const scenarioButton = document.getElementById('scenarioButton');  // Adjust ID as needed
+        const scenarioButton = document.getElementById('baselineButton');  // Example ID, ensure this matches your actual button ID
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
+                // Toggle the scenario active state based on whether it currently has the 'active' class
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
+
+                // Update the text based on activation state
                 this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
 
-                // Toggle the filter values based on scenario
-                const scenarioType = this.dataset.scenarioType; // Assuming each button has a data attribute like 'data-scenario-type="nuclear"'
-                if (!isActive) {
-                    // If activating, ensure the scenario is added to the filters
-                    if (!filters[scenarioType]) {
-                        filters[scenarioType] = ['full', 'partial'];  // Or whichever values are pertinent to the scenario
-                    }
-                } else {
-                    // If deactivating, remove the scenario from the filters
-                    filters[scenarioType] = [];
-                }
+                // Example: toggle scenario filters, replace 'baseline' with the actual scenario field
+                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                    checkbox.checked = !isActive; // Toggle checkbox state
+                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
 
-                // Update which checkboxes are checked based on the active scenario
-                document.querySelectorAll(`.icon-container[data-field="${scenarioType}"] input`).forEach(checkbox => {
-                    checkbox.checked = !isActive && ['full', 'partial'].includes(checkbox.value); // Adjust based on your scenario logic
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
+                    // Update or clear the filter based on the button state
+                    const baselineIndex = filters[field].indexOf('baseline');
+                    if (!isActive && baselineIndex === -1) {
+                        filters[field].push('baseline');
+                    } else if (isActive && baselineIndex !== -1) {
+                        filters[field].splice(baselineIndex, 1);
+                    }
                 });
 
-                updatePlot(); // Redraw the plot with updated filters
+                updatePlot(); // Call to update the plot
             });
         }
 
-
-
-
+        
 
         //Scenario 1 Function
 
@@ -200,15 +202,14 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field => {
-                    return filters[field].length === 0 || filters[field].includes(d[field]);
-                });
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
             });
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Ensure canvas is cleared if no data
-                return;
+                return; // Exit if no data to plot after filtering
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -218,28 +219,33 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Clear any existing path before starting to draw new lines
+            context.beginPath();
+
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.beginPath(); // Begin a new path for each line segment
+                    // Move to the start point of the current segment without drawing
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    // Draw to the end point of the current segment
                     context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 0.2;
-                    context.strokeStyle = getColor(d.field, d.value); // Use getColor to determine the color based on field and value
-                    context.stroke(); // Draw the current segment
                 }
             });
+
+            context.lineWidth = 0.2;
+            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
+            context.stroke();
+            context.closePath(); // Close the path after drawing all segments
 
             context.restore();
             drawAxis(); // Draw axes
         }
 
         function getColor(field, value) {
-            if (scenario1Active && field === 'nuclear') {
-                return '#00897b'; // Teal for active scenario 1
+            if (scenario1Active) {
+                return '#00897b'; // Teal color for Scenario 1
             }
-            return '#565656'; // Default color
+            return '#565656'; // Default color for all other cases
         }
-        
 
 
         function drawAxis() {
