@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Baseline button functionality
-        const scenarioButton = document.getElementById('baselineButton');
+        const scenarioButton = document.getElementById('baselineButton');  // Ensure this matches your actual button ID
         if (scenarioButton) {
             scenarioButton.addEventListener('click', function() {
                 const isActive = this.classList.contains('active');
@@ -146,14 +146,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Toggle the checkboxes and filters for the 'baseline' scenario
                 const scenarioValue = 'baseline';  // This should match the actual value you use in the data
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = !isActive;
+                    checkbox.checked = !isActive; // Toggle checkbox state
                     const field = checkbox.id.split('-')[0];
 
                     if (!isActive) {
-                        if (!filters[field]) filters[field] = [];
-                        filters[field].push(scenarioValue);
+                        // Activating the scenario
+                        if (!filters[field]) {
+                            filters[field] = [];
+                        }
+                        if (!filters[field].includes(scenarioValue)) {
+                            filters[field].push(scenarioValue);
+                        }
                     } else {
-                        filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        // Deactivating the scenario
+                        if (filters[field]) {
+                            filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        }
                     }
                 });
 
@@ -216,14 +224,14 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Drawing each segment
+            // Draw each line segment independently
             filteredData.forEach((d, i) => {
                 if (i > 0) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     context.lineWidth = 0.2;
-                    context.strokeStyle = scenario1Active ? '#00897b' : getColor(d.field, d.value);
+                    context.strokeStyle = getColor(d.field, d.value);
                     context.stroke();
                     context.closePath();
                 }
@@ -232,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(field, value) {
