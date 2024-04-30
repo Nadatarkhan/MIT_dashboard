@@ -200,14 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
+                return Object.keys(filters).every(field => {
+                    return filters[field].length === 0 || filters[field].includes(d[field]);
+                });
             });
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                return; // Exit if no data to plot after filtering
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Ensure canvas is cleared if no data
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -217,33 +218,28 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Clear any existing path before starting to draw new lines
-            context.beginPath();
-
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    // Move to the start point of the current segment without drawing
+                    context.beginPath(); // Begin a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    // Draw to the end point of the current segment
                     context.lineTo(x(d.year), y(d.emission));
+                    context.lineWidth = 0.2;
+                    context.strokeStyle = getColor(d.field, d.value); // Use getColor to determine the color based on field and value
+                    context.stroke(); // Draw the current segment
                 }
             });
-
-            context.lineWidth = 0.2;
-            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke();
-            context.closePath(); // Close the path after drawing all segments
 
             context.restore();
             drawAxis(); // Draw axes
         }
 
         function getColor(field, value) {
-            if (scenario1Active) {
-                return '#00897b'; // Teal color for Scenario 1
+            if (scenario1Active && field === 'nuclear') {
+                return '#00897b'; // Teal for active scenario 1
             }
-            return '#565656'; // Default color for all other cases
+            return '#565656'; // Default color
         }
+        
 
 
         function drawAxis() {
