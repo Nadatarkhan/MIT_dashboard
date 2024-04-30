@@ -140,8 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const isActive = this.classList.contains('active');
                 this.classList.toggle('active', !isActive);
 
-                // Update the text based on activation state
-                this.textContent = isActive ? "Activate Scenario" : "Deactivate Scenario";
+                // Update the text based on the button's active state
+                this.textContent = !isActive ? "Deactivate Scenario" : "Activate Scenario";
 
                 const scenarioValue = 'baseline';  // This should be the identifier for the scenario
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
@@ -152,21 +152,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         filters[field] = [];
                     }
 
+                    // Properly toggle the scenario filters
                     if (!isActive) {
-                        // Activating the scenario
                         if (!filters[field].includes(scenarioValue)) {
                             filters[field].push(scenarioValue);
                         }
                     } else {
-                        // Deactivating the scenario
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up to avoid empty arrays hanging around
+                            delete filters[field];
                         }
                     }
                 });
 
-                updatePlot();  // Update the plot to reflect changes
+                updatePlot();  // Call to update the plot reflecting the current filters state
             });
         }
 
@@ -225,23 +224,24 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Ensure to start a new path for each segment
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.beginPath();
+                    context.beginPath(); // Begin a new path
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     context.lineWidth = 0.2;
                     context.strokeStyle = getColor(d.field, d.value);
-                    context.stroke();
-                    context.closePath();
+                    context.stroke(); // Draw the current segment
                 }
             });
 
             context.restore();
-            drawAxis();
+            drawAxis(); // Ensure axes are drawn
         }
 
-        
+
+
 
         function getColor(field, value) {
             if (scenario1Active) {
