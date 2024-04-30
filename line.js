@@ -232,21 +232,29 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Drawing the line chart
-            context.beginPath();
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
-            line(filteredData); // Draw the line
-            context.lineWidth = 0.2;
-            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke(); // Apply the stroke to draw the line
-            // Removed context.closePath();
-            context.restore();
+            filteredData.forEach((dataPoint) => {
+                context.beginPath(); // Start a new path for each line
+                const line = d3.line()
+                    .x(d => x(d.year))
+                    .y(d => y(d.emission))
+                    .context(context);
+                line([dataPoint]); // Draw the line for a single data point
+                context.lineWidth = 0.2;
+                context.strokeStyle = scenario1Active ? '#00897b' : getColor(dataPoint.field, dataPoint.value);
+                context.stroke(); // Apply the stroke to draw the line
+            });
 
+            context.restore();
             drawAxis(); // Ensure axes are drawn after the line
         }
+
+        function getColor(field, value) {
+            if (scenario1Active) {
+                return '#00897b'; // Teal color for Scenario 1
+            }
+            return '#565656'; // Default color for all other cases
+        }
+
 
 
 
