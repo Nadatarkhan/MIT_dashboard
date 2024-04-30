@@ -255,26 +255,22 @@ document.addEventListener('DOMContentLoaded', function() {
             return '#565656'; // Default color for all other cases
         }
 
-
-
+        
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw the X-axis
             context.beginPath();
             context.moveTo(0, height);
             context.lineTo(width, height);
             context.strokeStyle = 'black';
             context.stroke();
 
-            // Draw the Y-axis
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(0, height);
             context.stroke();
 
-            // Axis labels and ticks
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
@@ -286,6 +282,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
+            // Draw red circle at 180,000 on the y-axis
+            context.beginPath();
+            context.arc(0, y(180000), 5, 0, 2 * Math.PI);
+            context.fillStyle = 'red';
+            context.fill();
+
             context.textAlign = 'center';
             context.textBaseline = 'top';
             x.ticks().forEach(d => {
@@ -293,10 +295,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             context.fillText("Year", width / 2, height + 20);
-
             context.restore();
 
-            // Y-axis label
             context.save();
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
