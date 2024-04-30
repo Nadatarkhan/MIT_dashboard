@@ -232,33 +232,27 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Begin drawing operations
-            context.beginPath();  // Start a new path for the line chart
+            // Draw each line segment independently
+            filteredData.forEach((dataPoint, index) => {
+                context.beginPath(); // Start a new path for each segment
+                context.moveTo(x(dataPoint.year), y(dataPoint.emission)); // Move to the start of this point
 
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.emission))
-                .context(context);
+                // Check if there's a next point and draw line to it
+                if (index < filteredData.length - 1) {
+                    const nextPoint = filteredData[index + 1];
+                    context.lineTo(x(nextPoint.year), y(nextPoint.emission));
+                }
 
-            line(filteredData);  // Draw the line based on filtered data
+                context.lineWidth = 0.2;
+                context.strokeStyle = scenario1Active ? '#00897b' : getColor(dataPoint.field, dataPoint.value);
+                context.stroke(); // Apply the stroke to draw the line
+                context.closePath(); // Close the path after drawing each segment
+            });
 
-            context.lineWidth = 0.2;
-            context.strokeStyle = scenario1Active ? '#00897b' : getColor(filteredData[0].field, filteredData[0].value);
-            context.stroke();  // Apply the stroke to draw the line
-
-            context.closePath();  // Close the path after drawing
             context.restore();
-
-            drawAxis();  // Ensure axes are drawn after the line
+            drawAxis(); // Ensure axes are drawn after the line
         }
 
-
-        function getColor(field, value) {
-            if (scenario1Active) {
-                return '#00897b'; // Teal color for Scenario 1
-            }
-            return '#565656'; // Default color for all other cases
-        }
 
 
         function drawAxis() {
