@@ -134,37 +134,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');  // Example ID
-        let baselineActive = false;  // Track the activation state of the baseline scenario
-
+        const baselineButton = document.getElementById('baselineButton');
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;  // Toggle the activation state
+                baselineActive = !baselineActive;  // Toggle the active state of the scenario
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                const scenarioValue = 'baseline';  // Adjust this as needed to match your data
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive;
+                    checkbox.checked = baselineActive; // Set checkbox according to the scenario state
                     const field = checkbox.id.split('-')[0];
 
-                    if (!filters[field]) {
-                        filters[field] = [];
-                    }
-
+                    if (!filters[field]) filters[field] = [];
                     if (baselineActive && !filters[field].includes(scenarioValue)) {
                         filters[field].push(scenarioValue);
                     } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up if no more filters
+                            delete filters[field];  // Clean up to avoid empty arrays hanging around
                         }
                     }
                 });
 
-                updatePlot();  // Update the plot to reflect changes
+                updatePlot(); // Re-draw the plot with the current filters
             });
         }
+
 
 
 
@@ -200,51 +196,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
 
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                drawAxis();
+                drawAxis(); // Always draw the axis
                 return;
             }
 
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
-
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
-
             filteredData.forEach((d, i) => {
                 if (i > 0) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 0.2;
                     context.strokeStyle = getColor(d.field, d.value);
+                    context.lineWidth = 2; // Make the line thicker for visibility
                     context.stroke();
                     context.closePath();
                 }
             });
-
             context.restore();
             drawAxis();
         }
 
 
 
+
         function getColor(field, value) {
-            // Apply specific color if the baseline scenario is active and the current data point belongs to it
-            if (baselineActive && filters[field] && filters[field].includes('baseline')) {
-                return '#b937b8'; // Specific color for active scenario
+            // Check if the baseline scenario is active and the current data point belongs to it
+            if (baselineActive && filters[field] && filters[field].includes(value) && value === 'baseline') {
+                return '#b937b8'; // Purple color for the baseline scenario
             }
-            return '#565656'; // Default color for all other cases or additional lines toggled after activation
+            return '#565656'; // Default gray color for all other cases
         }
 
 
