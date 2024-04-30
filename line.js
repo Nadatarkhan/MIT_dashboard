@@ -147,17 +147,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Baseline button functionality
+// Baseline button functionality
         const baselineButton = document.getElementById('baselineButton');
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                // Toggle the state of the baseline
-                const currentText = this.textContent;
-                const activate = currentText === "Baseline"; // Determine whether to activate or deactivate
+                // Determine whether to activate or deactivate based on the button text
+                const activate = this.textContent === "Baseline";
+
+                // Loop over all checkboxes related to the 'baseline' filter, replicating the checkbox behavior
                 document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
-                    checkbox.checked = activate;
+                    checkbox.checked = activate; // Set the state based on the button
+                    const field = checkbox.id.split('-')[0]; // Extract the field from ID
+
+                    // Ensure the filters object is up-to-date
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
+                    // Update or clear the filter based on button state
+                    const baselineIndex = filters[field].indexOf('baseline');
+                    if (activate && baselineIndex === -1) {
+                        filters[field].push('baseline');
+                    } else if (!activate && baselineIndex !== -1) {
+                        filters[field].splice(baselineIndex, 1);
+                    }
                 });
-                this.textContent = activate ? "Remove Baseline" : "Baseline"; // Update button text
+
+                // Update the button text based on its current state
+                this.textContent = activate ? "Remove Baseline" : "Baseline";
+
                 updatePlot(); // Call to update the plot
             });
         }
