@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.icon-and-graph');
+
     if (!container) {
         console.error("Container not found");
         return;
     }
+    console.log("Container found");
 
     const dpi = window.devicePixelRatio;
     const containerWidth = container.clientWidth - 50;
@@ -28,51 +31,156 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-    d3.csv("data/example_data.csv", function(data) {
+    d3.csv("data/example_data.csv").then(function(data) {
+        console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
         }));
 
         fields.forEach(field => {
-            const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
-            if (iconContainer) {
-                const checkboxes = iconContainer.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', () => {
-                        updateFilters(field, checkbox.value, checkbox.checked);
+            if (field === 'grid') {
+                const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
+                if (iconContainer) {
+                    const form = document.createElement('form');
+                    form.style.display = 'flex';
+                    form.style.flexDirection = 'column';
+
+                    const options = ['bau', 'cheap_ng', 'decarbonization'];
+                    options.forEach(value => {
+                        const checkboxContainer = document.createElement('div');
+                        checkboxContainer.style.display = 'flex';
+                        checkboxContainer.style.alignItems = 'center';
+
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = `${field}-${value}`;
+                        input.name = `${field}Filter`;
+                        input.value = value;
+                        input.style.transform = 'scale(0.75)';
+                        input.style.marginRight = '5px';
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `${field}-${value}`;
+                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                        label.style.fontSize = '12px';
+
+                        checkboxContainer.appendChild(input);
+                        checkboxContainer.appendChild(label);
+                        form.appendChild(checkboxContainer);
+
+                        input.addEventListener('change', function() {
+                            if (!filters[field]) filters[field] = [];
+                            const filterIndex = filters[field].indexOf(value);
+                            if (this.checked && filterIndex === -1) {
+                                filters[field].push(value);
+                            } else if (!this.checked && filterIndex !== -1) {
+                                filters[field].splice(filterIndex, 1);
+                            }
+                            updatePlot();
+                        });
                     });
+                    iconContainer.appendChild(form);
+                }
+            } else {
+                const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
+                if (iconContainer) {
+                    const form = document.createElement('form');
+                    let options = ['baseline', 'partial', 'full'];
+                    options.forEach(value => {
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = `${field}-${value}`;
+                        input.name = `${field}Filter`;
+                        input.value = value;
+                        input.style.transform = 'scale(0.75)';
+                        input.style.marginRight = '5px';
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `${field}-${value}`;
+                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                        label.style.fontSize = '12px';
+
+                        form.appendChild(input);
+                        form.appendChild(label);
+                        form.appendChild(document.createElement('br'));
+
+                        input.addEventListener('change', function() {
+                            if (!filters[field]) filters[field] = [];
+                            const filterIndex = filters[field].indexOf(value);
+                            if (this.checked && filterIndex === -1) {
+                                filters[field].push(value);
+                            } else if (!this.checked && filterIndex !== -1) {
+                                filters[field].splice(filterIndex, 1);
+                            }
+                            updatePlot();
+                        });
+                    });
+                    iconContainer.appendChild(form);
+                }
+            }
+        });
+
+        // Baseline checkbox logic
+        const baselineCheckbox = document.getElementById('select-all-baseline');
+        if (baselineCheckbox) {
+            baselineCheckbox.addEventListener('change', function() {
+                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                    checkbox.checked = this.checked; // Set all baseline checkboxes to match the main baseline checkbox state
+                    const field = checkbox.id.split('-')[0]; // Assuming your ID is structured as field-value
+
+                    // Update the filters object
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
+                    const baselineIndex = filters[field].indexOf('baseline');
+                    if (this.checked && baselineIndex === -1) {
+                        filters[field].push('baseline'); // Add 'baseline' if it's checked and not already in the filter
+                    } else if (!this.checked && baselineIndex !== -1) {
+                        filters[field].splice(baselineIndex, 1); // Remove 'baseline' if it's unchecked
+                    }
                 });
-            }
-        });
 
-        const baselineButton = document.getElementById('baselineButton');
-        baselineButton.addEventListener('click', function() {
-            const active = this.classList.toggle('active');
-            document.querySelectorAll('input[type="checkbox"][value="baseline"]').forEach(checkbox => {
-                checkbox.checked = active;
-                updateFilters(checkbox.getAttribute('data-field'), 'baseline', active);
+                updatePlot(); // Update the plot after changing the filters
             });
-        });
+        }
 
-        function updateFilters(field, value, active) {
-            if (!filters[field]) {
-                filters[field] = [];
-            }
-            const index = filters[field].indexOf(value);
-            if (active && index === -1) {
-                filters[field].push(value);
-            } else if (!active && index !== -1) {
-                filters[field].splice(index, 1);
-            }
-            updatePlot();
+        // Baseline button functionality
+        const baselineButton = document.getElementById('baselineButton');
+        if (baselineButton) {
+            baselineButton.addEventListener('click', function() {
+                // Toggle the state of the baseline
+                const currentText = this.textContent;
+                const activate = currentText === "Baseline"; // Determine whether to activate or deactivate
+                document.querySelectorAll('input[name$="Filter"][value="baseline"]').forEach(checkbox => {
+                    checkbox.checked = activate;
+                });
+                this.textContent = activate ? "Remove Baseline" : "Baseline"; // Update button text
+                updatePlot(); // Call to update the plot
+            });
+        }
+
+        function getColor(field, value) {
+            if (field === 'district' && ['baseline', 'partial', 'full'].includes(value)) return 'purple';
+            if (field === 'nuclear' && ['baseline', 'full'].includes(value)) return 'red';
+            if (field === 'deepgeo' && ['baseline', 'partial', 'full'].includes(value)) return 'green';
+            return 'steelblue';
         }
 
         function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return fields.every(field => filters[field].length === 0 || filters[field].includes(d[field]));
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
             });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                return; // Exit if no data to plot after filtering
+            }
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
@@ -81,18 +189,26 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Ensure to start a new path for drawing the line chart
+            context.beginPath();
+
             const line = d3.line()
                 .x(d => x(d.year))
                 .y(d => y(d.emission))
                 .context(context);
 
-            line(filteredData);
+            line(filteredData); // Draw the line
 
             context.lineWidth = 0.2;
-            context.strokeStyle = 'steelblue';
-            context.stroke();
+            context.strokeStyle = filteredData.length > 0 ? getColor(filteredData[0].field, filteredData[0].value) : 'steelblue';
+            context.stroke(); // Apply the stroke to draw the line
+
+            // Ensure to close the path after drawing
+            context.closePath();
+
             context.restore();
-            drawAxis();
+
+            drawAxis(); // Ensure axes are drawn after the line
         }
 
         function drawAxis() {
@@ -147,5 +263,3 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Error loading or processing data:", error);
     });
 });
-
-
