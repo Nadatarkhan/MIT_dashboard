@@ -235,6 +235,13 @@ body, html {
     font-size: 12px;
 }
 
+.bottom-visual .flex-container {
+    display: flex;
+    flex-direction: row; /* Keeps the left pane and main content side by side */
+    width: 100%; /* Full width to align children properly */
+}
+
+
 .bottom-visual img {
     max-width: 50%; /* Adjusts maximum width to allow space for text */
     height: auto; /* Keeps the image aspect ratio intact */
