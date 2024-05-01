@@ -62,6 +62,14 @@ body, html {
     overflow: visible; /* Changed to visible to test overflow issues */
 }
 
+.left-pane-2 {
+    flex: 1; /* Take up 20% of the flex-container width, adjust as needed */
+    max-width: 40%;
+    background-color: #dadada; /* Example background color */
+    padding: 10px; /* Padding for internal content */
+    height: 100%; /* Full height within flex-container */
+}
+
 
 
 .visual2 {
