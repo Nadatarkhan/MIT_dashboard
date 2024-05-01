@@ -369,24 +369,25 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            let lastScenario = null;  // Variable to track the last scenario processed
+            context.lineWidth = 0.5; // Thinner line for higher resolution
+            context.lineJoin = 'round'; // Smooths the junctions
+            context.lineCap = 'round'; // Rounds the endpoints
+
+            let lastScenario = null; // Variable to track the last scenario processed
             // Draw each segment independently
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();  // Start a new path for each line segment
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = getColor(d.scenario);  // Use the color based on the scenario
-                    context.lineWidth = 0.2;  // Set the line width
-                    context.stroke();  // Execute the drawing
+                    context.strokeStyle = getColor(d.scenario, 0.75); // Use the color based on the scenario with transparency
+                    context.stroke(); // Execute the drawing
                 }
-                lastScenario = d.scenario;  // Update the last scenario
             });
 
             context.restore();
             drawAxis();
         }
-
 
 
         function getColor(field, value) {
