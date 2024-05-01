@@ -187,14 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        //Scenario 1 Function
 
+//Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
         let scenario1Active = false;  // Track the state of Scenario 1 activation
 
         if (scenario1Button) {
             scenario1Button.addEventListener('click', function() {
                 scenario1Active = !scenario1Active;  // Toggle the active state
+                this.classList.toggle('active', scenario1Active); // Toggle class for styling
                 this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1"; // Update button text
                 updateFiltersForScenario1(scenario1Active);  // Update the filters based on new state
                 updatePlot();  // Re-draw the plot with updated filters
@@ -202,20 +203,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateFiltersForScenario1(active) {
-            fields.forEach(field => {
-                if (field === 'nuclear') {
-                    // Update the filters based on whether Scenario 1 is active
-                    filters[field] = active ? ['full', 'partial'] : [];
+            const baselineFields = ['deepgeo', 'nuclear', 'ccs']; // Fields to set as 'baseline'
+            const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district']; // Fields to set as 'partial'
+            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid checkboxes
 
-                    // Select all checkboxes related to the 'nuclear' field that match 'full' or 'partial'
-                    document.querySelectorAll(`.icon-container[data-field="${field}"] input`).forEach(checkbox => {
-                        if (['full', 'partial'].includes(checkbox.value)) {
-                            checkbox.checked = active; // Set checkbox state based on Scenario 1 activation
-                        }
-                    });
-                }
+            baselineFields.forEach(field => {
+                document.querySelectorAll(`input[name="${field}Filter"][value="baseline"]`).forEach(checkbox => {
+                    checkbox.checked = active;
+                    updateFilterArray(field, 'baseline', active);
+                });
+            });
+
+            partialFields.forEach(field => {
+                document.querySelectorAll(`input[name="${field}Filter"][value="partial"]`).forEach(checkbox => {
+                    checkbox.checked = active;
+                    updateFilterArray(field, 'partial', active);
+                });
+            });
+
+            gridFilters.forEach(filter => {
+                document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
+                    checkbox.checked = active;
+                    updateFilterArray('grid', filter, active);
+                });
             });
         }
+
+        function updateFilterArray(field, value, add) {
+            if (!filters[field]) {
+                filters[field] = [];
+            }
+            const index = filters[field].indexOf(value);
+            if (add && index === -1) {
+                filters[field].push(value);
+            } else if (!add && index !== -1) {
+                filters[field].splice(index, 1);
+                if (filters[field].length === 0) {
+                    delete filters[field];  // Clean up if no more filters
+                }
+            }
+        }
+
 
 
         function updatePlot() {
@@ -257,13 +285,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
         function getColor(field, value) {
-            // Apply specific color if the baseline scenario is active and the current data point belongs to it
+            // Assign color #b937b8 for Baseline scenario lines when active
             if (baselineActive && filters[field] && filters[field].includes('baseline')) {
-                return '#b937b8'; // Specific color for active scenario
+                return '#b937b8'; // Purple color for the Baseline scenario
             }
-            return '#565656'; // Default color for all other cases or additional lines toggled after activation
+            // Assign color #00897b for Scenario 1 lines when active
+            else if (scenario1Active && (
+                (['deepgeo', 'nuclear', 'ccs'].includes(field) && value === 'baseline') ||
+                (['retrofit', 'schedules', 'lab', 'pv', 'district'].includes(field) && value === 'partial') ||
+                (field === 'grid' && ['bau', 'cheap_ng', 'decarbonization'].includes(value))
+            )) {
+                return '#00897b'; // Teal color for Scenario 1
+            }
+            // Default color for all other cases
+            return '#565656'; // Grey
         }
 
 
