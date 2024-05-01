@@ -285,6 +285,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+        // Scenario 2 button functionality
+        const scenario2Button = document.getElementById('scenario2Button');  // Make sure the ID matches your HTML
+        let scenario2Active = false;  // Track the state of Scenario 2 activation
+
+        if (scenario2Button) {
+            scenario2Button.addEventListener('click', function() {
+                scenario2Active = !scenario2Active;  // Toggle the active state
+                this.classList.toggle('active', scenario2Active); // Toggle class for styling
+                this.textContent = scenario2Active ? "Deactivate Scenario 2" : "Activate Scenario 2"; // Update button text
+                if (scenario2Active) {
+                    updateFiltersForScenario2();  // Update the filters based on current checkbox state when activated
+                } else {
+                    resetScenario2Filters();  // Reset filters when deactivated
+                }
+                updatePlot();  // Re-draw the plot with updated filters
+            });
+        }
+
+        function updateFiltersForScenario2() {
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const field = checkbox.name.replace('Filter', '');
+                const value = checkbox.value;
+                updateFilterArray(field, value, true);
+            });
+        }
+
+        function resetScenario2Filters() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const field = checkbox.name.replace('Filter', '');
+                const value = checkbox.value;
+                updateFilterArray(field, value, false);
+            });
+        }
+
+
+
+
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
@@ -325,21 +362,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function getColor(field, value) {
-            // Assign color #b937b8 for Baseline scenario lines when active
             if (baselineActive && filters[field] && filters[field].includes('baseline')) {
-                return '#b937b8'; // Purple color for the Baseline scenario
+                return '#b937b8';  // Purple for Baseline
+            } else if (scenario1Active && filters[field] && filters[field].includes(value)) {
+                return '#00897b';  // Teal for Scenario 1
+            } else if (scenario2Active && filters[field] && filters[field].includes(value)) {
+                return '#055f8a';  // Dark blue for Scenario 2
             }
-            // Assign color #00897b for Scenario 1 lines when active
-            if (scenario1Active && (
-                (['deepgeo', 'nuclear', 'ccs'].includes(field) && value === 'baseline') ||
-                (['retrofit', 'schedules', 'lab', 'pv', 'district'].includes(field) && value === 'partial') ||
-                (field === 'grid' && ['bau', 'cheap_ng', 'decarbonization'].includes(value))
-            )) {
-                return '#00897b'; // Teal color for Scenario 1
-            }
-            // Default color for all other cases
-            return '#565656'; // Grey
+            return '#565656';  // Grey for unselected
         }
+
 
 
 
