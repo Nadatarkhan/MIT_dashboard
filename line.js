@@ -28,22 +28,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const y = d3.scaleLinear().range([height, 0]);
 
     let filters = {}; // Object to hold the active filters for each technology
+
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
+// 2 csvs
     Promise.all([
         d3.csv("data/data_1.csv"),
         d3.csv("data/data_2.csv")
     ]).then(function(files) {
+        // files[0] is data from data_1.csv, files[1] is from data_2.csv
+
+        // Concatenate the data arrays from both files
         const concatenatedData = files[0].concat(files[1]);
+
+        // Map and process the concatenated data
         const emissionsData = concatenatedData.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
             scenario: d.Scenario,
-            tech_schematic: d.tech_schematic,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
+            //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
-        updateTechSchematicDropdown(emissionsData.filter(d => d.tech_schematic)); // Assuming tech_schematic is your desired field
+
+
 
         fields.forEach(field => {
             if (field === 'grid') {
