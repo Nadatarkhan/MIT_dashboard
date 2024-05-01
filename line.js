@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     context.lineWidth = 0.2;
-                    context.strokeStyle = getColor(d.field, d[field]);  // Ensure the field and value are passed correctly
+                    context.strokeStyle = getColor(d.field, d.value);
                     context.stroke();
                     context.closePath();
                 }
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-        
+
 
         function getColor(field, value) {
             // Assign color #b937b8 for Baseline scenario lines when active
