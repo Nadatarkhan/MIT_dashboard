@@ -187,15 +187,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
                 const scenarioValue = 'baseline';  // This should be the identifier for the scenario
-
                 // Toggle baseline filters
-                if (baselineActive) {
-                    filters[scenarioValue] = ['active'];
-                } else {
-                    delete filters[scenarioValue]; // Remove the scenario from filters if deactivated
-                }
+                document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
+                    checkbox.checked = baselineActive;
+                    const field = checkbox.id.split('-')[0];
 
-                // Toggle additional logic to handle grid checkboxes
+                    if (!filters[field]) {
+                        filters[field] = [];
+                    }
+
+                    if (baselineActive && !filters[field].includes(scenarioValue)) {
+                        filters[field].push(scenarioValue);
+                    } else if (!baselineActive) {
+                        filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        if (filters[field].length === 0) {
+                            delete filters[field];  // Clean up if no more filters
+                        }
+                    }
+                });
+
+                // Additional logic to handle grid checkboxes
                 const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
@@ -217,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Update the plot to reflect changes
             });
         }
+
 
 
 //Scenario 1 Function
