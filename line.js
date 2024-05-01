@@ -143,29 +143,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                const scenarioValue = 'baseline';
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive; // Set the checkbox state based on the button toggle
+                    checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
 
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
-                    if (baselineActive) {
-                        if (!filters[field].includes(scenarioValue)) {
-                            filters[field].push(scenarioValue);  // Add the scenario filter
-                        }
-                    } else {
-                        // Remove only the scenario filter, preserving any other filters
+                    if (baselineActive && !filters[field].includes(scenarioValue)) {
+                        filters[field].push(scenarioValue);
+                    } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
-                        if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up if no filters remain
-                        }
                     }
                 });
 
-                updatePlot();  // Re-draw the plot with the updated filter configuration
+                console.log("Filters after toggle:", filters);
+                updatePlot();  // Update the plot to reflect changes
             });
         }
 
@@ -202,18 +197,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
+            console.log("Current filters:", filters);
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
 
+            console.log("Filtered data length:", filteredData.length);
+
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 drawAxis();
-                return;  // Ensure no further drawing happens if no data is to be displayed
+                return;
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -223,18 +220,20 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            for (let i = 1; i < filteredData.length; i++) {
-                context.beginPath();
-                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
-                context.strokeStyle = getColor(filteredData[i].field, filteredData[i].value);
-                context.lineWidth = 0.2;
-                context.stroke();
-                context.closePath();
-            }
+            filteredData.forEach((d, i) => {
+                if (i > 0) {
+                    context.beginPath();
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.lineWidth = 0.2;
+                    context.strokeStyle = getColor(d.field, d.value);
+                    context.stroke();
+                    context.closePath();
+                }
+            });
 
             context.restore();
-            drawAxis(); // Draw the axis as the last step
+            drawAxis();
         }
 
 
