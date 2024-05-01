@@ -55,8 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
-            if (!dropdown) {
-                console.error('Dropdown element not found');
+            const techImage = document.getElementById('techImage');  // Ensure you have this element in your HTML
+
+            if (!dropdown || !techImage) {
+                console.error('Dropdown or image element not found');
                 return;
             }
 
@@ -82,9 +84,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.textContent = schematic;
                 dropdown.appendChild(option);
             });
+
+            // Setup change listener to update the image based on the selected schematic
+            dropdown.addEventListener('change', function() {
+                const selectedSchematic = dropdown.value;
+                if (selectedSchematic) {
+                    techImage.src = `images/${selectedSchematic}.png`;
+                    techImage.alt = selectedSchematic;
+                } else {
+                    techImage.src = 'images/diagram.png'; // Default image
+                    techImage.alt = 'Default Diagram';
+                }
+            });
         };
 
-
+        
         fields.forEach(field => {
             if (field === 'grid') {
                 const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
