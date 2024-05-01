@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
             scenario: d.Scenario,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
-            .sort((a, b) => a.scenario - b.scenario || a.year - b.year);
-        
+            //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
+
 
         fields.forEach(field => {
             if (field === 'grid') {
