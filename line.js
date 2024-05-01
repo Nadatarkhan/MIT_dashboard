@@ -368,17 +368,18 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Only use beginPath once before drawing all lines
-            context.beginPath();
+            // Draw each segment individually
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
+                    const prev = filteredData[i - 1];
+                    context.beginPath(); // Start a new path for each segment
+                    context.moveTo(x(prev.year), y(prev.emission)); // Move to the start of this segment
+                    context.lineTo(x(d.year), y(d.emission)); // Draw to the end of this segment
+                    context.strokeStyle = getColor(d); // Set the color based on the data
+                    context.lineWidth = 0.2; // Keep the line thin
+                    context.stroke(); // Execute the drawing
                 }
             });
-            context.lineWidth = 0.2; // Restored to original thin line width
-            context.strokeStyle = '#7a7a7a'; // Set to black or another color as needed
-            context.stroke(); // Apply the stroke to draw the lines
 
             context.restore();
             drawAxis();
