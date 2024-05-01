@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
 
-        .sort((a, b) => a.year - b.year);  // Sort by year after mapping
+        //.sort((a, b) => a.year - b.year);  // Sort by year after mapping
 
         fields.forEach(field => {
             if (field === 'grid') {
