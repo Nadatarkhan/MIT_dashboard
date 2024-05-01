@@ -50,9 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
-        // Update the dropdown immediately after data is processed
-        updateTechSchematicDropdown(emissionsData.filter(d => d.tech_schematic));
-
 
         fields.forEach(field => {
             if (field === 'grid') {
@@ -148,17 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        function updateTechSchematicDropdown(data) {
-            const dropdown = document.getElementById('techSchematicDropdown'); // Ensure you have this element in your HTML
-            dropdown.innerHTML = ''; // Clear existing options
-            data.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.tech_schematic;
-                option.textContent = item.tech_schematic;
-                dropdown.appendChild(option);
-            });
-        }
-
         // reset buttons
         function resetBaselineFilters() {
             document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
@@ -189,6 +175,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
+
+        //dropdown
+
+        function updateTechSchematicDropdown(filteredData) {
+            const dropdown = document.getElementById('techSchematicDropdown');
+            // Clear existing options
+            dropdown.innerHTML = '';
+
+            // Add a default option
+            const defaultOption = document.createElement('option');
+            defaultOption.textContent = "Select a schematic";
+            defaultOption.value = "";
+            dropdown.appendChild(defaultOption);
+
+            // Populate dropdown with filtered data
+            filteredData.forEach(dataItem => {
+                if (dataItem.tech_schematic) {  // Ensure data is not undefined or empty
+                    const option = document.createElement('option');
+                    option.textContent = dataItem.tech_schematic;
+                    option.value = dataItem.tech_schematic;
+                    dropdown.appendChild(option);
+                }
+            });
+        }
+
 
 
 // Scenario button functionality
