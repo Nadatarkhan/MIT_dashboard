@@ -36,10 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
+            scenario: d.Scenario,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
 
         //.sort((a, b) => a.year - b.year);  // Sort by year after mapping
+        .sort((a, b) => a.scenario - b.scenario || a.year - b.year);  // Sort first by scenario, then by year
 
         fields.forEach(field => {
             if (field === 'grid') {
@@ -370,15 +372,21 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw each segment independently
-            for (let i = 1; i < filteredData.length; i++) {
-                context.beginPath(); // Begin a new path for each line segment
-                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
-                context.strokeStyle = getColor(filteredData[i].field, filteredData[i].value); // Assign color
-                context.lineWidth = 0.2; // Thin line width
-                context.stroke();
-            }
+            let lastScenario = null;
+            filteredData.forEach((d, i) => {
+                if (i === 0 || d.scenario !== lastScenario) {
+                    context.beginPath(); // Start a new path for a new scenario
+                }
+                if (i > 0 && d.scenario === lastScenario) {
+                    const prev = filteredData[i - 1];
+                    context.moveTo(x(prev.year), y(prev.emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.strokeStyle = getColor(d.scenario); // Assuming getColor is adapted to use scenario
+                    context.lineWidth = 0.2;
+                    context.stroke();
+                }
+                lastScenario = d.scenario;
+            });
 
             context.restore();
             drawAxis();
