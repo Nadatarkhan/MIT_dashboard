@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenario: d.Scenario,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
-
+            
         //.sort((a, b) => a.year - b.year);  // Sort by year after mapping
         .sort((a, b) => a.scenario - b.scenario || a.year - b.year);  // Sort first by scenario, then by year
 
@@ -347,59 +347,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+
+
+
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
-            const groupedData = groupByScenario(emissionsData);
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
 
-            if (Object.keys(groupedData).length === 0) {
+            if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 drawAxis();
                 return;
             }
 
-            x.domain(d3.extent(emissionsData, d => d.year));
-            y.domain([0, d3.max(emissionsData, d => d.emission)]);
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            Object.keys(groupedData).forEach(scenario => {
-                const data = groupedData[scenario];
-                context.beginPath(); // Start a new path for each scenario
-                data.forEach((d, i) => {
-                    if (i === 0) {
-                        context.moveTo(x(d.year), y(d.emission));
-                    } else {
-                        context.lineTo(x(d.year), y(d.emission));
-                    }
-                });
-                context.strokeStyle = getColor(scenario); // Set color by scenario
-                context.lineWidth = 0.2;
+            // Draw each segment independently
+            for (let i = 1; i < filteredData.length; i++) {
+                context.beginPath(); // Begin a new path for each line segment
+                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
+                context.strokeStyle = getColor(filteredData[i].field, filteredData[i].value); // Assign color
+                context.lineWidth = 0.2; // Thin line width
                 context.stroke();
-            });
+            }
 
             context.restore();
             drawAxis();
-        }
-
-        function groupByScenario(data) {
-            return data.reduce((acc, d) => {
-                acc[d.scenario] = acc[d.scenario] || [];
-                acc[d.scenario].push(d);
-                return acc;
-            }, {});
-        }
-
-        function applyFilters(data) {
-            return data.filter(d => {
-                // Implement the logic to filter data based on active filters
-                // Example: return filters[d.field].includes(d.value);
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
-            });
         }
 
 
