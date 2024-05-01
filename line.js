@@ -370,22 +370,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Enhancements for better visual quality
             context.lineWidth = 0.5; // Thinner line for higher resolution appearance
-            context.strokeStyle = 'rgba(120, 180, 240, 0.8)'; // Semi-transparent blue for better visibility
+            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent blue for better visibility
             context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
             context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
+
+            // Optional: Shadow for depth (comment out if not desired)
+            //context.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            //context.shadowBlur = 4;
+            //context.shadowOffsetX = 2;
+            //context.shadowOffsetY = 2;
 
             let lastScenario = null; // Variable to track the last scenario processed
             // Draw each segment independently
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    if (i === 1 || filteredData[i - 1].scenario !== lastScenario) {
-                        context.beginPath(); // Start a new path for each scenario or if it's the first segment of a scenario
-                    }
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    if (i === filteredData.length - 1 || filteredData[i + 1].scenario !== d.scenario) {
-                        context.stroke(); // Execute the drawing and close the path if it's the last point in the scenario
-                    }
+                    context.stroke(); // Execute the drawing
                 }
                 lastScenario = d.scenario; // Update the last scenario
             });
