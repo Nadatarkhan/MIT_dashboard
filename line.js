@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenario: d.Scenario,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
-            
+
         //.sort((a, b) => a.year - b.year);  // Sort by year after mapping
         .sort((a, b) => a.scenario - b.scenario || a.year - b.year);  // Sort first by scenario, then by year
 
@@ -347,9 +347,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
-
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
@@ -372,19 +369,24 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            let lastScenario = null;  // Variable to track the last scenario processed
             // Draw each segment independently
-            for (let i = 1; i < filteredData.length; i++) {
-                context.beginPath(); // Begin a new path for each line segment
-                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
-                context.strokeStyle = getColor(filteredData[i].field, filteredData[i].value); // Assign color
-                context.lineWidth = 0.2; // Thin line width
-                context.stroke();
-            }
+            filteredData.forEach((d, i) => {
+                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
+                    context.beginPath();  // Start a new path for each line segment
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.strokeStyle = getColor(d.scenario);  // Use the color based on the scenario
+                    context.lineWidth = 0.2;  // Set the line width
+                    context.stroke();  // Execute the drawing
+                }
+                lastScenario = d.scenario;  // Update the last scenario
+            });
 
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(field, value) {
