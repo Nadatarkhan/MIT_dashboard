@@ -229,8 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-
-
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
         let scenario1Active = false;  // Track the state of Scenario 1 activation
@@ -381,8 +379,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+
+                    // Check if the current scenario is considered active
+                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
+
                     // Determine the color and thickness of the line based on the active filters
-                    const { color, lineWidth } = getColor(d.scenario, filters[d.scenario] && filters[d.scenario].length > 0);
+                    const { color, lineWidth } = getColor(d.scenario, isActive);
                     context.strokeStyle = color;
                     context.lineWidth = lineWidth;
                     context.stroke(); // Execute the drawing
@@ -393,7 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
 
         function getColor(scenario, isActive) {
             if (isActive) {
