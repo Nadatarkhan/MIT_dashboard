@@ -377,33 +377,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Enhancements for better visual quality
             context.lineWidth = 0.5; // Thinner line for higher resolution appearance
-            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent for better visibility
+            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent blue for better visibility
             context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
             context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
 
 
-            let lastScenario = null;
-            context.beginPath(); // Consider starting the path outside the loop if scenarios are not an issue
+            let lastScenario = null; // Variable to track the last scenario processed
+            // Draw each segment independently
             filteredData.forEach((d, i) => {
-                if (i > 0) {
-                    if (d.scenario !== lastScenario) {
-                        context.stroke(); // Finish the previous line
-                        context.beginPath(); // Start a new path for a new scenario
-                    }
+                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+                    context.stroke(); // Execute the drawing
                 }
                 lastScenario = d.scenario; // Update the last scenario
             });
-            context.stroke(); // Ensure to stroke the last path
-
 
             context.restore();
             drawAxis();
         }
 
-
-
+        
         function getColor(field, value) {
             if (baselineActive && filters[field] && filters[field].includes('baseline')) {
                 return '#b937b8';  // Purple for Baseline
