@@ -60,7 +60,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const techSchematics = new Set(emissionsData.map(item => item.tech_schematic).filter(Boolean));
+            // Collect all currently active filters
+            const activeFilters = Object.entries(filters).reduce((acc, [key, values]) => {
+                if (values.length > 0) acc[key] = values;
+                return acc;
+            }, {});
+
+            // Filter emissionsData based on active filters
+            const filteredData = emissionsData.filter(item =>
+                Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
+            );
+
+            // Extract unique tech_schematic values from the filtered data
+            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
+
+            // Populate the dropdown with unique schematics
             dropdown.innerHTML = '';  // Clear current options
             techSchematics.forEach(schematic => {
                 const option = document.createElement('option');
