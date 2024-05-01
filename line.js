@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-    d3.csv("data/example_data.csv").then(function(data) {
+    d3.csv("data/data_1.csv").then(function(data) {
         console.log("Data loaded successfully");
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
