@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (scenario1Active && filters[field] && filters[field].includes(value)) {
                 return '#00897b';  // Teal for Scenario 1
             } else if (scenario2Active && filters[field] && filters[field].includes(value)) {
-                return '#055f8a';  // Dark blue for Scenario 2
+                return '#b64f1d';  // orange for Scenario 2
             }
             return '#565656';  // Grey for unselected
         }
