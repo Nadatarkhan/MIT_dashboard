@@ -611,4 +611,17 @@ width: 100%;     // Matches the button width for consistency
 border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
+@media (max-width: 768px) {
+    .icon-and-graph {
+        height: auto; /* Adjust based on content */
+        padding: 10px; /* Adjust padding */
+    }
+
+    .icon-and-graph canvas {
+        max-width: 100%; /* Ensure canvas does not overflow its container */
+        height: auto; /* Maintain aspect ratio or adjust as needed */
+    }
+}
+
+
 
