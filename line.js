@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }))
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
-
         fields.forEach(field => {
             if (field === 'grid') {
                 const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
@@ -382,23 +381,22 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
             context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
 
-            // Optional: Shadow for depth (comment out if not desired)
-            //context.shadowColor = 'rgba(0, 0, 0, 0.5)';
-            //context.shadowBlur = 4;
-            //context.shadowOffsetX = 2;
-            //context.shadowOffsetY = 2;
 
-            let lastScenario = null; // Variable to track the last scenario processed
-            // Draw each segment independently
+            let lastScenario = null;
+            context.beginPath(); // Consider starting the path outside the loop if scenarios are not an issue
             filteredData.forEach((d, i) => {
-                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
+                if (i > 0) {
+                    if (d.scenario !== lastScenario) {
+                        context.stroke(); // Finish the previous line
+                        context.beginPath(); // Start a new path for a new scenario
+                    }
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.stroke(); // Execute the drawing
                 }
                 lastScenario = d.scenario; // Update the last scenario
             });
+            context.stroke(); // Ensure to stroke the last path
+
 
             context.restore();
             drawAxis();
