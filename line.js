@@ -346,7 +346,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filters = {}; // This line can be adjusted based on how your filter logic is implemented
         }
 
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
@@ -369,9 +368,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            context.lineWidth = 0.5; // Thinner line for higher resolution
-            context.lineJoin = 'round'; // Smooths the junctions
-            context.lineCap = 'round'; // Rounds the endpoints
+            // Enhancements for better visual quality
+            context.lineWidth = 0.5; // Thinner line for higher resolution appearance
+            context.strokeStyle = 'rgba(120, 180, 240, 0.8)'; // Semi-transparent blue for better visibility
+            context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
+            context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
+
+            // Optional: Shadow for depth (comment out if not desired)
+            context.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            context.shadowBlur = 4;
+            context.shadowOffsetX = 2;
+            context.shadowOffsetY = 2;
 
             let lastScenario = null; // Variable to track the last scenario processed
             // Draw each segment independently
@@ -380,14 +387,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = getColor(d.scenario, 0.75); // Use the color based on the scenario with transparency
                     context.stroke(); // Execute the drawing
                 }
+                lastScenario = d.scenario; // Update the last scenario
             });
 
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(field, value) {
