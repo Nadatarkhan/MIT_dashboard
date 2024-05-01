@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
                 const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                // Toggle baseline filters
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
@@ -160,6 +161,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             delete filters[field];  // Clean up if no more filters
                         }
                     }
+                });
+
+                // Additional logic to handle grid checkboxes
+                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
+                gridFilters.forEach(filter => {
+                    document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
+                        checkbox.checked = baselineActive;
+                        if (!filters['grid']) {
+                            filters['grid'] = [];
+                        }
+                        if (baselineActive && !filters['grid'].includes(filter)) {
+                            filters['grid'].push(filter);
+                        } else if (!baselineActive) {
+                            filters['grid'] = filters['grid'].filter(f => f !== filter);
+                            if (filters['grid'].length === 0) {
+                                delete filters['grid'];  // Clean up if no more filters
+                            }
+                        }
+                    });
                 });
 
                 updatePlot();  // Update the plot to reflect changes
@@ -236,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
+
 
         function getColor(field, value) {
             // Apply specific color if the baseline scenario is active and the current data point belongs to it
