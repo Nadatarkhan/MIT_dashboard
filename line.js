@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
         updateTechSchematicDropdown(emissionsData); // Call initially to populate dropdown
-        
 
 
         fields.forEach(field => {
@@ -366,24 +365,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Ensure the dropdown is present
             }
 
-            // Gather active filters
+            // Debug: Check what the filters object looks like when updating the dropdown
+            console.log("Active filters", filters);
+
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
             }, {});
 
-            console.log("Active Filters: ", activeFilters);
+            // Debug: Log activeFilters to see if they are correctly identified
+            console.log("Computed active filters", activeFilters);
 
-            // Filter data based on active filters, considering each part of tech_schematic
             const filteredData = data.filter(item =>
                 Object.keys(activeFilters).every(field =>
-                    activeFilters[field].some(val => item.tech_schematic.includes(val))
+                    activeFilters[field].includes(item[field])
                 )
             );
 
-            // Extract unique schematics considering they could be combinations
+            // Debug: Check what the filtered data looks like
+            console.log("Filtered data for dropdown", filteredData);
+
             const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
-            console.log("Filtered tech_schematics: ", techSchematics);
+
+            // Debug: Log the tech schematics found
+            console.log("Tech schematics to be added to dropdown", techSchematics);
 
             dropdown.innerHTML = ''; // Clear current options
             techSchematics.forEach(schematic => {
