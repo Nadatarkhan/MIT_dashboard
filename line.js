@@ -392,6 +392,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }, {});
         }
 
+        function applyFilters(data) {
+            return data.filter(d => {
+                // Implement the logic to filter data based on active filters
+                // Example: return filters[d.field].includes(d.value);
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
+            });
+        }
+
 
         function getColor(field, value) {
             if (baselineActive && filters[field] && filters[field].includes('baseline')) {
