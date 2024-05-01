@@ -612,16 +612,26 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 @media (max-width: 768px) {
-    .icon-and-graph {
-        height: auto; /* Adjust based on content */
-        padding: 10px; /* Adjust padding */
+    .flex-container, .icon-and-graph, .left-pane {
+        flex-direction: column; /* Stack elements vertically */
     }
 
-    .icon-and-graph canvas {
+    .left-pane, .icon-and-graph {
+        width: 100%; /* Each takes full width */
+        margin-bottom: 20px; /* Add some space between them */
+    }
+
+    .icon-container, .icon-container-2 {
+        width: 100%; /* Icons take full width of their container */
+        justify-content: center; /* Center content if necessary */
+    }
+
+    canvas {
         max-width: 100%; /* Ensure canvas does not overflow its container */
-        height: auto; /* Maintain aspect ratio or adjust as needed */
+        height: auto; /* Adjust height dynamically */
     }
 }
+
 
 
 
