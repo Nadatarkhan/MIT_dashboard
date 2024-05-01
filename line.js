@@ -386,15 +386,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.beginPath(); // Consider starting the path outside the loop if scenarios are not an issue
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    if (d.scenario !== filteredData[i - 1].scenario) {
-                        context.stroke();  // Finish the previous line
-                        context.beginPath();  // Start a new line path for each scenario
+                    if (d.scenario !== lastScenario) {
+                        context.stroke(); // Finish the previous line
+                        context.beginPath(); // Start a new path for a new scenario
                     }
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                 }
+                lastScenario = d.scenario; // Update the last scenario
             });
-            context.stroke();  // Ensure to stroke the last path
+            context.stroke(); // Ensure to stroke the last path
+
 
             context.restore();
             drawAxis();
