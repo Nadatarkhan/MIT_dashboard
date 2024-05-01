@@ -311,13 +311,38 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function resetScenario2Filters() {
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                const field = checkbox.name.replace('Filter', '');
-                const value = checkbox.value;
-                updateFilterArray(field, value, false);
+        function updateFiltersForScenario2(active) {
+            const filtersToUpdate = {
+                baseline: ['deepgeo', 'nuclear', 'ccs'],
+                partial: ['retrofit', 'schedules', 'lab', 'pv', 'district'],
+                grid: ['bau', 'cheap_ng', 'decarbonization']
+            };
+
+            // Set or reset filters based on the active state
+            Object.entries(filtersToUpdate).forEach(([type, fields]) => {
+                fields.forEach(field => {
+                    document.querySelectorAll(`input[name="${field}Filter"][value="${type}"]`).forEach(checkbox => {
+                        checkbox.checked = active; // Set checked state based on the scenario button state
+                        updateFilterArray(field, type, active);
+                    });
+                });
             });
+
+            // Additionally reset all checkboxes if the scenario is being deactivated
+            if (!active) {
+                resetAllCheckboxes();
+            }
         }
+
+// Helper function to reset all checkboxes
+        function resetAllCheckboxes() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            // Optionally reset the filters object entirely if needed
+            filters = {}; // This line can be adjusted based on how your filter logic is implemented
+        }
+
 
 
 
