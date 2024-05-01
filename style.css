@@ -216,7 +216,7 @@ body, html {
 }
 
 .bottom-visual img {
-    width: 55%;
+    width: 80%;
     height: auto;
     display: block;
     margin-top: 10px; /* Adds space between the text and the image */
@@ -251,7 +251,7 @@ body, html {
 
 
 .bottom-visual img {
-    max-width: 50%; /* Adjusts maximum width to allow space for text */
+    max-width: 90%; /* Adjusts maximum width to allow space for text */
     height: auto; /* Keeps the image aspect ratio intact */
     display: block; /* Ensures the image is treated as a block-level element */
     margin-top: 10px; /* Adds space between the text and the image */
