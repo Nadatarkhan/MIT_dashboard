@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.icon-and-graph');
 
     if (!container) {
@@ -7,34 +8,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     console.log("Container found");
 
-    function setupCanvas() {
-        const dpi = window.devicePixelRatio;
-        const containerWidth = container.clientWidth - 50;
-        const containerHeight = container.clientHeight - 170;
-        const canvas = d3.select(container)
-            .append("canvas")
-            .attr("width", containerWidth * dpi)
-            .attr("height", containerHeight * dpi)
-            .style("width", containerWidth + "px")
-            .style("height", containerHeight + "px");
-        const context = canvas.node().getContext("2d");
-        context.scale(dpi, dpi);
+    const dpi = window.devicePixelRatio;
+    const containerWidth = container.clientWidth - 50;
+    const containerHeight = container.clientHeight - 170;
+    const canvas = d3.select(container)
+        .append("canvas")
+        .attr("width", containerWidth * dpi)
+        .attr("height", containerHeight * dpi)
+        .style("width", containerWidth + "px")
+        .style("height", containerHeight + "px");
+    const context = canvas.node().getContext("2d");
+    context.scale(dpi, dpi);
 
-        const margin = {top: 50, right: 30, bottom: 40, left: 100},
-            width = containerWidth - margin.left - margin.right,
-            height = containerHeight - margin.top - margin.bottom;
+    const margin = {top: 50, right: 30, bottom: 40, left: 100},
+        width = containerWidth - margin.left - margin.right,
+        height = containerHeight - margin.top - margin.bottom;
 
-        const x = d3.scaleTime().range([0, width]);
-        const y = d3.scaleLinear().range([height, 0]);
-        
-    }
-
-    setupCanvas();  // Initial canvas setup
-
-    window.addEventListener('resize', function() {
-        // Redraw or resize the canvas when the window size changes
-        setupCanvas(); // You might need to clear or reinitialize parts of the canvas here if necessary
-    });
+    const x = d3.scaleTime().range([0, width]);
+    const y = d3.scaleLinear().range([height, 0]);
 
     let filters = {}; // Object to hold the active filters for each technology
 
