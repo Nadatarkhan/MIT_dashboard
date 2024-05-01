@@ -375,20 +375,16 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Enhancements for better visual quality
-            context.lineWidth = 0.5; // Thinner line for higher resolution appearance
-            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent blue for better visibility
-            context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
-            context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
-
-
             let lastScenario = null; // Variable to track the last scenario processed
-            // Draw each segment independently
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+                    // Determine the color and thickness of the line based on the active filters
+                    const { color, lineWidth } = getColor(d.scenario, filters[d.scenario] && filters[d.scenario].length > 0);
+                    context.strokeStyle = color;
+                    context.lineWidth = lineWidth;
                     context.stroke(); // Execute the drawing
                 }
                 lastScenario = d.scenario; // Update the last scenario
@@ -398,20 +394,25 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
-        function getColor(field, value) {
-            if (baselineActive && filters[field] && filters[field].includes('baseline')) {
-                return '#b937b8';  // Purple for Baseline
-            } else if (scenario1Active && filters[field] && filters[field].includes(value)) {
-                return '#00897b';  // Teal for Scenario 1
-            } else if (scenario2Active && filters[field] && filters[field].includes(value)) {
-                return '#b64f1d';  // orange for Scenario 2
+
+        function getColor(scenario, isActive) {
+            if (isActive) {
+                context.lineWidth = 1; // Make lines thicker when filter is active
+                switch(scenario) {
+                    case 'baseline':
+                        return '#b937b8'; // Purple for Baseline
+                    case 'scenario1':
+                        return '#00897b'; // Teal for Scenario 1
+                    case 'scenario2':
+                        return '#b64f1d'; // Orange for Scenario 2
+                    default:
+                        return '#6e6e6e'; // Default color if scenario is not matched
+                }
+            } else {
+                context.lineWidth = 0.5; // Standard line thickness
+                return 'rgba(108,108,108,0.8)'; // Default semi-transparent grey
             }
-            return '#565656';  // Grey for unselected
         }
-
-
-
 
         function drawAxis() {
             context.save();
