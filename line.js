@@ -146,17 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        function updateTechSchematicDropdown(data) {
-            const dropdown = document.getElementById('techSchematicDropdown');
-            dropdown.innerHTML = '';
-            const uniqueSchematics = new Set(data.map(item => item.tech_schematic).filter(Boolean));
-            uniqueSchematics.forEach(schematic => {
-                const option = document.createElement('option');
-                option.value = schematic;
-                option.textContent = schematic;
-                dropdown.appendChild(option);
-            });
-        }
+
+
 
         // reset buttons
         function resetBaselineFilters() {
@@ -364,6 +355,34 @@ document.addEventListener('DOMContentLoaded', function() {
             // Optionally reset the filters object entirely if needed
             filters = {}; // This line can be adjusted based on how your filter logic is implemented
         }
+
+        /*Drop down function */
+
+        function updateTechSchematicDropdown(data) {
+            const dropdown = document.getElementById('techSchematicDropdown');
+            if (!dropdown) return; // Ensure the dropdown is present
+
+            const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+                if (value.length > 0) acc[key] = value;
+                return acc;
+            }, {});
+
+            const filteredData = data.filter(item =>
+                Object.keys(activeFilters).every(field =>
+                    activeFilters[field].includes(item[field])
+                )
+            );
+
+            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
+            dropdown.innerHTML = ''; // Clear current options
+            techSchematics.forEach(schematic => {
+                const option = document.createElement('option');
+                option.value = schematic;
+                option.textContent = schematic;
+                dropdown.appendChild(option);
+            });
+        }
+
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
