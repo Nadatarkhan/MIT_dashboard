@@ -31,17 +31,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
-    d3.csv("data/data_1.csv").then(function(data) {
-        console.log("Data loaded successfully");
-        const emissionsData = data.map(d => ({
+// 2 csvs
+    Promise.all([
+        d3.csv("data/data_1.csv"),
+        d3.csv("data/data_2.csv")
+    ]).then(function(files) {
+        // files[0] is data from data_1.csv, files[1] is from data_2.csv
+
+        // Concatenate the data arrays from both files
+        const concatenatedData = files[0].concat(files[1]);
+
+        // Map and process the concatenated data
+        const emissionsData = concatenatedData.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
             scenario: d.Scenario,
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }))
-
-        //.sort((a, b) => a.year - b.year);  // Sort by year after mapping
-        .sort((a, b) => a.scenario - b.scenario || a.year - b.year);  // Sort first by scenario, then by year
+            .sort((a, b) => a.scenario - b.scenario || a.year - b.year);
+        
 
         fields.forEach(field => {
             if (field === 'grid') {
