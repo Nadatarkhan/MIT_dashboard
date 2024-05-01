@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
         updateTechSchematicDropdown(emissionsData); // Call initially to populate dropdown
+    }).catch(error => {
+        console.error("NT-Error loading or processing data:", error);
 
 
         fields.forEach(field => {
