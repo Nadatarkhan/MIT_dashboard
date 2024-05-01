@@ -36,21 +36,23 @@ document.addEventListener('DOMContentLoaded', function() {
         d3.csv("data/data_1.csv"),
         d3.csv("data/data_2.csv")
     ]).then(function(files) {
-        // files[0] is data from data_1.csv, files[1] is from data_2.csv
 
         // Concatenate the data arrays from both files
         const concatenatedData = files[0].concat(files[1]);
 
         // Map and process the concatenated data
-        const emissionsData = concatenatedData.map(d => ({
-            year: new Date(d.epw_year),
-            emission: +d.Emissions / 1000,
-            scenario: d.Scenario,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
-        }));
+        const emissionsData = concatenatedData.map(d => {
+            console.log("Tech Schematic:", d.tech_schematic);  // Debugging line to see what is loaded
+            return {
+                year: new Date(d.epw_year),
+                emission: +d.Emissions / 1000,
+                scenario: d.Scenario,
+                tech_schematic: d.tech_schematic,  // Explicitly handling tech_schematic
+                ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            };
+        });
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
-
-
+        
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
             if (!dropdown) {
