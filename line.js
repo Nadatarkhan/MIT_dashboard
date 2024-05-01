@@ -347,49 +347,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
-
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
-            const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
-            });
+            const groupedData = groupByScenario(emissionsData);
 
-            if (filteredData.length === 0) {
+            if (Object.keys(groupedData).length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 drawAxis();
                 return;
             }
 
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
+            x.domain(d3.extent(emissionsData, d => d.year));
+            y.domain([0, d3.max(emissionsData, d => d.emission)]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            let lastScenario = null;
-            filteredData.forEach((d, i) => {
-                if (i === 0 || d.scenario !== lastScenario) {
-                    context.beginPath(); // Start a new path for a new scenario
-                }
-                if (i > 0 && d.scenario === lastScenario) {
-                    const prev = filteredData[i - 1];
-                    context.moveTo(x(prev.year), y(prev.emission));
-                    context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = getColor(d.scenario); // Assuming getColor is adapted to use scenario
-                    context.lineWidth = 0.2;
-                    context.stroke();
-                }
-                lastScenario = d.scenario;
+            Object.keys(groupedData).forEach(scenario => {
+                const data = groupedData[scenario];
+                context.beginPath(); // Start a new path for each scenario
+                data.forEach((d, i) => {
+                    if (i === 0) {
+                        context.moveTo(x(d.year), y(d.emission));
+                    } else {
+                        context.lineTo(x(d.year), y(d.emission));
+                    }
+                });
+                context.strokeStyle = getColor(scenario); // Set color by scenario
+                context.lineWidth = 0.2;
+                context.stroke();
             });
 
             context.restore();
             drawAxis();
+        }
+
+        function groupByScenario(data) {
+            return data.reduce((acc, d) => {
+                acc[d.scenario] = acc[d.scenario] || [];
+                acc[d.scenario].push(d);
+                return acc;
+            }, {});
         }
 
 
