@@ -360,7 +360,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateTechSchematicDropdown(data) {
             const dropdown = document.getElementById('techSchematicDropdown');
-            if (!dropdown) return; // Ensure the dropdown is present
+            if (!dropdown) {
+                console.error("Dropdown element not found");
+                return; // Ensure the dropdown is present
+            }
 
             // Gather active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
