@@ -245,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
@@ -287,20 +286,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function getColor(field, value) {
-            console.log(`Checking color for field: ${field}, value: ${value}, Baseline active: ${baselineActive}, Scenario 1 active: ${scenario1Active}`);
-            if (baselineActive && filters[field] && filters[field].includes('baseline')) {
-                return '#b937b8'; // Purple color for the Baseline scenario
-            } else if (scenario1Active && (
-                (['deepgeo', 'nuclear', 'ccs'].includes(field) && value === 'baseline') ||
-                (['retrofit', 'schedules', 'lab', 'pv', 'district'].includes(field) && value === 'partial') ||
-                (field === 'grid' && ['bau', 'cheap_ng', 'decarbonization'].includes(value))
-            )) {
-                return '#00897b'; // Teal color for Scenario 1
+            if (scenario1Active && filters[field] && filters[field].includes(value)) {
+                return '#00897b';  // Teal color for Scenario 1
+            } else if (baselineActive && filters[field] && filters[field].includes(value)) {
+                return '#b937b8';  // Purple color for the baseline scenario
             }
-            return '#565656'; // Default gray color for all other cases
+            return '#565656';  // Default gray color for all other cases
         }
-
-
 
 
         function drawAxis() {
