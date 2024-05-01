@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
-        
+
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');  // Example ID
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     context.lineWidth = 0.2;
-                    context.strokeStyle = getColor(d.field, d.value);
+                    context.strokeStyle = getColor(d.field, d[field]);  // Ensure the field and value are passed correctly
                     context.stroke();
                     context.closePath();
                 }
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
+        
 
         function getColor(field, value) {
             // Assign color #b937b8 for Baseline scenario lines when active
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return '#b937b8'; // Purple color for the Baseline scenario
             }
             // Assign color #00897b for Scenario 1 lines when active
-            else if (scenario1Active && (
+            if (scenario1Active && (
                 (['deepgeo', 'nuclear', 'ccs'].includes(field) && value === 'baseline') ||
                 (['retrofit', 'schedules', 'lab', 'pv', 'district'].includes(field) && value === 'partial') ||
                 (field === 'grid' && ['bau', 'cheap_ng', 'decarbonization'].includes(value))
