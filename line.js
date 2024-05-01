@@ -368,22 +368,22 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Make sure to start and end each path within the loop
+            // Only use beginPath once before drawing all lines
+            context.beginPath();
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.beginPath(); // Start a new path
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 2; // Adjusted line width for visibility
-                    context.strokeStyle = getColor(d.field, d.value);
-                    context.stroke();
-                    context.closePath(); // Close the current path
                 }
             });
+            context.lineWidth = 0.2; // Restored to original thin line width
+            context.strokeStyle = '#7a7a7a'; // Set to black or another color as needed
+            context.stroke(); // Apply the stroke to draw the lines
 
             context.restore();
             drawAxis();
         }
+
 
 
 
