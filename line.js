@@ -36,8 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const emissionsData = data.map(d => ({
             year: new Date(d.epw_year),
             emission: +d.Emissions / 1000,
-            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {}) // assuming each field exists in CSV
-        }));
+            ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+        }))
+
+        .sort((a, b) => a.year - b.year);  // Sort by year after mapping
 
         fields.forEach(field => {
             if (field === 'grid') {
@@ -382,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
+
         function getColor(field, value) {
             if (baselineActive && filters[field] && filters[field].includes('baseline')) {
                 return '#b937b8';  // Purple for Baseline
