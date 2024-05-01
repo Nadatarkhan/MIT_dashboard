@@ -382,6 +382,39 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
+        function testPlot() {
+            const testData = [
+                { year: new Date(2020, 0, 1), emission: 100 },
+                { year: new Date(2021, 0, 1), emission: 150 },
+                { year: new Date(2022, 0, 1), emission: 125 },
+                { year: new Date(2023, 0, 1), emission: 175 }
+            ];
+
+            const x = d3.scaleTime().range([0, 400]).domain(d3.extent(testData, d => d.year));
+            const y = d3.scaleLinear().range([200, 0]).domain([0, 200]);
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.save();
+            context.translate(50, 50);  // Adjust as necessary for margins
+
+            // Draw each segment independently
+            testData.forEach((d, i) => {
+                if (i > 0) {
+                    context.beginPath();
+                    context.moveTo(x(testData[i - 1].year), y(testData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.strokeStyle = '#000';
+                    context.lineWidth = 0.2;
+                    context.stroke();
+                }
+            });
+
+            context.restore();
+        }
+
+        testPlot();
+
+
 
 
 
