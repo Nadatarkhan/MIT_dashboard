@@ -133,6 +133,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Place these functions at the top or just before your scenario handling code
+        function resetBaselineFilters() {
+            document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
+                checkbox.checked = false;
+                const field = checkbox.id.split('-')[0];
+                filters[field] = filters[field].filter(v => v !== 'baseline');
+                if (filters[field].length === 0) {
+                    delete filters[field];
+                }
+            });
+        }
+
+        function resetScenario1Filters() {
+            const baselineFields = ['deepgeo', 'nuclear', 'ccs'];
+            const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district'];
+            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];
+
+            baselineFields.concat(partialFields, ['grid']).forEach(field => {
+                document.querySelectorAll(`input[name="${field}Filter"]`).forEach(checkbox => {
+                    checkbox.checked = false;
+                    filters[field] = [];
+                });
+            });
+
+            gridFilters.forEach(filter => {
+                document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+        }
+        
+
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');  // Example ID
         let baselineActive = false;  // Track the activation state of the baseline scenario
@@ -197,6 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 scenario1Active = !scenario1Active;  // Toggle the active state
                 this.classList.toggle('active', scenario1Active); // Toggle class for styling
                 this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1"; // Update button text
+
+                // Clear existing filters when toggling this scenario
+                Object.keys(filters).forEach(field => {
+                    filters[field] = [];  // Clear all filters
+                    document.querySelectorAll(`input[name="${field}Filter"]`).forEach(checkbox => checkbox.checked = false);
+                });
+
                 updateFiltersForScenario1(scenario1Active);  // Update the filters based on new state
                 updatePlot();  // Re-draw the plot with updated filters
             });
@@ -243,7 +282,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-
 
 
 
@@ -303,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return '#565656'; // Grey
         }
 
-        
+
 
         function drawAxis() {
             context.save();
