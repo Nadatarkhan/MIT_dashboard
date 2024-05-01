@@ -371,8 +371,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Draw red circle at 180,000 on the y-axis
             context.beginPath();
-            context.arc(0, y(180000), 8, 0, 2 * Math.PI);
-            context.fillStyle = 'rgba(148,54,51,0.73)';
+            context.arc(0, y(180000), 3, 0, 2 * Math.PI);
+            context.fillStyle = 'rgba(12,12,12,0.73)';
             context.fill();
 
             context.textAlign = 'center';
