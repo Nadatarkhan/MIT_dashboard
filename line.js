@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Enhancements for better visual quality
             context.lineWidth = 0.5; // Thinner line for higher resolution appearance
-            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent blue for better visibility
+            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent for better visibility
             context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
             context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
 
@@ -386,17 +386,15 @@ document.addEventListener('DOMContentLoaded', function() {
             context.beginPath(); // Consider starting the path outside the loop if scenarios are not an issue
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    if (d.scenario !== lastScenario) {
-                        context.stroke(); // Finish the previous line
-                        context.beginPath(); // Start a new path for a new scenario
+                    if (d.scenario !== filteredData[i - 1].scenario) {
+                        context.stroke();  // Finish the previous line
+                        context.beginPath();  // Start a new line path for each scenario
                     }
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                 }
-                lastScenario = d.scenario; // Update the last scenario
             });
-            context.stroke(); // Ensure to stroke the last path
-
+            context.stroke();  // Ensure to stroke the last path
 
             context.restore();
             drawAxis();
