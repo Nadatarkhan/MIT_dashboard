@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';
+                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.id.split('-')[0];
@@ -152,23 +152,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         filters[field] = [];
                     }
 
-                    if (baselineActive) {
-                        if (!filters[field].includes(scenarioValue)) {
-                            filters[field].push(scenarioValue);
-                        }
-                    } else {
+                    if (baselineActive && !filters[field].includes(scenarioValue)) {
+                        filters[field].push(scenarioValue);
+                    } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up to avoid empty arrays hanging around
+                            delete filters[field];  // Clean up if no more filters
                         }
                     }
                 });
 
-                console.log("Filters after toggle:", filters);
                 updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 
         //Scenario 1 Function
@@ -203,16 +199,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
-            console.log("Current filters:", filters);
+            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                let passesFilters = Object.keys(filters).every(field => {
-                    return filters[field].length === 0 || filters[field].includes(d[field]);
-                });
-                console.log(`Data point: ${d.year}, Passes filters: ${passesFilters}`);
-                return passesFilters;
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
             });
-
-            console.log("Filtered data length:", filteredData.length);
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -243,6 +235,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
+        
+
+        function getColor(field, value) {
+            // Apply specific color if the baseline scenario is active and the current data point belongs to it
+            if (baselineActive && filters[field] && filters[field].includes('baseline')) {
+                return '#b937b8'; // Specific color for active scenario
+            }
+            return '#565656'; // Default color for all other cases or additional lines toggled after activation
+        }
+
 
 
         function drawAxis() {
