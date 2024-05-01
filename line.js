@@ -370,15 +370,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Enhancements for better visual quality
             context.lineWidth = 0.5; // Thinner line for higher resolution appearance
-            context.strokeStyle = 'rgba(120, 180, 240, 0.8)'; // Semi-transparent blue for better visibility
+            context.strokeStyle = 'rgba(108,108,108,0.8)'; // Semi-transparent blue for better visibility
             context.lineJoin = 'round'; // Creates rounded corners for smoother transitions between line segments
             context.lineCap = 'round'; // Rounds off the end of the lines for a cleaner look
 
             // Optional: Shadow for depth (comment out if not desired)
-            context.shadowColor = 'rgba(0, 0, 0, 0.5)';
-            context.shadowBlur = 4;
-            context.shadowOffsetX = 2;
-            context.shadowOffsetY = 2;
+            //context.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            //context.shadowBlur = 4;
+            //context.shadowOffsetX = 2;
+            //context.shadowOffsetY = 2;
 
             let lastScenario = null; // Variable to track the last scenario processed
             // Draw each segment independently
