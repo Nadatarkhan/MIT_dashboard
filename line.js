@@ -284,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
         // Scenario 2 button functionality
         const scenario2Button = document.getElementById('scenario2Button');  // Make sure the ID matches your HTML
         let scenario2Active = false;  // Track the state of Scenario 2 activation
@@ -369,21 +368,23 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Make sure to start and end each path within the loop
             filteredData.forEach((d, i) => {
                 if (i > 0) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 0.2;
+                    context.lineWidth = 2; // Adjusted line width for visibility
                     context.strokeStyle = getColor(d.field, d.value);
                     context.stroke();
-                    context.closePath();
+                    context.closePath(); // Close the current path
                 }
             });
 
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(field, value) {
