@@ -49,7 +49,24 @@ document.addEventListener('DOMContentLoaded', function() {
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
-        updateTechSchematicDropdown(emissionsData); // Call initially to populate dropdown
+        
+
+        window.tryUpdateDropdown = function() {
+            const dropdown = document.getElementById('techSchematicDropdown');
+            if (!dropdown) {
+                console.error('Dropdown element not found');
+                return;
+            }
+
+            const techSchematics = new Set(emissionsData.map(item => item.tech_schematic).filter(Boolean));
+            dropdown.innerHTML = '';  // Clear current options
+            techSchematics.forEach(schematic => {
+                const option = document.createElement('option');
+                option.value = schematic;
+                option.textContent = schematic;
+                dropdown.appendChild(option);
+            });
+        };
 
 
         fields.forEach(field => {
