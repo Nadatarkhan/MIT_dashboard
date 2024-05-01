@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function getColor(scenario, isActive) {
             if (isActive) {
-                context.lineWidth = 1; // Make lines thicker when filter is active
+                context.lineWidth = 0.5; // Make lines thicker when filter is active
                 switch(scenario) {
                     case 'baseline':
                         return '#b937b8'; // Purple for Baseline
