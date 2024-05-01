@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
         }));
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
-        
+
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');

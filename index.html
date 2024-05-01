@@ -126,12 +126,10 @@
         <div class="flex-container">
             <div class="controls">
                 <h3 class="controls-title">Schematic Options</h3>
-                <select class="pheasant-demure-button dropdown">
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                    <!-- Add more options as needed -->
+                <select class="pheasant-demure-button dropdown" id="techSchematicDropdown">
+                    <!-- Options will dynamically populate here -->
                 </select>
+                <button onclick="tryUpdateDropdown()">Load Schematics</button>
             </div>
             <div class="bottom-content">
                 <img src="images/diagram.png" alt="Diagram" class="scaled-image">
@@ -142,7 +140,6 @@
         </div>
     </div>
 </div>
-
 <div id="popupOverlay">
     <div id="popupBox">
         <img src="images/cover.png" alt="Welcome Image" style="max-width: 100%; height: auto;">

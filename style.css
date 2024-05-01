@@ -192,7 +192,7 @@ body, html {
 
 .controls {
     position: relative;
-    width: 100%; /* Adjust as needed */
+    width: 80%; /* Adjust as needed */
     display: flex;
     flex-direction: column; /* Arrange buttons and toggles vertically */
     align-items: flex-start; /* Align items to the left */
@@ -578,4 +578,37 @@ input[type='radio']:checked + label {
     margin-top: 5px; /* Adds space above the toggle switch */
     margin-bottom: 10px; /* Adds space below the toggle switch */
 }
+
+
+/*Drop down */
+
+.pheasant-demure-button, .dropdown {
+    padding: 8px 25px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: #424242;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.dropdown {
+    display: block;  // Ensures the dropdown fills the container width appropriately
+width: 100%;     // Matches the button width for consistency
+}
+
+.pheasant-demure-button:hover, .dropdown:hover {
+    background-color: #2d2d2d;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* For focusing on dropdown specifically if needed */
+.dropdown:focus {
+    outline: none;  // Removes the default focus outline
+border: 2px solid #888;  // Optional: adds a custom border on focus
+}
+
 
