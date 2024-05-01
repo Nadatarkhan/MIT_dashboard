@@ -143,9 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';
+                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive;
+                    checkbox.checked = baselineActive; // Set the checkbox state based on the button toggle
                     const field = checkbox.id.split('-')[0];
 
                     if (!filters[field]) {
@@ -154,18 +154,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (baselineActive) {
                         if (!filters[field].includes(scenarioValue)) {
-                            filters[field].push(scenarioValue);
+                            filters[field].push(scenarioValue);  // Add the scenario filter
                         }
                     } else {
+                        // Remove only the scenario filter, preserving any other filters
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up to avoid empty arrays hanging around
+                            delete filters[field];  // Clean up if no filters remain
                         }
                     }
                 });
 
-                console.log("Filters after toggle:", filters);
-                updatePlot();  // Update the plot to reflect changes
+                updatePlot();  // Re-draw the plot with the updated filter configuration
             });
         }
 
@@ -202,22 +202,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updatePlot() {
-            console.log("Current filters:", filters);
+            console.log("Updating plot with current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                let passesFilters = Object.keys(filters).every(field => {
-                    return filters[field].length === 0 || filters[field].includes(d[field]);
-                });
-                console.log(`Data point: ${d.year}, Passes filters: ${passesFilters}`);
-                return passesFilters;
+                return Object.keys(filters).every(field =>
+                    filters[field].length === 0 || filters[field].includes(d[field])
+                );
             });
-
-            console.log("Filtered data length:", filteredData.length);
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 drawAxis();
-                return;
+                return;  // Ensure no further drawing happens if no data is to be displayed
             }
 
             x.domain(d3.extent(filteredData, d => d.year));
@@ -227,31 +223,19 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            filteredData.forEach((d, i) => {
-                if (i > 0) {
-                    context.beginPath();
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
-                    context.lineWidth = 0.2;
-                    context.strokeStyle = getColor(d.field, d.value);
-                    context.stroke();
-                    context.closePath();
-                }
-            });
+            for (let i = 1; i < filteredData.length; i++) {
+                context.beginPath();
+                context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                context.lineTo(x(filteredData[i].year), y(filteredData[i].emission));
+                context.strokeStyle = getColor(filteredData[i].field, filteredData[i].value);
+                context.lineWidth = 0.2;
+                context.stroke();
+                context.closePath();
+            }
 
             context.restore();
-            drawAxis();
+            drawAxis(); // Draw the axis as the last step
         }
-
-        
-        function getColor(field, value) {
-            // Check if the baseline scenario is active and the current data point belongs to it
-            if (baselineActive && filters[field] && filters[field].includes(value) && value === 'baseline') {
-                return '#b937b8'; // Purple color for the baseline scenario
-            }
-            return '#8c8c8c'; // Default gray color for all other cases
-        }
-
 
 
         function drawAxis() {
