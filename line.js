@@ -152,10 +152,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         filters[field] = [];
                     }
 
-                    if (baselineActive && !filters[field].includes(scenarioValue)) {
-                        filters[field].push(scenarioValue);
-                    } else if (!baselineActive) {
+                    if (baselineActive) {
+                        if (!filters[field].includes(scenarioValue)) {
+                            filters[field].push(scenarioValue);
+                        }
+                    } else {
                         filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        if (filters[field].length === 0) {
+                            delete filters[field];  // Clean up to avoid empty arrays hanging around
+                        }
                     }
                 });
 
@@ -199,9 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Current filters:", filters);
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length === 0 || filters[field].includes(d[field])
-                );
+                let passesFilters = Object.keys(filters).every(field => {
+                    return filters[field].length === 0 || filters[field].includes(d[field]);
+                });
+                console.log(`Data point: ${d.year}, Passes filters: ${passesFilters}`);
+                return passesFilters;
             });
 
             console.log("Filtered data length:", filteredData.length);
@@ -236,9 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-
-
-
+        
         function getColor(field, value) {
             // Check if the baseline scenario is active and the current data point belongs to it
             if (baselineActive && filters[field] && filters[field].includes(value) && value === 'baseline') {
