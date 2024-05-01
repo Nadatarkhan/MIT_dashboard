@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Map and process the concatenated data
         const emissionsData = concatenatedData.map(d => {
-            console.log("Tech Schematic:", d.tech_schematic);  // Debugging line to see what is loaded
+            //console.log("Tech Schematic:", d.tech_schematic);  // Debugging line to see what is loaded
             return {
                 year: new Date(d.epw_year),
                 emission: +d.Emissions / 1000,
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
             //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
-        
+
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
             if (!dropdown) {
