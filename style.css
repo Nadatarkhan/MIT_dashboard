@@ -477,6 +477,7 @@ h2 {
     display: flex; /* Aligns buttons in a row */
     justify-content: flex-end; /* Aligns buttons to the far right */
     padding-right: 20px; /* Adds padding to the right side of the buttons */
+    align-items: flex-start;  
 }
 
 .header-buttons button {
