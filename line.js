@@ -465,25 +465,48 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            filteredData.forEach((d, i, array) => {
-                if (i > 0 && d.year.getTime() === array[i - 1].year.getTime()) {
-                    context.beginPath();
-                    context.moveTo(x(array[i - 1].year), y(array[i - 1].emission));
+            let lastScenario = null; // Variable to track the last scenario processed
+            filteredData.forEach((d, i) => {
+                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
+                    context.beginPath(); // Start a new path for each line segment
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check scenario activation status from filters
-                    const isActive = baselineActive; // Here baselineActive is checked directly from global variable
+                    // Check if the current scenario is considered active
+                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
 
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
-                    context.lineWidth = 1; // Fixed line width, adjust as needed
-                    context.stroke();
+                    // Determine the color and thickness of the line based on the active filters
+                    const { color, lineWidth } = getColor(d.scenario, isActive);
+
+                    // Apply color based on baseline scenario activation
+                    context.strokeStyle = isActive && d.scenario === 'baseline' ? '#b937b8' : color;
+                    context.lineWidth = lineWidth;
+                    context.stroke(); // Execute the drawing
                 }
+                lastScenario = d.scenario; // Update the last scenario
             });
 
             context.restore();
             drawAxis();
         }
 
+        function getColor(scenario, isActive) {
+            // Custom function to determine color and lineWidth based on scenario and isActive flag
+            if (isActive) {
+                switch(scenario) {
+                    case 'baseline':
+                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
+                    case 'scenario1':
+                        return { color: '#00897b', lineWidth: 2 }; // Teal
+                    case 'scenario2':
+                        return { color: '#b64f1d', lineWidth: 2 }; // Red
+                    default:
+                        return { color: '#565656', lineWidth: 1 }; // Default gray
+                }
+            } else {
+                return { color: '#565656', lineWidth: 1 }; // Default gray when not active
+            }
+        }
 
 
         function drawAxis() {
