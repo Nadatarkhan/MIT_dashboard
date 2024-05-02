@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
-    const margin = {top: 50, right: 30, bottom: 40, left: 100},
+    const margin = {top: 30, right: 30, bottom: 30, left: 100},
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Determine the color and thickness of the line based on the active filters
                     const { color, lineWidth } = getColor(d.scenario, isActive);
-                    context.strokeStyle = color;
+                    context.strokeStyle = '#565656';
                     context.lineWidth = lineWidth;
                     context.stroke(); // Execute the drawing
                 }
@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function getColor(scenario, isActive) {
             if (isActive) {
-                context.lineWidth = 0.5; // Make lines thicker when filter is active
+                context.lineWidth = 0.3; // Make lines thicker when filter is active
                 switch(scenario) {
                     case 'baseline':
                         return '#b937b8'; // Purple for Baseline
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         return '#6e6e6e'; // Default color if scenario is not matched
                 }
             } else {
-                context.lineWidth = 0.5; // Standard line thickness
+                context.lineWidth = 0.3; // Standard line thickness
                 return 'rgba(108,108,108,0.8)'; // Default semi-transparent grey
             }
         }
