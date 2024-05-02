@@ -237,7 +237,7 @@ body, html {
     display: flex;
     width: 100%; /* Ensures full container width usage */
     align-items: flex-start; /* Aligns the image to the top of the container */
-    justify-content: center; /* Distributes space evenly around items */
+    justify-content: left; /* Distributes space evenly around items */
     padding: 10px 0; /* Padding above and below the content */
 }
 
