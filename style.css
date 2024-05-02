@@ -534,10 +534,10 @@ input[type='radio']:checked + label {
 }
 
 .pheasant-demure-button {
-    padding: 8px 25px;
-    margin-bottom: 10px;
+    padding: 8px 30px;
+    margin-bottom: 5px;
     margin-top: 5px;
-    font-size: 11px;
+    font-size: 10px;
     font-family: Arial, sans-serif;
     color: white;
     background-color: #424242;
