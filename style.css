@@ -536,9 +536,9 @@ input[type='radio']:checked + label {
 }
 
 .pheasant-demure-button {
-    padding: 8px 40px;
+    padding: 6px 50px;
     margin-bottom: 5px;
-    margin-top: 5px;
+    margin-top: 3px;
     font-size: 6px;
     font-family: Arial, sans-serif;
     color: white;
@@ -546,7 +546,6 @@ input[type='radio']:checked + label {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-align: left; /* Aligns text to the left */
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
