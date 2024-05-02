@@ -621,13 +621,30 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
         overflow: hidden;
     }
 
-    .left-pane, .icon-and-graph {
+    .icon-and-graph {
         width: 100%; /* Adjusts to full width for responsiveness */
         max-height: 50%; /* Adjusts the height to split between the elements */
     }
 
     .visual1 {
         height: auto; /* Allows the visual1 to adjust height as needed */
+    }
+
+    .left-pane {
+        padding: 5px; /* Reduce padding */
+    }
+
+    .left-pane .icon-label, .left-pane .tooltip, .controls-title {
+        font-size: smaller; /* Reduce font size */
+    }
+
+    .left-pane button {
+        padding: 8px 10px; /* Smaller buttons */
+        font-size: 10px; /* Smaller font size for button text */
+    }
+
+    .toggle-wrapper, .toggleContainer {
+        transform: scale(0.8); /* Scale down the toggle switch */
     }
 }
 
