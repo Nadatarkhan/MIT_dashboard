@@ -477,7 +477,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Determine the color and thickness of the line based on the active filters
                     const { color, lineWidth } = getColor(d.scenario, isActive);
-                    context.strokeStyle = '#565656';
+
+                    // Apply color based on baseline scenario activation
+                    context.strokeStyle = isActive && d.scenario === 'baseline' ? '#b937b8' : color;
                     context.lineWidth = lineWidth;
                     context.stroke(); // Execute the drawing
                 }
@@ -489,23 +491,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function getColor(scenario, isActive) {
+            // Custom function to determine color and lineWidth based on scenario and isActive flag
             if (isActive) {
-                context.lineWidth = 0.3; // Make lines thicker when filter is active
                 switch(scenario) {
                     case 'baseline':
-                        return '#b937b8'; // Purple for Baseline
+                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
                     case 'scenario1':
-                        return '#00897b'; // Teal for Scenario 1
+                        return { color: '#00897b', lineWidth: 2 }; // Teal
                     case 'scenario2':
-                        return '#b64f1d'; // Orange for Scenario 2
+                        return { color: '#b64f1d', lineWidth: 2 }; // Red
                     default:
-                        return '#6e6e6e'; // Default color if scenario is not matched
+                        return { color: '#565656', lineWidth: 1 }; // Default gray
                 }
             } else {
-                context.lineWidth = 0.3; // Standard line thickness
-                return 'rgba(108,108,108,0.8)'; // Default semi-transparent grey
+                return { color: '#565656', lineWidth: 1 }; // Default gray when not active
             }
         }
+
 
         function drawAxis() {
             context.save();
