@@ -648,27 +648,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
     }
 }
 
-/* Additional CSS to ensure flexibility in displaying content */
-.left-pane .icon-container, .left-pane .icon-container-2 {
-    flex: 1 1 auto; /* Allows these elements to grow and shrink as needed */
-    min-height: 50px; /* Sets a minimum height for icons */
-    display: flex;
-    flex-direction: column; /* Stacks icon and label vertically */
-    align-items: center; /* Centers content horizontally */
-}
 
-.icon-container img, .icon-container-2 img {
-    max-height: 40px; /* Limits image size to ensure fit */
-    margin-bottom: 5px; /* Space between the icon and the label or button */
-}
-
-.icon-container-2 form, .icon-container form {
-    width: 100%; /* Ensures form elements use the full width */
-}
-
-.icon-container-2, .icon-container {
-    padding: 5px; /* Reduces padding within each icon container */
-}
 
 /* Ensuring images and canvas within .icon-and-graph are scaled correctly */
 .canvas-container, .scaled-image {
