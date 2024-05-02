@@ -229,6 +229,8 @@ body, html {
 .scaled-image {
     width: 100%;
     height: auto;
+    display: block;
+    margin-top: -20px; /* Adjusts the margin to move the image up */
 }
 
 .bottom-visual .bottom-content {
@@ -544,6 +546,7 @@ input[type='radio']:checked + label {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-align: left; /* Aligns text to the left */
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
