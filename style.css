@@ -480,6 +480,8 @@ h2 {
 }
 
 .header-buttons button {
+    display: flex;
+    align-items: center;  /* Ensures buttons are aligned with the title */
     margin-left: 10px; /* Adds space between buttons */
     background-color: #363636; /* Example: Blue background for buttons */
     color: white; /* Text color for buttons */
@@ -493,6 +495,7 @@ h2 {
     margin: 0; /* Removes default margin to avoid any unwanted space */
     padding-left: 20px; /* Adds left padding to the title */
     color: #333; /* Dark grey color for the title text */
+    flex-grow: 1;  /* Allows the title to take up available space, adjust as needed */
 }
 
 input[type='radio']:checked + label {
