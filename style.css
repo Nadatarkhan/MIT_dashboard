@@ -220,7 +220,7 @@ body, html {
 }
 
 .bottom-visual img {
-    width: 90%;
+    width: 100%;
     height: auto;
     display: block;
     margin-top: 10px; /* Adds space between the text and the image */
