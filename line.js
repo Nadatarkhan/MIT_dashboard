@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function getColor(scenario, isActive) {
-            // Custom function to determine color and lineWidth based on scenario and isActive flag
+            console.log(`Scenario: ${scenario}, Active: ${isActive}`);
             if (isActive) {
                 switch(scenario) {
                     case 'baseline':
@@ -507,8 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return { color: '#565656', lineWidth: 1 }; // Default gray when not active
             }
         }
-
-
+        
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
