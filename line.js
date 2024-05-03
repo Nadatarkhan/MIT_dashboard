@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
                 // Calculate the current y position of the text to animate it
                 const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
-                context.fillText("Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos);
+                context.fillText("To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             } else {
