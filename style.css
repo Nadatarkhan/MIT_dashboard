@@ -74,8 +74,6 @@ body, html {
     height: 100%; /* Full height within flex-container */
 }
 
-
-
 .visual2 {
     flex: 4; /* Takes 40% of the width within its container */
     display: flex;
@@ -118,7 +116,6 @@ body, html {
     align-items: center; /* Align items vertically center */
 }
 
-
 .icon-container-2 img {
     margin-right: 10px; // Space between the icon and the checkboxes
 }
@@ -129,7 +126,6 @@ body, html {
     margin-left: 10px; /* Space between the icon and the checkboxes */
 }
 
-
 .icon-container-2 .icon-label {
     display: block;  /* Ensures the label is treated as a block element, making it easier to position */
     color: black;  /* Sets the text color for visibility */
@@ -139,15 +135,13 @@ body, html {
     font-size: 12px; /* Ensure the font size is adequate */
 }
 
-
 .icon-container-2 input[type="checkbox"] {
     margin-right: 5px; /* Space between checkbox and label */
 }
 
-
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
-    background-color: #f4f4f4; // Light background color for active state
+background-color: #f4f4f4; // Light background color for active state
 }
 
 .icon-label {
@@ -169,7 +163,6 @@ body, html {
     align-items: center;
     margin-top: 5px;  // Add margin for spacing from the icon
 }
-
 
 .circle {
     width: 15px;
@@ -203,11 +196,9 @@ body, html {
     margin-bottom: 20px; /* Add some space between the controls and the plot */
 }
 
-
 .icon-row img {
     height: 50px;
 }
-
 
 .bottom-visual {
     flex: 4; /* Bottom container takes 45% of the screen height */
@@ -255,7 +246,6 @@ body, html {
     width: 100%; /* Full width to align children properly */
 }
 
-
 .bottom-visual img {
     max-width: 90%; /* Adjusts maximum width to allow space for text */
     height: auto; /* Keeps the image aspect ratio intact */
@@ -274,8 +264,6 @@ body, html {
     background-color: #c9c9c9; /* Example background color for visibility */
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
-
-
 
 h1 {
     text-align: left;
@@ -307,7 +295,6 @@ h2 {
     transform: translate(-50%, -100%); /* Center the tooltip and move it up 100% of its height */
     bottom: 20px; /* Position the tooltip above the icon */
 }
-
 
 .icon-container:hover .tooltip {
     opacity: 1; /* Show the tooltip when hovering over the icon */
@@ -461,7 +448,7 @@ h2 {
     float: right; /* Places the arrow at the right corner of the description bar */
 }
 
-/*TOPBAR*//
+/*TOPBAR*/
 
 .header {
     display: flex;
@@ -475,7 +462,7 @@ h2 {
 
 .header-buttons {
     display: flex; /* Aligns buttons in a row */
-    justify-content: flex-end; /* Aligns buttons to the far right */
+    justify-content:flex-end; /* Aligns buttons to the far right */
     padding-right: 20px; /* Adds padding to the right side of the buttons */
     align-items: flex-start;
 }
@@ -623,15 +610,8 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 @media (max-width: 768px) {
     .flex-container, .icon-and-graph, .left-pane {
-        flex-direction: column;
-    }
-
-    .visual1, .icon-and-graph {
-        width: 100%;
-    }
-
-    .left-pane {
-        width: 100%; /* Full width on smaller screens */
+        flex-direction: column; /* Stacks elements vertically */
+        overflow: hidden;
     }
 
     .icon-and-graph {
@@ -668,7 +648,3 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
     max-width: 100%; /* Ensures no overflow */
     height: auto; /* Maintains aspect ratio */
 }
-
-
-
-
