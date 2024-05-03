@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxOpacity = 1; // Target opacity
         const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
         const incrementYOffset = 2; // Move the text down by 2 pixels each frame
+        const maxWidth = containerWidth * dpi - 100; // Maximum width for text, with margins
+        const lineHeight = 20; // Line height for wrapping text
 
         // Clear the entire canvas first
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -42,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
         context.fillStyle = "#666"; // Set the text color
         context.textAlign = "center"; // Center the text horizontally
         context.textBaseline = "middle"; // Center the text vertically
+
+        const text = "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.";
 
         function fadeIn() {
             if (opacity < maxOpacity || yOffset < 0) {
@@ -52,18 +56,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
                 // Calculate the current y position of the text to animate it
                 const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
-                context.fillText("To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos);
+                wrapText(context, text, containerWidth * dpi / 2, yPos, maxWidth, lineHeight);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             } else {
-
                 context.globalAlpha = 1;
-                context.fillText("Select at least one option from each category to display the plot.", containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top);
+                wrapText(context, text, containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
             }
         }
 
         fadeIn();
     }
+
+// Function to handle text wrapping
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+
+        for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = context.measureText(testLine);
+            const testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+                context.fillText(line, x, y);
+                line = words[n] + ' ';
+                y += lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+        context.fillText(line, x, y);
+    }
+
 
 
     showInitialMessage();  // Display initial message when the page loads
