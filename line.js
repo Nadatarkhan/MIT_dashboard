@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const increment = 0.05; // Increment the opacity by this amount each frame
 
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas
-        context.font = "italic 16px Arial";
+        context.font = "italic 14px Arial";
         context.fillStyle = "#666"; // Set the text color
         context.textAlign = "center"; // Center the text
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.save();
                 context.globalAlpha = opacity; // Set the current opacity for the drawing
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
-                context.fillText("Select one of the preset scenarios from the left pane or build your own! To build your own scenario, select at least one option from each category to display the plot.", containerWidth * dpi / 2, containerHeight * dpi / 2);
+                context.fillText("Select one of the preset scenarios from the left pane or build your own! To build your own scenario, select at least one option from each category to display the plot.", containerWidth * dpi / 3, containerHeight * dpi / 2);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             }
