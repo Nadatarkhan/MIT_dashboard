@@ -495,42 +495,45 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();  // Display message indicating the need to select filters
+                // Call the initial message function to show the message
+                showInitialMessage();
                 return; // Exit the function if not all fields have active filters
             }
 
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
+                    filters[field].length === 0 || filters[field].includes(d[field])
                 );
             });
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                drawAxis();
                 return;
             }
+
+            // Once conditions are met, clear the message and proceed to plot
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
 
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            filteredData.forEach((d, i) => {
-                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+            filteredData.forEach((d, i, array) => {
+                if (i > 0 && d.year.getTime() === array[i - 1].year.getTime()) {
+                    context.beginPath();
+                    context.moveTo(x(array[i - 1].year), y(array[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
+                    // Check scenario activation status from filters
+                    const isActive = baselineActive; // Here baselineActive is checked directly from global variable
 
-                    // Determine the color and thickness of the line based on the active filters
                     context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
-                    context.lineWidth = 2; // Adjust line width for visibility
-                    context.stroke(); // Execute the drawing
+                    context.lineWidth = 1; // Fixed line width, adjust as needed
+                    context.stroke();
                 }
             });
 
