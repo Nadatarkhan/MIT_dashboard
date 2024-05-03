@@ -29,15 +29,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    // Function to display initial message
     function showInitialMessage() {
-        context.save();
-        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = '16px Arial';
-        context.textAlign = 'center';
-        context.fillStyle = 'grey';
-        context.fillText("Select filters to see the plot", width / 2, height / 2);
-        context.restore();
+        let opacity = 0; // Start with an opacity of 0
+        const maxOpacity = 1; // Target opacity
+        const increment = 0.05; // Increment the opacity by this amount each frame
+
+        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas
+        context.font = "italic 16px Arial";
+        context.fillStyle = "#666"; // Set the text color
+        context.textAlign = "center"; // Center the text
+
+        function fadeIn() {
+            if (opacity < maxOpacity) {
+                opacity += increment; // Increase the opacity
+                context.save();
+                context.globalAlpha = opacity; // Set the current opacity for the drawing
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
+                context.fillText("Select one of the preset scenarios from the left pane or build your own! To build your own scenario, select at least one option from each category to display the plot.", containerWidth * dpi / 2, containerHeight * dpi / 2);
+                context.restore();
+                requestAnimationFrame(fadeIn); // Request the next frame of the animation
+            }
+        }
+
+        fadeIn(); // Start the fade-in animation
     }
 
     showInitialMessage();  // Display initial message when the page loads
