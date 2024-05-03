@@ -288,12 +288,11 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
-    opacity: 0; /* Initially hide the tooltip */
-    pointer-events: none; /* Ensure the tooltip does not interfere with other interactions */
-    font-size: 10px;
-    transition: opacity 0.3s ease; /* Smooth transition for opacity changes */
-    transform: translate(-50%, -100%); /* Center the tooltip and move it up 100% of its height */
-    bottom: 20px; /* Position the tooltip above the icon */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    transform: translate(-50%, -100%);
+    z-index: 1050; /* Ensures tooltips float above other content */
 }
 
 .icon-container:hover .tooltip {
@@ -647,4 +646,33 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 .canvas-container, .scaled-image {
     max-width: 100%; /* Ensures no overflow */
     height: auto; /* Maintains aspect ratio */
+}
+
+/* Bootstrap specific adjustments */
+@media (max-width: 768px) {
+    .top-container, .visual1, .flex-container, .icon-and-graph {
+        flex-direction: column;
+    }
+
+    .left-pane, .icon-and-graph {
+        width: 100%;
+        max-height: unset; /* Removes max height restrictions for mobile */
+    }
+
+    .visual1, .visual2, .bottom-visual {
+        flex: unset; /* Removes flex settings to adapt to column layout */
+    }
+
+    .controls, .toggle-wrapper, .pheasant-demure-button {
+        width: 100%; /* Ensures controls fill the container */
+    }
+
+    .icon-row {
+        flex-wrap: wrap; /* Allows icons to wrap to new lines */
+    }
+
+    .icon-container, .icon-container-2 {
+        width: 100%; /* Full width icons for better mobile layout */
+        margin: 10px 0; /* Adjusts margin for vertical stacking */
+    }
 }
