@@ -623,8 +623,15 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 @media (max-width: 768px) {
     .flex-container, .icon-and-graph, .left-pane {
-        flex-direction: column; /* Stacks elements vertically */
-        overflow: hidden;
+        flex-direction: column;
+    }
+
+    .visual1, .icon-and-graph {
+        width: 100%;
+    }
+
+    .left-pane {
+        width: 100%; /* Full width on smaller screens */
     }
 
     .icon-and-graph {
