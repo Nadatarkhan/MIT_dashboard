@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             } else {
-                // Ensure text is at final position and fully opaque if rounding errors occur
+
                 context.globalAlpha = 1;
                 context.fillText("Select at least one option from each category to display the plot.", containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top);
             }
         }
 
-        fadeIn(); // Start the fade-in and swoop down animation
+        fadeIn();
     }
 
 
