@@ -96,99 +96,91 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         fields.forEach(field => {
-            if (field === 'grid') {
-                const iconContainer = document.querySelector(`.icon-container-2[data-field="${field}"]`);
-                if (iconContainer) {
-                    const form = document.createElement('form');
-                    form.style.display = 'flex';
-                    form.style.flexDirection = 'column';
+            const iconContainer = document.querySelector(`.icon-container${field === 'grid' ? '-2' : ''}[data-field="${field}"]`);
+            if (iconContainer) {
+                const form = document.createElement('form');
+                form.style.display = 'flex';
+                form.style.flexDirection = 'column';
 
-                    const options = ['bau', 'cheap_ng', 'decarbonization'];
-                    options.forEach(value => {
-                        const checkboxContainer = document.createElement('div');
-                        checkboxContainer.style.display = 'flex';
-                        checkboxContainer.style.alignItems = 'center';
+                const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
+                const checkboxes = []; // Array to store references to all checkboxes within this field
 
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.id = `${field}-${value}`;
-                        input.name = `${field}Filter`;
-                        input.value = value;
-                        input.style.transform = 'scale(0.75)';
-                        input.style.marginRight = '5px';
+                options.forEach(value => {
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.style.display = 'flex';
+                    checkboxContainer.style.alignItems = 'center';
 
-                        const label = document.createElement('label');
-                        label.htmlFor = `${field}-${value}`;
-                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                        label.style.fontSize = '10px';
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = `${field}-${value}`;
+                    input.name = `${field}Filter`;
+                    input.value = value;
+                    input.style.transform = 'scale(0.75)';
+                    input.style.marginRight = '5px';
+                    checkboxes.push(input); // Store reference to checkbox
 
-                        // Change the label text based on the value
+                    const label = document.createElement('label');
+                    label.htmlFor = `${field}-${value}`;
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                    label.style.fontSize = '10px';
+
+                    // Set descriptive text for grid values
+                    if (field === 'grid') {
                         if (value === "bau") {
-                            label.textContent = "Business as usual"; // Changed to more descriptive text
+                            label.textContent = "Business as usual";
                         } else if (value === "cheap_ng") {
-                            label.textContent = "Cheap Natural Gas"; // Change for "cheap_ng"
+                            label.textContent = "Cheap Natural Gas";
                         } else if (value === "decarbonization") {
-                            label.textContent = "95% Decarbonization"; // Change for "decarbonization"
-                        } else {
-                            label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
+                            label.textContent = "95% Decarbonization";
+                        }
+                    }
+
+                    checkboxContainer.appendChild(input);
+                    checkboxContainer.appendChild(label);
+                    form.appendChild(checkboxContainer);
+
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
+                        const isChecked = this.checked;
+                        const value = this.value;
+
+                        // Prevent unchecking if it's the last checked checkbox in this group
+                        if (!isChecked && filters[field].length <= 1) {
+                            this.checked = true; // Revert unchecking action
+                            return; // Stop further execution
                         }
 
-                        checkboxContainer.appendChild(input);
-                        checkboxContainer.appendChild(label);
-                        form.appendChild(checkboxContainer);
-
-                        input.addEventListener('change', function() {
-                            if (!filters[field]) filters[field] = [];
-                            const filterIndex = filters[field].indexOf(value);
-                            if (this.checked && filterIndex === -1) {
-                                filters[field].push(value);
-                            } else if (!this.checked && filterIndex !== -1) {
-                                filters[field].splice(filterIndex, 1);
+                        // Update filters based on checkbox state
+                        if (isChecked && !filters[field].includes(value)) {
+                            filters[field].push(value);
+                        } else if (!isChecked) {
+                            const index = filters[field].indexOf(value);
+                            if (index !== -1) {
+                                filters[field].splice(index, 1);
                             }
+                        }
+
+                        // Update the plot if all technologies have at least one checkbox checked
+                        if (fields.every(f => filters[f] && filters[f].length > 0)) {
                             updatePlot();
-                        });
+                        } else {
+                            // Optionally clear the plot if not all conditions are met
+                            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                        }
                     });
-                    iconContainer.appendChild(form);
+                });
+                iconContainer.appendChild(form);
+
+                // Set one checkbox as checked by default to meet the requirement
+                checkboxes[0].checked = true;
+                if (!filters[field]) {
+                    filters[field] = [];
                 }
-            } else {
-                const iconContainer = document.querySelector(`.icon-container[data-field="${field}"]`);
-                if (iconContainer) {
-                    const form = document.createElement('form');
-                    let options = ['baseline', 'partial', 'full'];
-                    options.forEach(value => {
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.id = `${field}-${value}`;
-                        input.name = `${field}Filter`;
-                        input.value = value;
-                        input.style.transform = 'scale(0.75)';
-                        input.style.marginRight = '5px';
-
-                        const label = document.createElement('label');
-                        label.htmlFor = `${field}-${value}`;
-                        label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
-                        label.style.fontSize = '12px';
-
-                        form.appendChild(input);
-                        form.appendChild(label);
-                        form.appendChild(document.createElement('br'));
-
-                        input.addEventListener('change', function() {
-                            if (!filters[field]) filters[field] = [];
-                            const filterIndex = filters[field].indexOf(value);
-                            if (this.checked && filterIndex === -1) {
-                                filters[field].push(value);
-                            } else if (!this.checked && filterIndex !== -1) {
-                                filters[field].splice(filterIndex, 1);
-                            }
-                            updatePlot();
-                        });
-                    });
-                    iconContainer.appendChild(form);
+                if (!filters[field].includes(checkboxes[0].value)) {
+                    filters[field].push(checkboxes[0].value);
                 }
             }
         });
-
 
 
 
@@ -442,9 +434,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
+
+            // Check if all required fields have at least one filter active before drawing the plot
+            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+                console.log("Not all conditions met for drawing plot.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                return; // Exit the function if not all fields have active filters
+            }
+
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length === 0 || filters[field].includes(d[field])
@@ -465,30 +464,25 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            let lastScenario = null; // Variable to track the last scenario processed
-            filteredData.forEach((d, i) => {
-                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+            filteredData.forEach((d, i, array) => {
+                if (i > 0 && d.year.getTime() === array[i - 1].year.getTime()) {
+                    context.beginPath();
+                    context.moveTo(x(array[i - 1].year), y(array[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
+                    // Check scenario activation status from filters
+                    const isActive = baselineActive; // Here baselineActive is checked directly from global variable
 
-                    // Determine the color and thickness of the line based on the active filters
-                    const { color, lineWidth } = getColor(d.scenario, isActive);
-
-                    // Apply color based on baseline scenario activation
-                    context.strokeStyle = isActive && d.scenario === 'baseline' ? '#b937b8' : color;
-                    context.lineWidth = lineWidth;
-                    context.stroke(); // Execute the drawing
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
+                    context.lineWidth = 1; // Fixed line width, adjust as needed
+                    context.stroke();
                 }
-                lastScenario = d.scenario; // Update the last scenario
             });
 
             context.restore();
             drawAxis();
         }
+
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
