@@ -29,6 +29,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
+    // Function to display initial message
+    function showInitialMessage() {
+        context.save();
+        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+        context.font = '16px Arial';
+        context.textAlign = 'center';
+        context.fillStyle = 'grey';
+        context.fillText("Select filters to see the plot", width / 2, height / 2);
+        context.restore();
+    }
+
+    showInitialMessage();  // Display initial message when the page loads
+
     const fields = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv', 'grid'];
 
 // 2 csvs
@@ -171,13 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 iconContainer.appendChild(form);
 
-                // Initially, do not check any checkboxes
-                // Previously set checkboxes[0].checked = true has been removed
-                // Ensuring all checkboxes are unchecked by default
             }
         });
 
-        
+
         // reset buttons
         function resetBaselineFilters() {
             document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
@@ -435,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                showInitialMessage();  // Display message indicating the need to select filters
                 return; // Exit the function if not all fields have active filters
             }
 
