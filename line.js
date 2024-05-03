@@ -31,28 +31,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
+        let yOffset = -50; // Start 50 pixels above the final position
         const maxOpacity = 1; // Target opacity
-        const increment = 0.05; // Increment the opacity by this amount each frame
+        const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
+        const incrementYOffset = 2; // Move the text down by 2 pixels each frame
 
-        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas
-        context.font = "italic 14px Arial";
+        // Clear the entire canvas first
+        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+        context.font = "italic 16px Arial"; // Set the font for the text to italic
         context.fillStyle = "#666"; // Set the text color
-        context.textAlign = "center"; // Center the text
+        context.textAlign = "center"; // Center the text horizontally
+        context.textBaseline = "middle"; // Center the text vertically
 
         function fadeIn() {
-            if (opacity < maxOpacity) {
-                opacity += increment; // Increase the opacity
+            if (opacity < maxOpacity || yOffset < 0) {
+                opacity += incrementOpacity; // Increase the opacity
+                yOffset += incrementYOffset; // Decrease the vertical offset to move the text down
                 context.save();
                 context.globalAlpha = opacity; // Set the current opacity for the drawing
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
-                context.fillText("Select one of the preset scenarios from the left pane or build your own! To build your own scenario, select at least one option from each category to display the plot.", containerWidth * dpi / 3, containerHeight * dpi / 2);
+                // Calculate the current y position of the text to animate it
+                const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
+                context.fillText("Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
+            } else {
+                // Ensure text is at final position and fully opaque if rounding errors occur
+                context.globalAlpha = 1;
+                context.fillText("Select at least one option from each category to display the plot.", containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top);
             }
         }
 
-        fadeIn(); // Start the fade-in animation
+        fadeIn(); // Start the fade-in and swoop down animation
     }
+
 
     showInitialMessage();  // Display initial message when the page loads
 
