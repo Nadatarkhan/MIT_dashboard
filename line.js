@@ -529,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Determine the color and thickness of the line based on the active filters
                     context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
-                    context.lineWidth = 2; // Adjust line width for visibility
+                    context.lineWidth = 0.9; // Adjust line width for visibility
                     context.stroke(); // Execute the drawing
                 }
             });
