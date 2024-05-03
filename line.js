@@ -171,19 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 iconContainer.appendChild(form);
 
-                // Set one checkbox as checked by default to meet the requirement
-                checkboxes[0].checked = true;
-                if (!filters[field]) {
-                    filters[field] = [];
-                }
-                if (!filters[field].includes(checkboxes[0].value)) {
-                    filters[field].push(checkboxes[0].value);
-                }
+                // Initially, do not check any checkboxes
+                // Previously set checkboxes[0].checked = true has been removed
+                // Ensuring all checkboxes are unchecked by default
             }
         });
 
-
-
+        
         // reset buttons
         function resetBaselineFilters() {
             document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
@@ -483,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
+
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
             if (isActive) {
