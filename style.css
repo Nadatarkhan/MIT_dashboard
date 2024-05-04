@@ -104,7 +104,7 @@ body, html {
     font-size: 12px;
     font-style: italic;
     margin: 0 5px; /* Ensures padding doesn't affect layout significantly */
-    margin-top: 0px; 
+    margin-top: 0px;
 }
 
 .icon-container {
@@ -480,6 +480,7 @@ h2 {
     padding: 10px 15px; /* Padding inside the button */
     border-radius: 5px; /* Rounded corners for the button */
     cursor: pointer; /* Cursor changes to pointer when hovering over the button */
+    font-size: 12px;
 }
 
 .header h1 {
