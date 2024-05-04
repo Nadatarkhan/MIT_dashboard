@@ -145,7 +145,7 @@ body, html {
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
-    background-color: #f4f4f4; // Light background color for active state
+background-color: #f4f4f4; // Light background color for active state
 }
 
 .icon-label {
@@ -291,7 +291,7 @@ h2 {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 3px;
+    padding: 5px;
     opacity: 0;
     font-size: 8px; /* Adjust this value to change the font size */
     pointer-events: none;
@@ -639,7 +639,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
     .left-pane button {
         padding: 8px 10px; /* Smaller buttons */
-        font-size: 8px; /* Smaller font size for button text */
+        font-size: 12px; /* Smaller font size for button text */
     }
 
     .toggle-wrapper, .toggleContainer {
