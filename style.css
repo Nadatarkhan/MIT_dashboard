@@ -15,8 +15,9 @@ body, html {
 .top-container {
     display: flex;
     flex-direction: row;
-    height: 55%; /* Top container takes 55% of the screen height */
-    overflow: hidden; /* Ensures content does not overflow */
+    overflow: hidden; /* Check if this needs adjustment */
+    width: 100%; /* Ensure full width */
+    height: 55vh; /* Adjust based on your design */
 }
 
 .visual1 {
@@ -276,9 +277,9 @@ h1 {
 h2 {
     text-align: left;
     color: black;
-    font-size: 18px;
+    font-size: 12px;
     font-family: 'Roboto', sans-serif;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .tooltip {
