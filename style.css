@@ -266,7 +266,7 @@ background-color: #f4f4f4; // Light background color for active state
     padding: 5px; /* Adds padding inside the text container for better spacing */
 }
 
-h1 {
+.header h1 {
     text-align: left;
     color: black;
     font-size: 16px;
