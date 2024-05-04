@@ -48,7 +48,7 @@ body, html {
 
 .left-pane {
     flex: 1 1 auto; /* Allows the pane to grow and shrink as needed */
-    max-width: 20%;
+    max-width: 18%;
     background-color: #dadada; /* Example background color */
     padding: 10px; /* Padding for internal content */
     overflow: hidden;
@@ -535,7 +535,7 @@ input[type='radio']:checked + label {
     padding: 6px 50px;
     margin-bottom: 5px;
     margin-top: 3px;
-    font-size: 6px;
+    font-size: 4px;
     font-family: Arial, sans-serif;
     color: white;
     background-color: #424242;
@@ -587,7 +587,7 @@ input[type='radio']:checked + label {
 .pheasant-demure-button, .dropdown {
     padding: 8px 25px;
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 9px;
     font-family: Arial, sans-serif;
     color: white;
     background-color: #424242;
@@ -638,7 +638,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
     .left-pane button {
         padding: 8px 10px; /* Smaller buttons */
-        font-size: 10px; /* Smaller font size for button text */
+        font-size: 8px; /* Smaller font size for button text */
     }
 
     .toggle-wrapper, .toggleContainer {
