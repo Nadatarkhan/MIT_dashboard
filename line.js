@@ -511,18 +511,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
+            // Calculating the maximum and minimum emissions across the entire dataset
+            const overallMinY = d3.min(emissionsData, d => d.emission);
+            const overallMaxY = d3.max(emissionsData, d => d.emission);
+
+            x.domain(d3.extent(emissionsData, d => d.year)); // Using the whole data set for x domain
+            y.domain([overallMinY, overallMaxY]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw background area for data range
-            const minY = d3.min(filteredData, d => d.emission);
-            const maxY = d3.max(filteredData, d => d.emission);
+            // Draw background area for data range between highest and lowest curves
             context.fillStyle = '#f0f0f0'; // Light grey region color
-            context.fillRect(x(d3.min(filteredData, d => d.year)), y(maxY), x(d3.max(filteredData, d => d.year)) - x(d3.min(filteredData, d => d.year)), y(minY) - y(maxY));
+            context.fillRect(x(d3.min(emissionsData, d => d.year)), y(overallMaxY), x(d3.max(emissionsData, d => d.year)) - x(d3.min(emissionsData, d => d.year)), y(overallMinY) - y(overallMaxY));
 
             // Draw grid lines
             y.ticks(10).forEach(tick => {
