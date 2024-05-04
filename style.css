@@ -100,9 +100,9 @@ body, html {
 .icon-description p {
     background-color: #c9c9c9;
     padding: 2px;
-    font-size: 13px;
+    font-size: 12px;
     font-style: italic;
-    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
+    margin: 0 5px; /* Ensures padding doesn't affect layout significantly */
 }
 
 .icon-container {
