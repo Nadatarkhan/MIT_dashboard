@@ -494,62 +494,42 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
+            }
+
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length > 0 && filters[field].includes(d[field])
+                );
+            });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 return;
             }
 
-            // Extracting year range and emissions range across all data
-            x.domain(d3.extent(emissionsData, d => d.year));
-            const minY = d3.min(emissionsData, d => d.emission);
-            const maxY = d3.max(emissionsData, d => d.emission);
-            y.domain([minY, maxY]);
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Create data structures to hold the min/max values for each year
-            let yearMinMax = {};
-            emissionsData.forEach(d => {
-                if (!yearMinMax[d.year]) yearMinMax[d.year] = { min: Infinity, max: -Infinity };
-                yearMinMax[d.year].min = Math.min(yearMinMax[d.year].min, d.emission);
-                yearMinMax[d.year].max = Math.max(yearMinMax[d.year].max, d.emission);
-            });
-
-            // Convert the yearMinMax object to an array for easier processing
-            let minMaxPairs = Object.keys(yearMinMax).map(year => {
-                return { year: parseInt(year), min: yearMinMax[year].min, max: yearMinMax[year].max };
-            });
-
-            // Sort by year to ensure correct plotting
-            minMaxPairs.sort((a, b) => a.year - b.year);
-
-            // Draw shaded area
-            context.beginPath();
-            minMaxPairs.forEach((d, i) => {
-                if (i === 0) {
-                    context.moveTo(x(d.year), y(d.max));
-                } else {
-                    context.lineTo(x(d.year), y(d.max));
-                }
-            });
-            for (let i = minMaxPairs.length - 1; i >= 0; i--) {
-                context.lineTo(x(minMaxPairs[i].year), y(minMaxPairs[i].min));
-            }
-            context.closePath();
-            context.fillStyle = 'rgba(200, 200, 200, 0.5)'; // Light grey color for the area
-            context.fill();
-
-            // Plotting the lines
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+
+                    // Check if the current scenario is considered active
                     const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
-                    context.stroke();
+
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
