@@ -684,6 +684,10 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 /* Ensure proper sizing and accessibility */
-.visual1, .visual2 {
-    flex: 1 0 auto; /* Adjusts basis to auto and allows growing but not shrinking */
+.visual1 {
+    flex: 8 1 0%; /* flex-grow, flex-shrink, flex-basis */
+}
+
+.visual2 {
+    flex: 2 1 0%; /* flex-grow, flex-shrink, flex-basis */
 }
