@@ -518,6 +518,21 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Draw background area for data range
+            const minY = d3.min(filteredData, d => d.emission);
+            const maxY = d3.max(filteredData, d => d.emission);
+            context.fillStyle = '#f0f0f0'; // Light grey region color
+            context.fillRect(x(d3.min(filteredData, d => d.year)), y(maxY), x(d3.max(filteredData, d => d.year)) - x(d3.min(filteredData, d => d.year)), y(minY) - y(maxY));
+
+            // Draw grid lines
+            y.ticks(10).forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi - margin.right - margin.left, y(tick));
+                context.strokeStyle = '#ddd'; // Light grey for grid lines
+                context.stroke();
+            });
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath(); // Start a new path for each line segment
@@ -537,6 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(scenario, isActive) {
