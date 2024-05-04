@@ -20,7 +20,7 @@ body, html {
 }
 
 .visual1 {
-    flex: 7.5; /* Takes 60% of the width within its container */
+    flex: 8; /* Takes 60% of the width within its container */
     display: flex;
     flex-direction: column; /* Stacks children vertically */
     padding: 10px; /* Consistent padding for better content alignment */
@@ -74,7 +74,7 @@ body, html {
 }
 
 .visual2 {
-    flex: 2.5; /* Takes 40% of the width within its container */
+    flex: 2; /* Takes 20% of the width within its container */
     display: flex;
     flex-direction: column; /* Aligns children vertically */
     overflow: hidden; /* Adjust as needed */
