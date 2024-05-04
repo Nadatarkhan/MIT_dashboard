@@ -487,7 +487,8 @@ h2 {
     margin: 0; /* Removes default margin to avoid any unwanted space */
     padding-left: 10px; /* Adds left padding to the title */
     color: #333; /* Dark grey color for the title text */
-    flex-grow: 1;  /* Allows the title to take up available space, adjust as needed */
+    flex-grow: 1; /* Allows the title to take up available space, adjust as needed */
+    font-weight: 600;
 }
 
 input[type='radio']:checked + label {
