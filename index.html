@@ -6,7 +6,6 @@
     <title>Decarbonization Pathways</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="stylesheet" href="pheasant-demure-buttons-reset.css">
@@ -28,120 +27,118 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            <div class="top-container d-flex flex-column flex-md-row">
-                <div class="visual visual1 col-12 col-md-8">
-                    <div class="icon-description">
-                        <h2>Technologies</h2>
-                        <p>Click the checkboxes to choose the implementation pathways</p>
-                    </div>
-                    <div class="flex-container d-flex flex-column flex-md-row">
-                        <div class="left-pane col-3">
-                            <div class="icon-row">
-                                <!-- Existing content -->
-                                <span class="icon-label">Grid Scenarios</span>
-                                <div class="icon-container-2" data-field="grid">
-                                    <img src="icons/10.png" alt="Future grid emissions">
-                                    <span class="icon-label">Future grid emissions</span>
-                                    <div class="tooltip">Future grid emissions</div>
-                                </div>
-                            </div>
-
-                            <!-- New buttons and toggle -->
-                            <div class="controls">
-                                <h3 class="controls-title">Business as Usual- No Action</h3> <!-- Title for the buttons -->
-                                <button id="baselineButton" class="pheasant-demure-button solid baseline">Activate Scenario</button>
-                                <h3 class="controls-title">Best Practice Implementation</h3> <!-- Title for the buttons -->
-                                <button id="scenario1Button" class="pheasant-demure-button solid scenario1">Activate Scenario</button>
-                                <h3 class="controls-title">Scenario Recorders</h3> <!-- Title for the buttons -->
-                                <button id="scenario2Button" class="pheasant-demure-button solid scenario2">Scenario 2</button>
-                                <button class="pheasant-demure-button solid scenario3">Scenario 3</button>
-
-                                <h3 class="controls-title">Reset settings</h3> <!-- Title for the toggle -->
-                                <div class="toggle-wrapper">
-                                    <input type="checkbox" id="onOffToggle" class="toggleCheckbox">
-                                    <label for="onOffToggle" class="toggleContainer">
-                                        <div>On</div>
-                                        <div>Off</div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="icon-and-graph col-9">
-                            <div class="icon-row">
-                                <!-- Icon instances -->
-                                <div class="icon-container" data-field="retrofit">
-                                    <img src="icons/1.png" alt="Envelope & lighting">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Added insulation and LED lighting</div>
-                                </div>
-                                <div class="icon-container" data-field="schedules">
-                                    <img src="icons/3.png" alt="Smart Control">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Introduce temperature controls across campus</div>
-                                </div>
-                                <div class="icon-container" data-field="lab">
-                                    <img src="icons/4.png" alt="Energy-efficient labs">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Control lab ventilation and equipment</div>
-                                </div>
-                                <div class="icon-container" data-field="pv">
-                                    <img src="icons/9.png" alt="Rooftop PV">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Install rooftop photovoltaics</div>
-                                </div>
-                                <div class="icon-container" data-field="district">
-                                    <img src="icons/2.png" alt="District Systems">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Move from steam to hot water or ambient temperature loop</div>
-                                </div>
-                                <div class="icon-container" data-field="deepgeo">
-                                    <img src="icons/5.png" alt="Deep Geothermal">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Harvest geothermal heat from >2km depth</div>
-                                </div>
-                                <div class="icon-container" data-field="nuclear">
-                                    <img src="icons/6.png" alt="Nuclear Battery">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Provide electricity and heat from nuclear energy</div>
-                                </div>
-                                <div class="icon-container" data-field="ccs">
-                                    <img src="icons/8.png" alt="Local Carbon Capture">
-                                    <span class="icon-label"></span>
-                                    <div class="tooltip">Capture and sequester residual on-site emissions</div>
-                                    <div class="graph-container" id="lineChart">
-                                        <!-- D3.js graph will be inserted here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="col-md-8">
+            <div class="visual1">
+                <div class="icon-description">
+                    <h2>Technologies</h2>
+                    <p>Click the checkboxes to choose the implementation pathways</p>
                 </div>
-                <div class="visual visual2 col-12 col-md-4" id="innovation_plot">
-                    <div class="icon-description">
-                        <h2>Metrics</h2>
-                        <p>Filter the metrics to explore the different scenarios</p>
+                <div class="flex-container">
+                    <div class="left-pane">
+                        <div class="icon-row">
+                            <!-- Existing content -->
+                            <span class="icon-label">Grid Scenarios</span>
+                            <div class="icon-container-2" data-field="grid">
+                                <img src="icons/10.png" alt="Future grid emissions">
+                                <span class="icon-label">Future grid emissions</span>
+                                <div class="tooltip">Future grid emissions</div>
+                            </div>
+                        </div>
+
+                        <!-- New buttons and toggle -->
+                        <div class="controls">
+                            <h3 class="controls-title">Business as Usual- No Action</h3>
+                            <button id="baselineButton" class="pheasant-demure-button solid baseline">Activate Scenario</button>
+                            <h3 class="controls-title">Best Practice Implementation</h3>
+                            <button id="scenario1Button" class="pheasant-demure-button solid scenario1">Activate Scenario</button>
+                            <h3 class="controls-title">Scenario Recorders</h3>
+                            <button id="scenario2Button" class="pheasant-demure-button solid scenario2">Scenario 2</button>
+                            <button class="pheasant-demure-button solid scenario3">Scenario 3</button>
+
+                            <h3 class="controls-title">Reset settings</h3>
+                            <div class="toggle-wrapper">
+                                <input type="checkbox" id="onOffToggle" class="toggleCheckbox">
+                                <label for="onOffToggle" class="toggleContainer">
+                                    <div>On</div>
+                                    <div>Off</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="icon-and-graph">
+                        <div class="icon-row">
+                            <!-- Icon instances -->
+                            <div class="icon-container" data-field="retrofit">
+                                <img src="icons/1.png" alt="Envelope & lighting">
+                                <span class="icon-label">Added insulation and LED lighting</span>
+                                <div class="tooltip">Added insulation and LED lighting</div>
+                            </div>
+                            <div class="icon-container" data-field="schedules">
+                                <img src="icons/3.png" alt="Smart Control">
+                                <span class="icon-label">Introduce temperature controls across campus</span>
+                                <div class="tooltip">Introduce temperature controls across campus</div>
+                            </div>
+                            <div class="icon-container" data-field="lab">
+                                <img src="icons/4.png" alt="Energy-efficient labs">
+                                <span class="icon-label">Control lab ventilation and equipment</span>
+                                <div class="tooltip">Control lab ventilation and equipment</div>
+                            </div>
+                            <div class="icon-container" data-field="pv">
+                                <img src="icons/9.png" alt="Rooftop PV">
+                                <span class="icon-label">Install rooftop photovoltaics</span>
+                                <div class="tooltip">Install rooftop photovoltaics</div>
+                            </div>
+                            <div class="icon-container" data-field="district">
+                                <img src="icons/2.png" alt="District Systems">
+                                <span class="icon-label">Move from steam to hot water or ambient temperature loop</span>
+                                <div class="tooltip">Move from steam to hot water or ambient temperature loop</div>
+                            </div>
+                            <div class="icon-container" data-field="deepgeo">
+                                <img src="icons/5.png" alt="Deep Geothermal">
+                                <span class="icon-label">Harvest geothermal heat from >2km depth</span>
+                                <div class="tooltip">Harvest geothermal heat from >2km depth</div>
+                            </div>
+                            <div class="icon-container" data-field="nuclear">
+                                <img src="icons/6.png" alt="Nuclear Battery">
+                                <span class="icon-label">Provide electricity and heat from nuclear energy</span>
+                                <div class="tooltip">Provide electricity and heat from nuclear energy</div>
+                            </div>
+                            <div class="icon-container" data-field="ccs">
+                                <img src="icons/8.png" alt="Local Carbon Capture">
+                                <span class="icon-label">Capture and sequester residual on-site emissions</span>
+                                <div class="tooltip">Capture and sequester residual on-site emissions</div>
+                                <div class="graph-container" id="lineChart">
+                                    <!-- D3.js graph will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="bottom-visual">
+            <div class="visual visual2 col-12 col-md-4" id="innovation_plot">
                 <div class="icon-description">
-                    <h2>Technology Schematic</h2>
-                    <p>Layout of technologies implemented</p>
+                    <h2>Metrics</h2>
+                    <p>Filter the metrics to explore the different scenarios</p>
                 </div>
-                <div class="flex-container d-flex">
-                    <div class="controls">
-                        <h3 class="controls-title">Schematic Options</h3>
-                        <button class="pheasant-demure-button solid" onclick="tryUpdateDropdown()">Load Schematics</button>
-                        <select class="pheasant-demure-button dropdown" id="techSchematicDropdown">
-                            <!-- Options will dynamically populate here -->
-                        </select>
-                        <p>A description about what is shown in the schematics</p>
-                    </div>
-                    <div class="bottom-content">
-                        <img src="images/diagram.png" alt="Diagram" class="scaled-image" id="techImage">
-                    </div>
+            </div>
+        </div>
+        <div class="bottom-visual">
+            <div class="icon-description">
+                <h2>Technology Schematic</h2>
+                <p>Layout of technologies implemented</p>
+            </div>
+            <div class="flex-container d-flex">
+                <div class="controls">
+                    <h3 class="controls-title">Schematic Options</h3>
+                    <button class="pheasant-demure-button solid" onclick="tryUpdateDropdown()">Load Schematics</button>
+                    <select class="pheasant-demure-button dropdown" id="techSchematicDropdown">
+                        <!-- Options will dynamically populate here -->
+                    </select>
+                    <p>A description about what is shown in the schematics</p>
+                </div>
+                <div class="bottom-content">
+                    <img src="images/diagram.png" alt="Diagram" class="scaled-image" id="techImage">
                 </div>
             </div>
         </div>
