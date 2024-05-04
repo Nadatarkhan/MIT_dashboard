@@ -36,7 +36,6 @@ body, html {
     overflow: hidden; /* Adjust as needed */
     padding: 10px; /* Ensure there's padding to not cut off content */
     background-color: #f4f4f4;
-    height: calc(100vh - 50px); /* Full height minus header height */
 }
 
 .flex-container {
@@ -214,15 +213,6 @@ background-color: #f4f4f4; // Light background color for active state
     align-items: center; /* Centers content horizontally */
     padding: 10px;
     width: 100%; /* Ensures it takes full container width */
-}
-
-.bottom-visual .flex-container {
-    display: flex;
-    flex-direction: row; /* Side by side on medium screens */
-}
-
-.bottom-visual .controls, .bottom-visual .bottom-content {
-    flex: 1;
 }
 
 .bottom-visual img {
