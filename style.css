@@ -145,7 +145,7 @@ body, html {
 
 .icon-container.active {
     border: 2px solid #b937b8; // Use a bright color to indicate selection
-background-color: #f4f4f4; // Light background color for active state
+    background-color: #f4f4f4; // Light background color for active state
 }
 
 .icon-label {
@@ -291,8 +291,9 @@ h2 {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 5px;
+    padding: 3px;
     opacity: 0;
+    font-size: 8px; /* Adjust this value to change the font size */
     pointer-events: none;
     transition: opacity 0.3s ease;
     transform: translate(-50%, -100%);
