@@ -94,7 +94,8 @@ body, html {
     font-size: 20px;  /* Change this value to adjust the font size */
     color: #333;     /* Set the text color */
     font-weight: bold; /* Adjust the font weight as needed */
-    margin-bottom: 10px; /* Adds spacing below the h2 elements */
+    margin-bottom: 5px; /* Adds spacing below the h2 elements */
+
 }
 
 .icon-description p {
@@ -103,6 +104,7 @@ body, html {
     font-size: 12px;
     font-style: italic;
     margin: 0 5px; /* Ensures padding doesn't affect layout significantly */
+    margin-top: 0px; 
 }
 
 .icon-container {
