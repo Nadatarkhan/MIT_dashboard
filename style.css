@@ -29,7 +29,7 @@ body, html {
 }
 
 .flex-container {
-    display: flex;
+    flex: 1 1 auto; /* flex-grow, flex-shrink, and flex-basis */
     flex-direction: row; /* Keeps the left pane and icon/graph container side by side */
     width: 100%; /* Full width to align children properly */
     flex-grow: 1; /* Takes up all available space after icon-description */
@@ -41,7 +41,6 @@ body, html {
     max-width: 20%;
     background-color: #dadada; /* Example background color */
     padding: 10px; /* Padding for internal content */
-    height: 100%; /* Full height within flex-container */
     overflow: hidden;
 }
 
@@ -654,9 +653,16 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
         flex-direction: column;
     }
 
-    .left-pane, .icon-and-graph {
+    .icon-and-graph {
         width: 100%;
         max-height: unset; /* Removes max height restrictions for mobile */
+    }
+
+    .left-pane {
+        width: 100%;
+        max-height: unset;
+        min-height: 50px; /* You might want a smaller min-height on mobile */
+        overflow: auto; /* Ensure it remains scrollable on all devices */
     }
 
     .visual1, .visual2, .bottom-visual {
