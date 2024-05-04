@@ -91,7 +91,7 @@ body, html {
 }
 
 .icon-description h2 {
-    font-size: 20px;  /* Change this value to adjust the font size */
+    font-size: 18px;  /* Change this value to adjust the font size */
     color: #333;     /* Set the text color */
     font-weight: bold; /* Adjust the font weight as needed */
     margin-bottom: 5px; /* Adds spacing below the h2 elements */
