@@ -21,12 +21,21 @@ body, html {
 }
 
 .visual1 {
-    flex: 8; /* Takes 60% of the width within its container */
+    flex: 8; /* Takes 80% of the width within its container */
     display: flex;
     flex-direction: column; /* Stacks children vertically */
     padding: 10px; /* Consistent padding for better content alignment */
     overflow: hidden; /* Ensures no content spills out */
     height: 100%; /* Ensure it takes full available height */
+}
+
+.visual2 {
+    flex: 2; /* Takes 20% of the width within its container */
+    display: flex;
+    flex-direction: column; /* Aligns children vertically */
+    overflow: hidden; /* Adjust as needed */
+    padding: 10px; /* Ensure there's padding to not cut off content */
+    background-color: #f4f4f4;
 }
 
 .flex-container {
@@ -74,14 +83,6 @@ body, html {
     height: 100%; /* Full height within flex-container */
 }
 
-.visual2 {
-    flex: 2; /* Takes 20% of the width within its container */
-    display: flex;
-    flex-direction: column; /* Aligns children vertically */
-    overflow: hidden; /* Adjust as needed */
-    padding: 10px; /* Ensure there's padding to not cut off content */
-    background-color: #f4f4f4;
-}
 
 .metric-container {
     flex-grow: 1;
