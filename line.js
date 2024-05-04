@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const label = document.createElement('label');
                     label.htmlFor = `${field}-${value}`;
                     label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-                    label.style.fontSize = '18px';
+                    label.style.fontSize = '12px';
 
                     // Set descriptive text for grid values
                     if (field === 'grid') {
