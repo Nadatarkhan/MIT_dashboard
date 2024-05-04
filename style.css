@@ -137,7 +137,7 @@ body, html {
     bottom: 100%;  /* Position above the icon */
     left: 50%;  /* Center relative to the icon */
     transform: translateX(-50%);  /* Adjust horizontally to truly center */
-    font-size: 12px;
+    font-size: 20px;
     font-weight: bold;
     color: black;
     text-align: center;  /* Ensures text is centered if multiple lines are needed */
