@@ -91,9 +91,10 @@ body, html {
 }
 
 .icon-description h2 {
-    background-color: #c9c9c9;
-    padding: 5px;
-    margin: 0 10px; /* Ensures padding doesn't affect layout significantly */
+    font-size: 20px;  /* Change this value to adjust the font size */
+    color: #333;     /* Set the text color */
+    font-weight: bold; /* Adjust the font weight as needed */
+    margin-bottom: 10px; /* Adds spacing below the h2 elements */
 }
 
 .icon-description p {
@@ -269,7 +270,7 @@ background-color: #f4f4f4; // Light background color for active state
 .header h1 {
     text-align: left;
     color: black;
-    font-size: 16px;
+    font-size: 18px;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
     padding-top: 10px;
