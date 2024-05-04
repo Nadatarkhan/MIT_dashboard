@@ -651,44 +651,28 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 /* Bootstrap specific adjustments */
 @media (max-width: 768px) {
     .top-container, .visual1, .flex-container, .icon-and-graph {
-        flex-direction: column;
+        flex-direction: column; /* Stack vertically on small screens */
     }
 
-    .icon-and-graph {
-        width: 100%;
-        max-height: unset; /* Removes max height restrictions for mobile */
-    }
-
-    .left-pane {
-        width: 100%;
-        max-height: unset;
-        min-height: 50px; /* You might want a smaller min-height on mobile */
-        overflow: auto; /* Ensure it remains scrollable on all devices */
+    .left-pane, .icon-and-graph {
+        width: 100%; /* Full width for smaller devices */
+        max-height: unset; /* Removes any max-height restrictions */
     }
 
     .visual1, .visual2, .bottom-visual {
-        flex: unset; /* Removes flex settings to adapt to column layout */
+        flex: unset; /* Allow automatic resizing */
     }
 
     .controls, .toggle-wrapper, .pheasant-demure-button {
-        width: 100%; /* Ensures controls fill the container */
+        width: 100%; /* Full width controls on small screens */
     }
 
     .icon-row {
-        flex-wrap: wrap; /* Allows icons to wrap to new lines */
+        flex-wrap: wrap; /* Allow icons to wrap onto multiple lines */
     }
 
     .icon-container, .icon-container-2 {
-        width: 100%; /* Full width icons for better mobile layout */
-        margin: 10px 0; /* Adjusts margin for vertical stacking */
+        width: 100%; /* Full width icons for better layout on mobile */
+        margin: 10px 0; /* Adjust margin for stacking */
     }
-}
-
-/* Ensure proper sizing and accessibility */
-.visual1 {
-    flex: 8 1 0%; /* flex-grow, flex-shrink, flex-basis */
-}
-
-.visual2 {
-    flex: 2 1 0%; /* flex-grow, flex-shrink, flex-basis */
 }
