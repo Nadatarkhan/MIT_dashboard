@@ -491,6 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -516,6 +517,16 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
+
+            // Draw horizontal grid lines
+            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            tickValues.forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi, y(tick));
+                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.stroke();
+            });
 
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
