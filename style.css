@@ -682,3 +682,8 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
         margin: 10px 0; /* Adjusts margin for vertical stacking */
     }
 }
+
+/* Ensure proper sizing and accessibility */
+.visual1, .visual2 {
+    flex: 1 0 auto; /* Adjusts basis to auto and allows growing but not shrinking */
+}
