@@ -37,7 +37,7 @@ body, html {
 }
 
 .left-pane {
-    flex: 1; /* Take up 20% of the flex-container width, adjust as needed */
+    flex: 1 1 auto; /* Allows the pane to grow and shrink as needed */
     max-width: 20%;
     background-color: #dadada; /* Example background color */
     padding: 10px; /* Padding for internal content */
@@ -453,7 +453,7 @@ h2 {
     justify-content: space-between; /* Ensures the title and button container are on opposite ends */
     align-items: center; /* Vertically centers the content */
     padding: 10px; /* Adds more padding to the top */
-    padding-top: 30px;
+    padding-top: 10px;
     background-color: #f4f4f4; /* Light grey background */
     width: 100%; /* Ensures the header spans the full width of the viewport */
 }
@@ -479,7 +479,7 @@ h2 {
 
 .header h1 {
     margin: 0; /* Removes default margin to avoid any unwanted space */
-    padding-left: 20px; /* Adds left padding to the title */
+    padding-left: 10px; /* Adds left padding to the title */
     color: #333; /* Dark grey color for the title text */
     flex-grow: 1;  /* Allows the title to take up available space, adjust as needed */
 }
