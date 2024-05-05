@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
             baselineButton.addEventListener('click', function() {
                 baselineActive = !baselineActive;
                 this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Business as Usual- No Action" : "Business as Usual- No Action";
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
@@ -323,6 +323,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Redraw the plot with the new settings
             });
         }
+
+        function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
+
+            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+                console.log("Not all conditions met for drawing plot.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
+            }
+
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length > 0 && filters[field].includes(d[field])
+                );
+            });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                return;
+            }
+
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
+
+            filteredData.forEach((d, i) => {
+                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
+                    context.beginPath();
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+
+                    // Determine the color based on whether the scenario is active in baselineScenarios
+                    context.strokeStyle = baselineScenarios.has(d.scenario.toString()) && baselineActive ? '#b937b8' : '#565656';
+                    context.lineWidth = 0.9;
+                    context.stroke();
+                }
+            });
+
+            context.restore();
+            drawAxis();
+        }
+
 
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
@@ -524,16 +571,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    let lineColor = '#565656'; // Default grey color
-                    if (baselineActive) {  // Apply purple color if baseline is active
-                        lineColor = '#b937b8'; // Purple color for baseline
-                    }
-                    if (scenario1Active) {  // Apply green color if scenario 1 is active
-                        lineColor = '#008000'; // Green color for scenario 1
-                    }
-
-                    context.strokeStyle = lineColor;
-                    context.lineWidth = 1.5; // Use a fixed line width for visibility
+                    // Determine the color based on whether the scenario is active in baselineScenarios
+                    context.strokeStyle = baselineScenarios.has(d.scenario.toString()) && baselineActive ? '#b937b8' : '#565656';
+                    context.lineWidth = 0.9;
                     context.stroke();
                 }
             });
