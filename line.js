@@ -565,11 +565,18 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Log current state of baselineScenarios
+            console.log("Baseline scenarios active:", Array.from(baselineScenarios));
+            console.log("Baseline active:", baselineActive);
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
+
+                    // Log the check for active baseline scenario
+                    console.log(`Scenario: ${d.scenario}, isActive: ${baselineScenarios.has(d.scenario.toString())}, Filters: ${filters[d.scenario]}`);
 
                     // Determine the color based on whether the scenario is active in baselineScenarios
                     context.strokeStyle = baselineScenarios.has(d.scenario.toString()) && baselineActive ? '#b937b8' : '#565656';
@@ -581,6 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
 
