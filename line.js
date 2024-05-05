@@ -279,8 +279,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
                 this.classList.toggle('active', baselineActive); // Toggle the active class for styling
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
-                console.log("Baseline scenario toggled:", baselineActive);
-                updatePlot();  // Trigger re-draw of the plot
 
                 const scenarioValue = 'baseline'; // This should be the identifier for the scenario
 
@@ -522,19 +520,18 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            console.log("Drawing lines for scenarios. Baseline active:", baselineActive);
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Update to check if the baseline scenario is active and the current data point is from the baseline
                     const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
                     context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
-                    console.log(`Scenario: ${d.scenario}, Color: ${context.strokeStyle}`);
+                    console.log(`Scenario: ${d.scenario}, Active: ${isBaselineScenario}, Color: ${context.strokeStyle}`);
 
-                    context.lineWidth = 2;
+                    context.lineWidth = isBaselineScenario && baselineActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
                 }
             });
