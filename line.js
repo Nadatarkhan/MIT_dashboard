@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Determine if the current line belongs to the baseline scenario and if it's active
                     const isBaseline = d.scenario === 'baseline';
-                    context.strokeStyle = isBaseline && baselineActive ? '#b937b8' : '#ccc';
+                    context.strokeStyle = isBaseline && baselineActive ? '#b937b8' : '#656565';
                     context.lineWidth = isBaseline && baselineActive ? 2 : 1;
                     context.stroke();
                 }
