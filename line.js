@@ -271,21 +271,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');
+        const baselineButton = document.getElementById('baselineButton');  // Get the button by its ID
         let baselineActive = false;  // Track the activation state of the baseline scenario
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
-                this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
-
-                // Adjust the baseline scenario filter directly
-                if (baselineActive) {
-                    filters['baseline'] = ['active'];
-                } else {
-                    delete filters['baseline'];
-                }
+                this.classList.toggle('active', baselineActive); // Toggle the active class for styling
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
 
                 const scenarioValue = 'baseline'; // This should be the identifier for the scenario
 
@@ -310,17 +303,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 // Additional logic to handle grid checkboxes
-                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
+                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // IDs or values for the grid checkboxes
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
-                        checkbox.checked = baselineActive;
+                        checkbox.checked = baselineActive; // Sync checkbox states with baseline button state
                         if (!filters['grid']) {
                             filters['grid'] = [];
                         }
                         if (baselineActive && !filters['grid'].includes(filter)) {
-                            filters['grid'].push(filter);
+                            filters['grid'].push(filter); // Add filter if activating
                         } else if (!baselineActive) {
-                            filters['grid'] = filters['grid'].filter(f => f !== filter);
+                            filters['grid'] = filters['grid'].filter(f => f !== filter); // Remove filter if deactivating
                             if (filters['grid'].length === 0) {
                                 delete filters['grid'];  // Clean up if no more filters
                             }
@@ -331,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Update the plot to reflect changes
             });
         }
+
 
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
@@ -534,7 +528,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Determine if the current line belongs to the baseline scenario and if it's active
                     const isBaseline = d.scenario === 'baseline';
-                    context.strokeStyle = isBaseline && baselineActive ? '#b937b8' : '#656565';
+                    context.strokeStyle = isBaseline && baselineActive ? '#b937b8' : '#ccc';
                     context.lineWidth = isBaseline && baselineActive ? 2 : 1;
                     context.stroke();
                 }
