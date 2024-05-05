@@ -578,8 +578,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Set y-axis to always reach up to 180,000
             y.domain([0, 180000]);
-            // Set the x-axis to start at 2026 and end at 2050
-            x.domain([new Date(2026, 0, 1), new Date(2050, 0, 1)]);
+
+            // Set the x-axis domain from 2025 to 2050 (it starts at 2025 but displays from 2026)
+            x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
 
             context.beginPath();
             context.moveTo(0, height);
@@ -605,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            x.ticks(d3.timeYear.every(2)).forEach(d => {  // Generate a tick every two years
+            x.ticks(d3.timeYear.every(2)).forEach(d => {  // Generate a tick every two years starting from 2026 to 2050
                 if (d.getFullYear() >= 2026 && d.getFullYear() <= 2050) {
                     context.fillText(d.getFullYear(), x(d), height + 5);
                 }
@@ -621,6 +622,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
 
     }).catch(function(error) {
