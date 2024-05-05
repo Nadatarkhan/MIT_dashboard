@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!filters[field].includes('baseline')) {
                             filters[field].push('baseline');
                             baselineScenarios.add(field);  // Add field to track affected scenarios
+                            console.log("Added to baselineScenarios:", field);
                         }
                     } else {
                         filters[field] = filters[field].filter(v => v !== 'baseline');
@@ -298,7 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             delete filters[field];
                         }
                         baselineScenarios.clear();  // Clear the set as we deactivate
+                        console.log("Cleared baselineScenarios");
                     }
+
+                    console.log("Current baselineScenarios:", Array.from(baselineScenarios));
+                    console.log("Filters after update:", filters);
                 });
 
                 // Sync the state of grid-related checkboxes with the baseline button
@@ -575,11 +580,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Log the check for active baseline scenario
-                    console.log(`Scenario: ${d.scenario}, isActive: ${baselineScenarios.has(d.scenario.toString())}, Filters: ${filters[d.scenario]}`);
+                    // Check if the scenario is in baselineScenarios
+                    let isActive = baselineScenarios.has(d.scenario.toString());  // Ensure type is consistent
+                    let scenarioFilters = filters[d.scenario] || [];
 
-                    // Determine the color based on whether the scenario is active in baselineScenarios
-                    context.strokeStyle = baselineScenarios.has(d.scenario.toString()) && baselineActive ? '#b937b8' : '#565656';
+                    console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${scenarioFilters.join(", ")}`);
+
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656';
                     context.lineWidth = 0.9;
                     context.stroke();
                 }
