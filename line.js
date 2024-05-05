@@ -485,9 +485,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
+            console.log("Updating plot with current filters:", JSON.stringify(filters, null, 2));  // Log the detailed structure of filters
 
-            // Ensure all required fields have at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -497,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
-                    filters[field] && filters[field].length > 0 && filters[field].includes(d[field])
+                    filters[field].length > 0 && filters[field].includes(d[field])
                 );
             });
 
@@ -514,29 +513,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw horizontal grid lines
-            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
-            tickValues.forEach(tick => {
-                context.beginPath();
-                context.moveTo(0, y(tick));
-                context.lineTo(containerWidth * dpi, y(tick));
-                context.strokeStyle = '#ccc'; // Grey color for the grid lines
-                context.stroke();
-            });
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
+                    context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the scenario is the baseline and if it's active
                     const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
                     console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${filters[d.scenario]}`);
 
-                    // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Assign purple color if baseline and active
-                    context.lineWidth = isActive ? 2 : 0.9; // Thicker line for active baseline
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656';
+                    context.lineWidth = isActive ? 2 : 0.9;
                     context.stroke();
                 }
             });
@@ -545,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
+
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
