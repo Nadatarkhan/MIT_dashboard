@@ -573,6 +573,12 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Set y-axis to always reach up to 180,000
+            y.domain([0, 180000]);
+
+            // Define the x-axis to cover from 2025 to 2050, but start labeling from 2026
+            x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
+
             context.beginPath();
             context.moveTo(0, height);
             context.lineTo(width, height);
@@ -587,36 +593,35 @@ document.addEventListener('DOMContentLoaded', function() {
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
-            y.ticks().forEach(d => {
-                context.fillText(d, -10, y(d));
+            y.ticks(10).forEach(d => {
+                context.fillText(d.toLocaleString(), -10, y(d));
                 context.beginPath();
                 context.moveTo(-10, y(d));
                 context.lineTo(0, y(d));
                 context.stroke();
             });
 
-            // Draw red circle at 180,000 on the y-axis
-            context.beginPath();
-            context.arc(0, y(180000), 3, 0, 2 * Math.PI);
-            context.fillStyle = 'rgba(12,12,12,0.73)';
-            context.fill();
-
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            x.ticks().forEach(d => {
-                context.fillText(d3.timeFormat("%Y")(d), x(d), height + 5);
+            // Generate ticks every two years starting from 2026
+            x.ticks(d3.timeYear.every(2)).forEach(d => {
+                // Only label starting from 2026 to 2050
+                if (d.getFullYear() >= 2026) {
+                    context.fillText(d.getFullYear(), x(d), height + 5);
+                }
             });
 
             context.fillText("Year", width / 2, height + 20);
-            context.restore();
 
+            context.restore();
             context.save();
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
             context.textAlign = "center";
-            context.fillText("Emissions- MT-CO2", 0, 0);
+            context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
