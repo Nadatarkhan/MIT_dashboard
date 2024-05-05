@@ -43,10 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         context.font = "italic 16px Arial"; // Set the font for the text to italic
         context.fillStyle = "#666"; // Set the text color
         context.textAlign = "center"; // Center the text horizontally
-        context.textBaseline = "top"; // Center the text vertically
-
-        // Calculate the y-coordinate to move the text higher up
-        var higherYPosition = 20; //
+        context.textBaseline = "middle"; // Center the text vertically
 
         const text = "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.";
 
@@ -579,8 +576,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set y-axis to always reach up to 180,000
             y.domain([0, 180000]);
 
-            // Define the x-axis to cover the range up to 2050
-            x.domain([new Date(Date.now()), new Date(2050, 0, 1)]);
+            // Define the x-axis to cover from 2025 to 2050, but start labeling from 2026
+            x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
 
             context.beginPath();
             context.moveTo(0, height);
@@ -596,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
-            y.ticks(10).forEach(d => { // Adjust the number of ticks as needed
+            y.ticks(10).forEach(d => {
                 context.fillText(d.toLocaleString(), -10, y(d));
                 context.beginPath();
                 context.moveTo(-10, y(d));
@@ -606,17 +603,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            // Modify this to generate ticks until 2050 and format them as years
-            x.ticks(d3.timeYear.every(1)).forEach(d => {
-                if (d.getFullYear() <= 2050) {
-                    context.fillText(d3.timeFormat("%Y")(d), x(d), height + 5);
+            // Generate ticks every two years starting from 2026
+            x.ticks(d3.timeYear.every(2)).forEach(d => {
+                // Only label starting from 2026 to 2050
+                if (d.getFullYear() >= 2026) {
+                    context.fillText(d.getFullYear(), x(d), height + 5);
                 }
             });
 
-            // Mark the axis with 'Year' at the center bottom
             context.fillText("Year", width / 2, height + 20);
 
-            // Add the emissions label on the y-axis
             context.restore();
             context.save();
             context.translate(margin.left - 60, margin.top + height / 2);
@@ -625,7 +621,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
-
 
 
     }).catch(function(error) {
