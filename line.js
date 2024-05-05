@@ -599,17 +599,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            // Draw red circle at 180,000 on the y-axis
-            context.beginPath();
-            context.arc(0, y(180000), 3, 0, 2 * Math.PI);
-            context.fillStyle = 'rgba(255, 0, 0, 0.7)';
-            context.fill();
-
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            // Ensure only the years 2025 and 2050 are marked
-            [new Date(2025, 0, 1), new Date(2050, 0, 1)].forEach(d => {
-                context.fillText(d.getFullYear(), x(d), height + 5);
+            x.ticks(d3.timeYear.every(1)).forEach(d => {  // Generate a tick for every year
+                if (d.getFullYear() >= 2025 && d.getFullYear() <= 2050) {
+                    context.fillText(d.getFullYear(), x(d), height + 5);
+                }
             });
 
             context.fillText("Year", width / 2, height + 20);
