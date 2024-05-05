@@ -43,7 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
         context.font = "italic 16px Arial"; // Set the font for the text to italic
         context.fillStyle = "#666"; // Set the text color
         context.textAlign = "center"; // Center the text horizontally
-        context.textBaseline = "middle"; // Center the text vertically
+        context.textBaseline = "top"; // Center the text vertically
+
+        // Calculate the y-coordinate to move the text higher up
+        var higherYPosition = 20; //
 
         const text = "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.";
 
