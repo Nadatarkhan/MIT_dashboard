@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
             baselineButton.addEventListener('click', function() {
                 baselineActive = !baselineActive;
                 this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
+                this.textContent = baselineActive ? "Business as Usual- No Action" : "Business as Usual- No Action";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
@@ -491,7 +491,6 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -534,19 +533,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline');
-
-                    // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
-                    context.lineWidth = isActive ? 2 : 0.9; // Thicker line for active baseline
-                    context.stroke();
+                    // Determine if the current data point should be colored for Scenario 1
+                    const isScenario1 = filters[d.scenario] && filters[d.scenario].includes('baseline') && filters[d.scenario].includes('partial');
+                    context.strokeStyle = isScenario1 ? '#008000' : '#565656'; // Green for Scenario 1, grey otherwise
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
             context.restore();
             drawAxis();
         }
+
 
 
 
