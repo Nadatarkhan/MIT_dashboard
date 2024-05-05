@@ -505,6 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -531,24 +532,18 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Log current state of baselineScenarios
-            console.log("Baseline scenarios active:", Array.from(baselineScenarios));
-            console.log("Baseline active:", baselineActive);
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the scenario is in baselineScenarios
-                    let isActive = baselineScenarios.has(d.scenario.toString());  // Ensure type is consistent
-                    let scenarioFilters = filters[d.scenario] || [];
+                    const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
 
-                    console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${scenarioFilters.join(", ")}`);
+                    console.log(`Scenario: ${d.scenario}, Color: ${color}`);
 
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
+                    context.strokeStyle = color;
+                    context.lineWidth = lineWidth;
                     context.stroke();
                 }
             });
@@ -556,9 +551,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
-
-
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
@@ -569,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'scenario1':
                         return { color: '#00897b', lineWidth: 2 }; // Teal
                     case 'scenario2':
-                        return { color: '#b64f1d', lineWidth: 2 }; // Red
+                        return { color: '#055f8a', lineWidth: 2 }; // Dark Blue
                     default:
                         return { color: '#565656', lineWidth: 1 }; // Default gray
                 }
@@ -577,6 +569,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return { color: '#565656', lineWidth: 1 }; // Default gray when not active
             }
         }
+
+
 
 
         function drawAxis() {
