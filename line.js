@@ -279,9 +279,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive; // Toggle the activation state
-                this.classList.toggle('active', baselineActive); // Toggle the active class for styling
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
+                let isActive = this.getAttribute('data-active') === 'true';
+                this.setAttribute('data-active', !isActive);
+                baselineActive = !isActive;
+                this.classList.toggle('active', baselineActive);
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
                 // Toggle baseline filters
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
