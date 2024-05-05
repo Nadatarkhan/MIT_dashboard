@@ -282,11 +282,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
                 this.classList.toggle('active', baselineActive); // Toggle the active class for styling
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
+                console.log("Baseline active state:", baselineActive);
 
                 // Toggle baseline filters
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive; // Set checkbox state based on the button toggle
                     const scenarioId = checkbox.dataset.scenarioId; // Get the scenario ID from the checkbox data attribute
+                    console.log("Toggling scenario ID:", scenarioId, "to", checkbox.checked);
 
                     if (baselineActive) {
                         activeBaselineScenarios.add(scenarioId);
@@ -295,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     const field = checkbox.getAttribute('name').replace('Filter', ''); // Get the field name from the checkbox name attribute
+                    console.log("Updating field:", field, "with value baseline:", baselineActive);
                     if (!filters[field]) {
                         filters[field] = [];
                     }
@@ -307,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             delete filters[field]; // Clean up if no more filters
                         }
                     }
+                    console.log("Current filters for", field, ":", filters[field]);
                 });
 
                 // Additional logic to handle grid checkboxes
