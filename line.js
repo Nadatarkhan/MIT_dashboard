@@ -157,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container${field === 'grid' ? '-2' : ''}[data-field="${field}"]`);
             if (iconContainer) {
@@ -292,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (!baselineActive) {
                         filters[field] = filters[field].filter(v => v !== 'baseline');
                         if (filters[field].length === 0) {
-                            delete filters[field];
+                            delete filters[field]; // Clean up if no more filters
                         }
                     }
                 });
@@ -491,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();
+                showInitialMessage();  // Display message indicating the need to select filters
                 return;
             }
 
@@ -514,33 +513,22 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw horizontal grid lines
-            y.ticks(10).forEach(tick => {
-                context.beginPath();
-                context.moveTo(0, y(tick));
-                context.lineTo(containerWidth * dpi, y(tick));
-                context.strokeStyle = '#ccc';
-                context.stroke();
-            });
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
-                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
-                    context.stroke();
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = (baselineActive && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
             context.restore();
             drawAxis();
         }
-
-
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
