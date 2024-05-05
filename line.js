@@ -273,9 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // Global active scenario tracking
         let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
 
-// Global active scenario tracking
-        let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
-
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');  // Get the button by its ID
         let baselineActive = false;  // Track the activation state of the baseline scenario
