@@ -273,12 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
+        let baselineScenarios = new Set();  // To track which scenarios are affected by the baseline button
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                isBaselineActive = !isBaselineActive;  // Toggle baseline active state
-                this.classList.toggle('active', isBaselineActive);
-                this.textContent = isBaselineActive ? "Deactivate Baseline" : "Activate Baseline";
+                baselineActive = !baselineActive;
+                this.classList.toggle('active', baselineActive);
+                this.textContent = baselineActive ? "Business as Usual- No Action" : "Business as Usual- No Action";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
