@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.lineTo(x(d.year), y(d.emission));
 
                     // Check if the current scenario is considered active
-                    const isBaselineScenario = activeBaselineScenarios.has(d.scenario.toString());
+                    const isBaselineScenario = activeBaselineScenarios.has(d.scenario);
                     context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656'; // Purple for active baseline
                     context.lineWidth = isBaselineScenario && baselineActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
@@ -545,6 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
         function drawAxis() {
