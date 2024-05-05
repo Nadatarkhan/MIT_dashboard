@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');  // Example ID
+        const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
 
         if (baselineButton) {
@@ -279,6 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
+
+                // Adjust the baseline scenario filter directly
+                if (baselineActive) {
+                    filters['baseline'] = ['active'];
+                } else {
+                    delete filters['baseline'];
+                }
 
                 const scenarioValue = 'baseline'; // This should be the identifier for the scenario
 
