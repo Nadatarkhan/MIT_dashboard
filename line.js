@@ -514,18 +514,28 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Draw horizontal grid lines
+            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            tickValues.forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi, y(tick));
+                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.stroke();
+            });
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Ensure that the scenario is in the filters and check if it includes 'baseline'
+                    // Check if the scenario is the baseline and if it's active
                     const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
 
-                    // Assign colors based on the active status of the baseline
-                    context.strokeStyle = isActive && baselineActive ? '#b937b8' : '#565656';
-                    context.lineWidth = isActive && baselineActive ? 2 : 0.9; // Thicker line for active baseline
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Assign purple color if baseline and active
+                    context.lineWidth = isActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
                 }
             });
@@ -533,6 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(scenario, isActive) {
