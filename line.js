@@ -276,26 +276,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;  // Toggle the activation state
+                baselineActive = !baselineActive; // Toggle the activation state
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline';  // This should be the identifier for the scenario
+                const scenarioValue = 'baseline'; // This should be the identifier for the scenario
+
                 // Toggle baseline filters
                 document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive;
-                    const field = checkbox.id.split('-')[0];
+                    checkbox.checked = baselineActive; // Set checkbox state based on the button toggle
+                    const field = checkbox.getAttribute('name').replace('Filter', ''); // Get the field name from the checkbox name attribute
 
+                    // Manage filter states for the baseline scenario
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
                     if (baselineActive && !filters[field].includes(scenarioValue)) {
-                        filters[field].push(scenarioValue);
+                        filters[field].push(scenarioValue); // Add baseline to filters if activating
                     } else if (!baselineActive) {
-                        filters[field] = filters[field].filter(v => v !== scenarioValue);
+                        filters[field] = filters[field].filter(v => v !== scenarioValue); // Remove baseline from filters if deactivating
                         if (filters[field].length === 0) {
-                            delete filters[field];  // Clean up if no more filters
+                            delete filters[field]; // Clean up if no more filters
                         }
                     }
                 });
@@ -538,7 +540,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
 
                     // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
+                    context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
                     context.lineWidth = 0.9; // Adjust line width for visibility
                     context.stroke(); // Execute the drawing
                 }
