@@ -528,7 +528,8 @@ input[type='radio']:checked + label {
 .controls-title {
     font-size: 11px; /* Smaller font size for the titles */
     text-align: left; /* Left align the titles */
-    margin-bottom: 8px; /* Space below the title */
+    margin-bottom: 1px; /* Space below the title */
+    margin-top: 10px; /* Space below the title */
     color: #424242; /* Optional: match the button color or choose another */
     font-family: Arial, sans-serif; /* Consistent font with the buttons */
 }
