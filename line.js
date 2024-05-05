@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.lineTo(x(d.year), y(d.emission));
 
                     // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
+                    const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
 
                     // Determine the color and thickness of the line based on the active filters
                     context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
