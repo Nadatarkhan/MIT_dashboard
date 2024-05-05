@@ -268,6 +268,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Global flags to track scenario activation
+        let isBaselineActive = false;
+        let isScenario1Active = false;
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
@@ -276,9 +279,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;
-                this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Business as Usual- No Action" : "Business as Usual- No Action";
+                isBaselineActive = !isBaselineActive;  // Toggle baseline active state
+                this.classList.toggle('active', isBaselineActive);
+                this.textContent = isBaselineActive ? "Deactivate Baseline" : "Activate Baseline";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
@@ -323,51 +326,38 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-//Scenario 1 Function
+// Scenario 1 button functionality
         const scenario1Button = document.getElementById('scenario1Button');
-        let scenario1Active = false;  // Track the state of Scenario 1 activation
-
         if (scenario1Button) {
             scenario1Button.addEventListener('click', function() {
-                scenario1Active = !scenario1Active;  // Toggle the active state
-                this.classList.toggle('active', scenario1Active); // Toggle class for styling
-                this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1"; // Update button text
+                isScenario1Active = !isScenario1Active;  // Toggle scenario 1 active state
+                this.classList.toggle('active', isScenario1Active);
+                this.textContent = isScenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1";
 
-                // Clear existing filters when toggling this scenario
-                Object.keys(filters).forEach(field => {
-                    filters[field] = [];  // Clear all filters
-                    document.querySelectorAll(`input[name="${field}Filter"]`).forEach(checkbox => checkbox.checked = false);
-                });
-
-                updateFiltersForScenario1(scenario1Active);  // Update the filters based on new state
-                updatePlot();  // Re-draw the plot with updated filters
+                // Update filters based on scenario 1 status
+                updateFiltersForScenario1(isScenario1Active);
+                updatePlot();  // Update the plot to reflect changes
             });
         }
 
         function updateFiltersForScenario1(active) {
-            const baselineFields = ['deepgeo', 'nuclear', 'ccs']; // Fields to set as 'baseline'
-            const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district']; // Fields to set as 'partial'
-            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid checkboxes
+            const baselineFields = ['deepgeo', 'nuclear', 'ccs'];
+            const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district'];
+            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];
 
-            baselineFields.forEach(field => {
-                document.querySelectorAll(`input[name="${field}Filter"][value="baseline"]`).forEach(checkbox => {
-                    checkbox.checked = active;
-                    updateFilterArray(field, 'baseline', active);
-                });
+            // Update filters for each field based on whether the scenario is active
+            [...baselineFields, ...partialFields, ...gridFilters].forEach(field => {
+                let value = baselineFields.includes(field) ? 'baseline' : (partialFields.includes(field) ? 'partial' : field);
+                updateFilterArray(field, value, active);
             });
 
-            partialFields.forEach(field => {
-                document.querySelectorAll(`input[name="${field}Filter"][value="partial"]`).forEach(checkbox => {
+            // Toggle corresponding checkboxes according to scenario activation state
+            document.querySelectorAll(`input[type="checkbox"]`).forEach(checkbox => {
+                if ((baselineFields.includes(checkbox.name.replace('Filter', '')) && checkbox.value === 'baseline') ||
+                    (partialFields.includes(checkbox.name.replace('Filter', '')) && checkbox.value === 'partial') ||
+                    gridFilters.includes(checkbox.value)) {
                     checkbox.checked = active;
-                    updateFilterArray(field, 'partial', active);
-                });
-            });
-
-            gridFilters.forEach(filter => {
-                document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
-                    checkbox.checked = active;
-                    updateFilterArray('grid', filter, active);
-                });
+                }
             });
         }
 
@@ -385,6 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+
 
 
         // Scenario 2 button functionality
@@ -491,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -533,10 +525,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Determine if the current data point should be colored for Scenario 1
-                    const isScenario1 = filters[d.scenario] && filters[d.scenario].includes('baseline') && filters[d.scenario].includes('partial');
-                    context.strokeStyle = isScenario1 ? '#008000' : '#565656'; // Green for Scenario 1, grey otherwise
-                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    // Determine if the line should be highlighted based on the active scenario
+                    let lineColor = '#565656'; // default color
+                    if (isBaselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline')) {
+                        lineColor = '#b937b8'; // Purple for baseline
+                    } else if (isScenario1Active && filters[d.scenario] && filters[d.scenario].includes('scenario1')) {
+                        lineColor = '#008000'; // Green for scenario 1
+                    }
+
+                    context.strokeStyle = lineColor;
+                    context.lineWidth = (lineColor === '#565656') ? 0.9 : 2; // Thicker line for active scenarios
                     context.stroke(); // Execute the drawing
                 }
             });
@@ -544,6 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
 
