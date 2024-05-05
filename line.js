@@ -281,17 +281,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
+                // Toggle baseline filters and manage scenario tracking
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.getAttribute('name').replace('Filter', '');
+
                     if (!filters[field]) {
                         filters[field] = [];
                     }
+
                     if (baselineActive) {
                         if (!filters[field].includes('baseline')) {
                             filters[field].push('baseline');
-                            baselineScenarios.add(field);  // Add field to track affected scenarios
-                            console.log("Added to baselineScenarios:", field);
+                            // Track the specific scenario IDs that are associated with each checkbox
+                            const scenarioId = checkbox.dataset.scenarioId; // Assuming each checkbox has a data attribute `data-scenario-id`
+                            if (scenarioId) {
+                                baselineScenarios.add(scenarioId);
+                            }
                         }
                     } else {
                         filters[field] = filters[field].filter(v => v !== 'baseline');
@@ -299,12 +305,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             delete filters[field];
                         }
                         baselineScenarios.clear();  // Clear the set as we deactivate
-                        console.log("Cleared baselineScenarios");
                     }
-
-                    console.log("Current baselineScenarios:", Array.from(baselineScenarios));
-                    console.log("Filters after update:", filters);
                 });
+
+                console.log("Current baselineScenarios:", Array.from(baselineScenarios));
+                console.log("Filters after update:", filters);
 
                 // Sync the state of grid-related checkboxes with the baseline button
                 const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
@@ -329,51 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function updatePlot() {
-            console.log("Updating plot with current filters:", filters);
 
-            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
-                console.log("Not all conditions met for drawing plot.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if not all fields have active filters
-            }
-
-            const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
-                );
-            });
-
-            if (filteredData.length === 0) {
-                console.log("No data to display.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                return;
-            }
-
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
-
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            context.save();
-            context.translate(margin.left, margin.top);
-
-            filteredData.forEach((d, i) => {
-                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
-
-                    // Determine the color based on whether the scenario is active in baselineScenarios
-                    context.strokeStyle = baselineScenarios.has(d.scenario.toString()) && baselineActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
-                    context.stroke();
-                }
-            });
-
-            context.restore();
-            drawAxis();
-        }
 
 
 //Scenario 1 Function
