@@ -540,25 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-        function getColor(scenario, isActive) {
-            // Custom function to determine color and lineWidth based on scenario and isActive flag
-            if (isActive) {
-                switch(scenario) {
-                    case 'baseline':
-                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
-                    case 'scenario1':
-                        return { color: '#00897b', lineWidth: 2 }; // Teal
-                    case 'scenario2':
-                        return { color: '#b64f1d', lineWidth: 2 }; // Red
-                    default:
-                        return { color: '#565656', lineWidth: 1 }; // Default gray
-                }
-            } else {
-                return { color: '#565656', lineWidth: 1 }; // Default gray when not active
-            }
-        }
-
-
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
