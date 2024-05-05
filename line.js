@@ -268,17 +268,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Global flags to track scenario activation
+        let isBaselineActive = false;
+        let isScenario1Active = false;
+
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
-        let baselineScenarios = new Set();  // To track which scenarios are affected by the baseline button
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;
+                baselineActive = !baselineActive;  // Toggle the activation state
                 this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Business as Usual- No Action" : "Business as Usual- No Action";
+                this.textContent = baselineActive ? "Deactivate Baseline" : "Activate Baseline";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
@@ -325,13 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
-        let scenario1Active = false;  // Track the state of Scenario 1 activation
+        let scenario1Active = false;  // Track the activation state of Scenario 1
 
         if (scenario1Button) {
             scenario1Button.addEventListener('click', function() {
-                scenario1Active = !scenario1Active;  // Toggle the active state
-                this.classList.toggle('active', scenario1Active); // Toggle class for styling
-                this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1"; // Update button text
+                scenario1Active = !scenario1Active;  // Toggle the activation state
+                this.classList.toggle('active', scenario1Active);
+                this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1";
 
                 // Clear existing filters when toggling this scenario
                 Object.keys(filters).forEach(field => {
@@ -517,34 +520,29 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw horizontal grid lines
-            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
-            tickValues.forEach(tick => {
-                context.beginPath();
-                context.moveTo(0, y(tick));
-                context.lineTo(containerWidth * dpi, y(tick));
-                context.strokeStyle = '#ccc'; // Grey color for the grid lines
-                context.stroke();
-            });
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
+                    context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Determine if the current data point should be colored for Scenario 1
-                    const isScenario1 = filters[d.scenario] && filters[d.scenario].includes('baseline') && filters[d.scenario].includes('partial');
-                    context.strokeStyle = isScenario1 ? '#008000' : '#565656'; // Green for Scenario 1, grey otherwise
-                    context.lineWidth = 0.9; // Adjust line width for visibility
-                    context.stroke(); // Execute the drawing
+                    let lineColor = '#565656'; // Default grey color
+                    if (baselineActive) {  // Apply purple color if baseline is active
+                        lineColor = '#b937b8'; // Purple color for baseline
+                    }
+                    if (scenario1Active) {  // Apply green color if scenario 1 is active
+                        lineColor = '#008000'; // Green color for scenario 1
+                    }
+
+                    context.strokeStyle = lineColor;
+                    context.lineWidth = 1.5; // Use a fixed line width for visibility
+                    context.stroke();
                 }
             });
 
             context.restore();
             drawAxis();
         }
-
 
 
 
