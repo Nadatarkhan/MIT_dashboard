@@ -271,28 +271,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
-        let baselineActive = false;  // This flag will directly control the color in the drawing logic.
+        let baselineActive = false;  // Track the activation state of the baseline scenario
+        let baselineScenarios = new Set();  // To track which scenarios are affected by the baseline button
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive; // Toggle the activation state.
+                baselineActive = !baselineActive;
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                // Update all baseline-related checkboxes according to the button's state
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.getAttribute('name').replace('Filter', '');
                     if (!filters[field]) {
                         filters[field] = [];
                     }
-                    if (baselineActive && !filters[field].includes('baseline')) {
-                        filters[field].push('baseline');
-                    } else if (!baselineActive) {
-                        filters[field].remove('baseline');
+                    if (baselineActive) {
+                        if (!filters[field].includes('baseline')) {
+                            filters[field].push('baseline');
+                            baselineScenarios.add(field);  // Add field to track affected scenarios
+                        }
+                    } else {
+                        filters[field] = filters[field].filter(v => v !== 'baseline');
                         if (filters[field].length === 0) {
                             delete filters[field];
                         }
+                        baselineScenarios.clear();  // Clear the set as we deactivate
                     }
                 });
 
@@ -490,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();
+                showInitialMessage();  // Display message indicating the need to select filters
                 return;
             }
 
@@ -518,7 +522,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = baselineActive ? '#b937b8' : '#565656';  // Use the global flag to determine color
+
+                    const isActive = baselineScenarios.has(d.scenario);  // Check if this scenario is part of the initially affected group
+                    context.strokeStyle = isActive && baselineActive ? '#b937b8' : '#565656';
                     context.lineWidth = 0.9;
                     context.stroke();
                 }
