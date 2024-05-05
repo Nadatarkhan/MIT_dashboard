@@ -270,6 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+// Global active scenario tracking
+        let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');  // Get the button by its ID
@@ -532,9 +534,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Assign purple color to the active baseline scenarios
-                    context.strokeStyle = baselineActive && activeBaselineScenarios.has(d.scenario) ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
+                    // Check if the current scenario is considered active
+                    const isBaselineScenario = activeBaselineScenarios.has(d.scenario.toString());
+                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656'; // Purple for active baseline
+                    context.lineWidth = isBaselineScenario && baselineActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
                 }
             });
