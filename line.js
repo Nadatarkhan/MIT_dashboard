@@ -532,6 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Check if the scenario is the baseline and if it's active
                     const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
+                    console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${filters[d.scenario]}`);
 
                     // Determine the color and thickness of the line based on the active filters
                     context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Assign purple color if baseline and active
@@ -544,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-
+        
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
