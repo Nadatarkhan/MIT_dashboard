@@ -281,32 +281,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                // Toggle baseline filters and manage scenario tracking
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.getAttribute('name').replace('Filter', '');
-
                     if (!filters[field]) {
                         filters[field] = [];
                     }
-
                     if (baselineActive) {
                         if (!filters[field].includes('baseline')) {
                             filters[field].push('baseline');
-                            // Track the specific scenario IDs that are associated with each checkbox
-                            const scenarioId = checkbox.dataset.scenarioId; // Assuming each checkbox has a data attribute `data-scenario-id`
-                            if (scenarioId) {
-                                baselineScenarios.add(scenarioId);
-                            }
                         }
                     } else {
                         filters[field] = filters[field].filter(v => v !== 'baseline');
                         if (filters[field].length === 0) {
                             delete filters[field];
                         }
-                        baselineScenarios.clear();  // Clear the set as we deactivate
                     }
                 });
+
+                // Ensure all relevant scenario identifiers are correctly captured or removed
+                const allScenarios = emissionsData.map(d => d.scenario);
+                if (baselineActive) {
+                    allScenarios.forEach(scenario => baselineScenarios.add(scenario));
+                } else {
+                    baselineScenarios.clear();
+                }
 
                 console.log("Current baselineScenarios:", Array.from(baselineScenarios));
                 console.log("Filters after update:", filters);
@@ -333,6 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Redraw the plot with the new settings
             });
         }
+
 
 
 
