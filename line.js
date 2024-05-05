@@ -270,6 +270,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+// Global variable to track the scenarios activated by the baseline button
+        let baselineScenarios = [];
+
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
@@ -298,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 // Additional logic to handle grid checkboxes
-                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
+                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
                         checkbox.checked = baselineActive;
@@ -310,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else if (!baselineActive) {
                             filters['grid'] = filters['grid'].filter(f => f !== filter);
                             if (filters['grid'].length === 0) {
-                                delete filters['grid'];  // Clean up if no more filters
+                                delete filters['grid'];
                             }
                         }
                     });
@@ -488,11 +491,12 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();
-                return;
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
             }
 
             const filteredData = emissionsData.filter(d => {
@@ -514,33 +518,23 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw horizontal grid lines
-            y.ticks(10).forEach(tick => {
-                context.beginPath();
-                context.moveTo(0, y(tick));
-                context.lineTo(containerWidth * dpi, y(tick));
-                context.strokeStyle = '#ccc';
-                context.stroke();
-            });
-
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
-                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
-                    context.stroke();
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = baselineActive && filters[d.scenario].includes('baseline') ? '#b937b8' : '#565656';
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
             context.restore();
             drawAxis();
         }
-
-
+        
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
