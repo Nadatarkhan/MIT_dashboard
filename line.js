@@ -279,6 +279,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
                 this.classList.toggle('active', baselineActive); // Toggle the active class for styling
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
+                console.log("Baseline scenario toggled:", baselineActive);
+                updatePlot();  // Trigger re-draw of the plot
 
                 const scenarioValue = 'baseline'; // This should be the identifier for the scenario
 
