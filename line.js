@@ -519,10 +519,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Debugging output to check scenario type and filters
-                    const scenarioKey = String(d.scenario);
-                    const isActive = filters[scenarioKey] && filters[scenarioKey].includes('baseline');
-                    console.log(`Scenario: ${scenarioKey}, Type: ${typeof scenarioKey}, isActive: ${isActive}, Filters: ${filters[scenarioKey] ? filters[scenarioKey].join(', ') : 'None'}`);
+                    const isActive = filters[String(d.scenario)] && filters[String(d.scenario)].includes('baseline');
+                    console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${JSON.stringify(filters[String(d.scenario)])}`);
 
                     context.strokeStyle = isActive ? '#b937b8' : '#565656';
                     context.lineWidth = isActive ? 2 : 0.9;
@@ -535,7 +533,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        
+
+
+
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
