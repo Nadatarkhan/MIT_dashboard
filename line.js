@@ -521,11 +521,11 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Draw horizontal grid lines
-            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            const tickValues = y.ticks(10); // Adjust number of ticks as needed
             tickValues.forEach(tick => {
                 context.beginPath();
                 context.moveTo(0, y(tick));
-                context.lineTo(containerWidth * dpi, y(tick));
+                context.lineTo(width, y(tick));
                 context.strokeStyle = '#ccc'; // Grey color for the grid lines
                 context.stroke();
             });
@@ -536,11 +536,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
-
                     // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
+                    context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
                     context.lineWidth = 0.9; // Adjust line width for visibility
                     context.stroke(); // Execute the drawing
                 }
@@ -549,6 +546,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
 
