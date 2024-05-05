@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
-        
+
 
 
 // Scenario button functionality
@@ -276,9 +276,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;  // Toggle the activation state
-                this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Baseline" : "Activate Baseline";
+                isBaselineActive = !isBaselineActive;  // Toggle baseline active state
+                this.classList.toggle('active', isBaselineActive);
+                this.textContent = isBaselineActive ? "Deactivate Baseline" : "Activate Baseline";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
