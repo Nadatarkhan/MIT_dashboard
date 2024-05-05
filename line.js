@@ -485,12 +485,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", JSON.stringify(filters, null, 2));  // Log the detailed structure of filters
+            console.log("Updating plot with current filters:", JSON.stringify(filters, null, 2));
 
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();  // Display message indicating the need to select filters
+                showInitialMessage();
                 return;
             }
 
@@ -531,6 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
 
