@@ -271,15 +271,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
-        let baselineActive = false;  // Track the activation state of the baseline scenario
+        let baselineActive = false;  // This flag will directly control the color in the drawing logic.
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;
+                baselineActive = !baselineActive; // Toggle the activation state.
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                // Toggle baseline filters
+                // Update all baseline-related checkboxes according to the button's state
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
                     const field = checkbox.getAttribute('name').replace('Filter', '');
@@ -289,15 +289,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (baselineActive && !filters[field].includes('baseline')) {
                         filters[field].push('baseline');
                     } else if (!baselineActive) {
-                        filters[field] = filters[field].filter(v => v !== 'baseline');
+                        filters[field].remove('baseline');
                         if (filters[field].length === 0) {
-                            delete filters[field]; // Clean up if no more filters
+                            delete filters[field];
                         }
                     }
                 });
 
-                // Additional logic to handle grid checkboxes
-                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
+                // Sync the state of grid-related checkboxes with the baseline button
+                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
                         checkbox.checked = baselineActive;
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
 
-                updatePlot();  // Update the plot to reflect changes
+                updatePlot();  // Redraw the plot with the new settings
             });
         }
 
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updatePlot() {
-            console.log("Updating plot with current filters:", JSON.stringify(filters, null, 2));
+            console.log("Updating plot with current filters:", filters);
 
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
@@ -518,13 +518,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-
-                    const scenarioString = String(d.scenario);  // Convert scenario to string for key matching
-                    const isActive = filters[scenarioString] && filters[scenarioString].includes('baseline');
-                    console.log(`Scenario: ${scenarioString}, isActive: ${isActive}, Filters: ${JSON.stringify(filters[scenarioString])}`);
-
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656';
-                    context.lineWidth = isActive ? 2 : 0.9;
+                    context.strokeStyle = baselineActive ? '#b937b8' : '#565656';  // Use the global flag to determine color
+                    context.lineWidth = 0.9;
                     context.stroke();
                 }
             });
@@ -532,12 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
-
-
-
-
-
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
