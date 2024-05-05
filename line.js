@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Ensure all required fields have at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -496,7 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
+                    filters[field] && filters[field].length > 0 && filters[field].includes(d[field])
                 );
             });
 
@@ -519,16 +520,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = (baselineActive && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
-                    context.lineWidth = 0.9; // Adjust line width for visibility
-                    context.stroke(); // Execute the drawing
+                    // Ensure that the scenario is in the filters and check if it includes 'baseline'
+                    const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
+
+                    // Assign colors based on the active status of the baseline
+                    context.strokeStyle = isActive && baselineActive ? '#b937b8' : '#565656';
+                    context.lineWidth = isActive && baselineActive ? 2 : 0.9; // Thicker line for active baseline
+                    context.stroke();
                 }
             });
 
             context.restore();
             drawAxis();
         }
+
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
