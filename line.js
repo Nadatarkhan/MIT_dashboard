@@ -490,36 +490,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-// Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');
-        let baselineActive = false;  // Track the activation state of the baseline scenario
-
-        if (baselineButton) {
-            baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive;
-                this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
-
-                // Directly toggle the visibility of baseline scenario lines in the plot
-                updatePlot();  // Re-render the plot to reflect changes
-            });
-        }
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();
-                return;
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
             }
 
-            const filteredData = emissionsData.filter(d =>
-                Object.keys(filters).every(field =>
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
-                )
-            );
+                );
+            });
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -534,30 +520,35 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Draw horizontal grid lines
+            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            tickValues.forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi, y(tick));
+                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.stroke();
+            });
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Determine if the current line belongs to the baseline scenario
-                    const isBaseline = d.scenario === 'baseline';
-                    if (isBaseline && baselineActive) {
-                        context.strokeStyle = '#b937b8';  // Purple for active baseline
-                        context.lineWidth = 1.5;  // Thicker line for emphasis
-                    } else if (!isBaseline || !baselineActive) {
-                        context.strokeStyle = '#ccc';  // Grey for non-baseline or when baseline is inactive
-                        context.lineWidth = 0.5;  // Normal line
-                    }
+                    // Check if the baseline scenario is considered active
+                    const isBaselineActive = baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline');
 
-                    context.stroke();
+                    // Determine the color and thickness of the line based on whether the baseline scenario is active
+                    context.strokeStyle = isBaselineActive ? '#b937b8' : '#565656'; // Purple if baseline active, grey otherwise
+                    context.lineWidth = isBaselineActive ? 2 : 0.9; // Thicker line if active
+                    context.stroke(); // Execute the drawing
                 }
             });
 
             context.restore();
             drawAxis();
         }
-
 
 
 
