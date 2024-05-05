@@ -579,8 +579,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set y-axis to always reach up to 180,000
             y.domain([0, 180000]);
 
-            // Set the x-axis domain from 2025 to 2050 (it starts at 2025 but displays from 2026)
-            x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
+            // Define the x-axis to cover the range up to 2050
+            x.domain([new Date(Date.now()), new Date(2050, 0, 1)]);
 
             context.beginPath();
             context.moveTo(0, height);
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
-            y.ticks(10).forEach(d => { // Adjust number of ticks as needed
+            y.ticks(10).forEach(d => { // Adjust the number of ticks as needed
                 context.fillText(d.toLocaleString(), -10, y(d));
                 context.beginPath();
                 context.moveTo(-10, y(d));
@@ -606,15 +606,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            x.ticks(d3.timeYear.every(2)).forEach(d => {  // Generate a tick every two years starting from 2026 to 2050
-                if (d.getFullYear() >= 2026 && d.getFullYear() <= 2050) {
-                    context.fillText(d.getFullYear(), x(d), height + 5);
+            // Modify this to generate ticks until 2050 and format them as years
+            x.ticks(d3.timeYear.every(1)).forEach(d => {
+                if (d.getFullYear() <= 2050) {
+                    context.fillText(d3.timeFormat("%Y")(d), x(d), height + 5);
                 }
             });
 
+            // Mark the axis with 'Year' at the center bottom
             context.fillText("Year", width / 2, height + 20);
-            context.restore();
 
+            // Add the emissions label on the y-axis
+            context.restore();
             context.save();
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
