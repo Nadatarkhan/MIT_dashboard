@@ -519,8 +519,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    const isActive = filters[String(d.scenario)] && filters[String(d.scenario)].includes('baseline');
-                    console.log(`Scenario: ${d.scenario}, isActive: ${isActive}, Filters: ${JSON.stringify(filters[String(d.scenario)])}`);
+                    const scenarioString = String(d.scenario);  // Convert scenario to string for key matching
+                    const isActive = filters[scenarioString] && filters[scenarioString].includes('baseline');
+                    console.log(`Scenario: ${scenarioString}, isActive: ${isActive}, Filters: ${JSON.stringify(filters[scenarioString])}`);
 
                     context.strokeStyle = isActive ? '#b937b8' : '#565656';
                     context.lineWidth = isActive ? 2 : 0.9;
@@ -531,6 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
 
