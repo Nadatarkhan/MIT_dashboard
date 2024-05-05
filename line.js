@@ -491,11 +491,12 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 showInitialMessage();  // Display message indicating the need to select filters
-                return;
+                return; // Exit the function if not all fields have active filters
             }
 
             const filteredData = emissionsData.filter(d => {
@@ -517,22 +518,34 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Draw horizontal grid lines
+            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            tickValues.forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi, y(tick));
+                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.stroke();
+            });
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    const isActive = baselineScenarios.has(d.scenario);  // Check if this scenario is part of the initially affected group
-                    context.strokeStyle = isActive && baselineActive ? '#b937b8' : '#565656';
-                    context.lineWidth = 0.9;
-                    context.stroke();
+                    // Determine if the current data point's scenario is part of the baseline and if baseline is active
+                    const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
+                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656'; // Apply purple if baseline and active, else grey
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
             context.restore();
             drawAxis();
         }
+
 
         function getColor(scenario, isActive) {
             // Custom function to determine color and lineWidth based on scenario and isActive flag
