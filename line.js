@@ -271,33 +271,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');  // Example ID
+        const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                baselineActive = !baselineActive; // Toggle the activation state
+                baselineActive = !baselineActive;
                 this.classList.toggle('active', baselineActive);
                 this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
 
-                const scenarioValue = 'baseline'; // This should be the identifier for the scenario
-
                 // Toggle baseline filters
-                document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
-                    checkbox.checked = baselineActive; // Set checkbox state based on the button toggle
-                    const field = checkbox.getAttribute('name').replace('Filter', ''); // Get the field name from the checkbox name attribute
-
-                    // Manage filter states for the baseline scenario
+                document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
+                    checkbox.checked = baselineActive;
+                    const field = checkbox.getAttribute('name').replace('Filter', '');
                     if (!filters[field]) {
                         filters[field] = [];
                     }
-
-                    if (baselineActive && !filters[field].includes(scenarioValue)) {
-                        filters[field].push(scenarioValue); // Add baseline to filters if activating
+                    if (baselineActive && !filters[field].includes('baseline')) {
+                        filters[field].push('baseline');
                     } else if (!baselineActive) {
-                        filters[field] = filters[field].filter(v => v !== scenarioValue); // Remove baseline from filters if deactivating
+                        filters[field] = filters[field].filter(v => v !== 'baseline');
                         if (filters[field].length === 0) {
-                            delete filters[field]; // Clean up if no more filters
+                            delete filters[field];
                         }
                     }
                 });
@@ -493,12 +488,11 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if not all fields have active filters
+                showInitialMessage();
+                return;
             }
 
             const filteredData = emissionsData.filter(d => {
@@ -521,28 +515,24 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Draw horizontal grid lines
-            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
-            tickValues.forEach(tick => {
+            y.ticks(10).forEach(tick => {
                 context.beginPath();
                 context.moveTo(0, y(tick));
                 context.lineTo(containerWidth * dpi, y(tick));
-                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.strokeStyle = '#ccc';
                 context.stroke();
             });
 
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath(); // Start a new path for each line segment
+                    context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
-
-                    // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
-                    context.lineWidth = 0.9; // Adjust line width for visibility
-                    context.stroke(); // Execute the drawing
+                    const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
+                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
+                    context.lineWidth = 0.9;
+                    context.stroke();
                 }
             });
 
