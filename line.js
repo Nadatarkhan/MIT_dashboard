@@ -270,64 +270,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-// Global active scenario tracking
-        let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
-
 // Scenario button functionality
-        const baselineButton = document.getElementById('baselineButton');  // Get the button by its ID
+        const baselineButton = document.getElementById('baselineButton');  // Example ID
         let baselineActive = false;  // Track the activation state of the baseline scenario
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
                 baselineActive = !baselineActive; // Toggle the activation state
-                this.classList.toggle('active', baselineActive); // Toggle the active class for styling
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
-                console.log("Baseline active state:", baselineActive);
+                this.classList.toggle('active', baselineActive);
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
+
+                const scenarioValue = 'baseline'; // This should be the identifier for the scenario
 
                 // Toggle baseline filters
-                document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
+                document.querySelectorAll(`input[name$="Filter"][value="${scenarioValue}"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive; // Set checkbox state based on the button toggle
-                    const scenarioId = checkbox.dataset.scenarioId; // Get the scenario ID from the checkbox data attribute
-                    console.log("Toggling scenario ID:", scenarioId, "to", checkbox.checked);
-
-                    if (baselineActive) {
-                        activeBaselineScenarios.add(scenarioId);
-                    } else {
-                        activeBaselineScenarios.delete(scenarioId);
-                    }
-
                     const field = checkbox.getAttribute('name').replace('Filter', ''); // Get the field name from the checkbox name attribute
-                    console.log("Updating field:", field, "with value baseline:", baselineActive);
+
+                    // Manage filter states for the baseline scenario
                     if (!filters[field]) {
                         filters[field] = [];
                     }
 
-                    if (baselineActive && !filters[field].includes("baseline")) {
-                        filters[field].push("baseline"); // Add baseline to filters if activating
+                    if (baselineActive && !filters[field].includes(scenarioValue)) {
+                        filters[field].push(scenarioValue); // Add baseline to filters if activating
                     } else if (!baselineActive) {
-                        filters[field] = filters[field].filter(v => v !== "baseline"); // Remove baseline from filters if deactivating
+                        filters[field] = filters[field].filter(v => v !== scenarioValue); // Remove baseline from filters if deactivating
                         if (filters[field].length === 0) {
                             delete filters[field]; // Clean up if no more filters
                         }
                     }
-                    console.log("Current filters for", field, ":", filters[field]);
                 });
 
                 // Additional logic to handle grid checkboxes
-                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // IDs or values for the grid checkboxes
+                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Assuming these are the IDs or values for the grid checkboxes
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
-                        checkbox.checked = baselineActive; // Sync checkbox states with baseline button state
-                        const gridField = 'grid';
-                        if (!filters[gridField]) {
-                            filters[gridField] = [];
+                        checkbox.checked = baselineActive;
+                        if (!filters['grid']) {
+                            filters['grid'] = [];
                         }
-                        if (baselineActive && !filters[gridField].includes(filter)) {
-                            filters[gridField].push(filter); // Add filter if activating
+                        if (baselineActive && !filters['grid'].includes(filter)) {
+                            filters['grid'].push(filter);
                         } else if (!baselineActive) {
-                            filters[gridField] = filters[gridField].filter(f => f !== filter); // Remove filter if deactivating
-                            if (filters[gridField].length === 0) {
-                                delete filters[gridField]; // Clean up if no more filters
+                            filters['grid'] = filters['grid'].filter(f => f !== filter);
+                            if (filters['grid'].length === 0) {
+                                delete filters['grid'];  // Clean up if no more filters
                             }
                         }
                     });
@@ -336,7 +324,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Update the plot to reflect changes
             });
         }
-
 
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
@@ -506,11 +493,12 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Check if all required fields have at least one filter active before drawing the plot
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 showInitialMessage();  // Display message indicating the need to select filters
-                return;
+                return; // Exit the function if not all fields have active filters
             }
 
             const filteredData = emissionsData.filter(d => {
@@ -532,17 +520,29 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Draw horizontal grid lines
+            const tickValues = y.ticks(10); // Number of ticks can be adjusted as needed
+            tickValues.forEach(tick => {
+                context.beginPath();
+                context.moveTo(0, y(tick));
+                context.lineTo(containerWidth * dpi, y(tick));
+                context.strokeStyle = '#ccc'; // Grey color for the grid lines
+                context.stroke();
+            });
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
+                    context.beginPath(); // Start a new path for each line segment
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
                     // Check if the current scenario is considered active
-                    const isBaselineScenario = activeBaselineScenarios.has(d.scenario);
-                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656'; // Purple for active baseline
-                    context.lineWidth = isBaselineScenario && baselineActive ? 2 : 0.9; // Thicker line for active baseline
-                    context.stroke();
+                    const isActive = filters[d.scenario] && filters[d.scenario].includes('active');
+
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = (filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656'; // Color based on active filter
+                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    context.stroke(); // Execute the drawing
                 }
             });
 
@@ -550,6 +550,25 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
+
+
+        function getColor(scenario, isActive) {
+            // Custom function to determine color and lineWidth based on scenario and isActive flag
+            if (isActive) {
+                switch(scenario) {
+                    case 'baseline':
+                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
+                    case 'scenario1':
+                        return { color: '#00897b', lineWidth: 2 }; // Teal
+                    case 'scenario2':
+                        return { color: '#b64f1d', lineWidth: 2 }; // Red
+                    default:
+                        return { color: '#565656', lineWidth: 1 }; // Default gray
+                }
+            } else {
+                return { color: '#565656', lineWidth: 1 }; // Default gray when not active
+            }
+        }
 
 
         function drawAxis() {
