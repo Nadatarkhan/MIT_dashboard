@@ -273,17 +273,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // Global active scenario tracking
         let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
 
+// Global active scenario tracking
+        let activeBaselineScenarios = new Set();  // This set will track which scenarios are part of the baseline
+
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');  // Get the button by its ID
         let baselineActive = false;  // Track the activation state of the baseline scenario
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
-                let isActive = this.getAttribute('data-active') === 'true';
-                this.setAttribute('data-active', !isActive);
-                baselineActive = !isActive;
-                this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
+                baselineActive = !baselineActive; // Toggle the activation state
+                this.classList.toggle('active', baselineActive); // Toggle the active class for styling
+                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario"; // Change button text
 
                 // Toggle baseline filters
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
@@ -538,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Check if the current scenario is considered active
                     const isBaselineScenario = activeBaselineScenarios.has(d.scenario.toString());
-                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
+                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656'; // Purple for active baseline
                     context.lineWidth = isBaselineScenario && baselineActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
                 }
