@@ -572,7 +572,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
