@@ -267,10 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
-
-        // Global flags to track scenario activation
-        let isBaselineActive = false;
-        let isScenario1Active = false;
+        
 
 
 // Scenario button functionality
