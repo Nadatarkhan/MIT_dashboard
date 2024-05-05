@@ -536,12 +536,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if the current scenario is considered active
-                    const isActive = filters[d.scenario] && filters[d.scenario].includes('baseline');
+                    // Check if the baseline scenario is considered active
+                    const isBaselineActive = baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline');
 
-                    // Determine the color and thickness of the line based on the active filters
-                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
-                    context.lineWidth = 0.9; // Adjust line width for visibility
+                    // Determine the color and thickness of the line based on whether the baseline scenario is active
+                    context.strokeStyle = isBaselineActive ? '#b937b8' : '#565656'; // Purple if baseline active, grey otherwise
+                    context.lineWidth = isBaselineActive ? 2 : 0.9; // Thicker line if active
                     context.stroke(); // Execute the drawing
                 }
             });
@@ -549,6 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
+
 
 
         function getColor(scenario, isActive) {
