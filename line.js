@@ -603,9 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            // Generate ticks every two years starting from 2026
             x.ticks(d3.timeYear.every(2)).forEach(d => {
-                // Only label starting from 2026 to 2050
                 if (d.getFullYear() >= 2026) {
                     context.fillText(d.getFullYear(), x(d), height + 5);
                 }
@@ -614,11 +612,12 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Year", width / 2, height + 20);
 
             context.restore();
+
+            // Formatting the y-axis label like the x-axis label
             context.save();
-            context.translate(margin.left - 60, margin.top + height / 2);
-            context.rotate(-Math.PI / 2);
+            context.translate(margin.left + width / 2, margin.top - 30);  // Adjust the position to be centered over the axis
             context.textAlign = "center";
-            context.fillText("Emissions (MT-CO2)", 0, 0);
+            context.fillText("Emissions (MT-CO2)", 0, 0);  // Centered text
             context.restore();
         }
 
