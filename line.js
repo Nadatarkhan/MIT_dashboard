@@ -494,7 +494,6 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Preliminary checks as previously defined
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
@@ -521,21 +520,19 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw lines
+            console.log("Drawing lines for scenarios. Baseline active:", baselineActive);
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Set the color based on whether the scenario is 'baseline' and active
-                    if (filters[d.scenario] && filters[d.scenario].includes('baseline') && baselineActive) {
-                        context.strokeStyle = '#b937b8'; // Purple for baseline when active
-                    } else {
-                        context.strokeStyle = '#565656'; // Default gray color
-                    }
+                    const isBaselineScenario = filters[d.scenario] && filters[d.scenario].includes('baseline');
+                    context.strokeStyle = isBaselineScenario && baselineActive ? '#b937b8' : '#565656';
+                    console.log(`Scenario: ${d.scenario}, Color: ${context.strokeStyle}`);
 
-                    context.lineWidth = 2; // Adjust line width for visibility
+                    context.lineWidth = 2;
                     context.stroke();
                 }
             });
@@ -543,8 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
             drawAxis();
         }
-
-
 
 
         function drawAxis() {
