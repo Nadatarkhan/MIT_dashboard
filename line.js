@@ -534,9 +534,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Use the baselineActive flag to determine line color
-                    context.strokeStyle = (baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline')) ? '#b937b8' : '#565656';
-                    context.lineWidth = baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline') ? 2 : 0.9; // Thicker line for active baseline
+                    // Check if the current scenario is considered active
+                    const isActive = baselineActive && filters[d.scenario] && filters[d.scenario].includes('baseline');
+
+                    // Determine the color and thickness of the line based on the active filters
+                    context.strokeStyle = isActive ? '#b937b8' : '#565656'; // Purple if active, grey otherwise
+                    context.lineWidth = isActive ? 2 : 0.9; // Thicker line for active baseline
                     context.stroke();
                 }
             });
