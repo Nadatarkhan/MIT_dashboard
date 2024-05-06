@@ -510,10 +510,24 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure context
 
+            // Draw horizontal grid lines
+            const numGridLines = 5; // Adjust as needed
+            const gridLineColor = '#c2c2c2'; // Light grey color
+            context.beginPath();
+            context.strokeStyle = gridLineColor;
+            context.lineWidth = 0.5; // Thin line
+            const yStep = (y.domain()[1] - y.domain()[0]) / (numGridLines - 1);
+            for (let i = 0; i < numGridLines; i++) {
+                const yValue = y.domain()[0] + i * yStep;
+                const yPos = y(yValue);
+                context.moveTo(margin.left, yPos);
+                context.lineTo(containerWidth * dpi - margin.right, yPos);
+            }
+            context.stroke();
+
             // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 showInitialMessage();  // Display message indicating the need to select filters
                 return; // Exit the function if not all fields have active filters
             }
@@ -526,7 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 return;
             }
 
