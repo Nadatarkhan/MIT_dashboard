@@ -557,8 +557,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.lineTo(x(d.year), y(d.emission));
                     if (isRecording) {
                         context.strokeStyle = '#b64f1d';
-                        context.lineWidth = 2;
-                        recordedLines.push({start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2});
+                        context.lineWidth = 0.8;
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 0.8});
                     } else {
                         const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
                         context.strokeStyle = color;
