@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
             );
 
             console.log("Entries for 2050:", filteredData.length);
-            console.log(filteredData);  // Output the actual filtered items to check data
+            console.log("Filtered data for 2050:", filteredData);  // Output the actual filtered items to check data
 
             const schematicsEmissionRange = {};
             filteredData.forEach(item => {
@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 techImage.alt = selectedSchematic;
             });
         };
+
 
 
 
