@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             width = container.clientWidth - margin.left - margin.right,
-            height = 100 - margin.top - margin.bottom;
+            height = 90 - margin.top - margin.bottom;
 
         // Load the data
         d3.csv("data/example_data.csv").then(function(data) {
@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 sliderContainer.selectAll('.tick line').remove();
                 sliderContainer.selectAll('.domain').remove();
                 sliderContainer.selectAll('.handle')
-                    .attr('fill', 'rgba(94,134,117,0.85)')
-                    .attr('stroke', 'rgba(94,134,117,0.85)')
+                    .attr('fill', 'rgba(248,39,227,0.85)')
+                    .attr('stroke', 'rgba(248,39,227,0.85)')
                     .attr('rx', 5)
                     .attr('ry', 5);
             });
