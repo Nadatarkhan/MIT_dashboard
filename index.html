@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="top-container d-flex flex-column flex-md-row">
-                <div class="visual visual1 col-12 col-md-12">
+                <div class="visual visual1 col-12">
                     <div class="icon-description">
                         <h2>Technologies</h2>
                         <p>Click the checkboxes to choose the implementation pathways</p>
@@ -102,9 +102,6 @@
                                     <img src="icons/8.png" alt="Local Carbon Capture">
                                     <span class="icon-label">Local Carbon Capture</span>
                                     <div class="tooltip">Capture and sequester residual on-site emissions</div>
-                                    <div class="graph-container" id="lineChart">
-                                        <!-- D3.js graph will be inserted here -->
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +110,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="visual visual2" id="innovation_plot">
+            <div class="visual visual2" id="innovation_plot" style="position: fixed; top: 0; height: 100vh;">
                 <div class="icon-description">
                     <h2>Metrics</h2>
                     <p>Filter the metrics to explore the different scenarios</p>
@@ -122,7 +119,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8"> <!-- This matches the width of visual1 -->
+        <div class="col-8">
             <div class="bottom-visual">
                 <div class="icon-description">
                     <h2>Technology Schematic</h2>
@@ -145,7 +142,6 @@
         </div>
     </div>
 </div>
-
 <div id="popupOverlay">
     <div id="popupBox">
         <img src="images/cover.png" alt="Welcome Image" style="max-width: 100%; height: auto;">
@@ -153,11 +149,9 @@
         <button onclick="closePopup()">Explore Pathways!</button>
     </div>
 </div>
-
 <script src="line.js" defer></script>
 <script src="filter.js" defer></script>
 <script src="icons.js" defer></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.closePopup = function() {
@@ -172,9 +166,7 @@
         });
     });
 </script>
-
 </body>
 </html>
-
 
 
