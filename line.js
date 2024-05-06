@@ -533,7 +533,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
+                // Check if the data point belongs to a baseline scenario
+                const isBaseline = Object.keys(filters).every(field => {
+                    if (filters[field].includes('baseline')) {
+                        // If baseline is selected, check if the data point has the baseline value for the field
+                        return d[field] === 'baseline';
+                    } else {
+                        // If baseline is not selected, include all data points for the field
+                        return filters[field].includes(d[field]);
+                    }
+                });
+                return isBaseline && Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
                 );
             });
@@ -551,28 +561,22 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             filteredData.forEach((d, i) => {
-                console.log("Scenario:", d.scenario, "Baseline:", d.baseline); // Debug log
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Orange color
+                        context.strokeStyle = '#b64f1d';
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        const scenario = parseInt(d.scenario); // Convert scenario to integer
-                        if (d.baseline && fields.every(field => filters[field].includes("Baseline"))) {
-                            // Color baseline scenarios purple when all baseline checkboxes are selected
-                            console.log("Baseline line found!"); // Debug log
-                            context.strokeStyle = '#b937b8'; // Purple color
-                            context.lineWidth = 2;
-                        } else if (scenario === 2) {
-                            // Color scenario 2 lines orange
-                            context.strokeStyle = '#b64f1d'; // Orange color
+                        // Color lines based on scenario
+                        if (d.scenario === '2') {
+                            // Scenario 2 lines are orange
+                            context.strokeStyle = '#ffa500'; // Orange color
                             context.lineWidth = 1.2;
                         } else {
-                            // Color other scenarios grey
+                            // All other lines are grey
                             context.strokeStyle = '#808080'; // Grey color
                             context.lineWidth = 1;
                         }
@@ -580,8 +584,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.stroke();
                 }
             });
-
-
 
             context.restore();
 
@@ -591,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             drawAxis();
         }
+
 
 
 
