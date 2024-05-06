@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (container) {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             width = container.clientWidth - margin.left - margin.right,
-            height = 200 - margin.top - margin.bottom;
+            height = 100 - margin.top - margin.bottom;
 
         // Load the data
         d3.csv("data/example_data.csv").then(function(data) {
