@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function drawRecordedLines(lines) {
             context.save();  // Save the current state of the context
-            context.translate(margin.left, margin.top);  // Apply translation to align with the plot area
+            context.translate(margin.left, margin.top);  // Ensure this translation matches exactly as in the main plot drawing
 
             lines.forEach(line => {
                 context.beginPath();
@@ -462,8 +462,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            context.restore();  // Restore the context to the saved state
+            context.restore();  // Restore the context to the saved state, undoing the translation
         }
+
 
 
 
