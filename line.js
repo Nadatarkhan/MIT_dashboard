@@ -145,8 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            console.log("Active filters", filters);
-
+            // Collect all currently active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
@@ -154,56 +153,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log("Filtered active filters", activeFilters);
 
-            // Check year parsing and log if any dates are incorrectly parsed
-            emissionsData.forEach(item => {
-                if (isNaN(item.year.getFullYear())) {
-                    console.error("Date parsing error for item", item);
-                }
-            });
+            // Filter emissionsData based on active filters
+            const filteredData = emissionsData.filter(item =>
+                Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
+            );
 
-            // Filter data for the year 2050 and log the process
-            const filteredData = emissionsData.filter(item => {
-                const isYear2050 = item.year.getFullYear() === 2050;
-                const matchesFilters = Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]));
-                if (!matchesFilters && isYear2050) {
-                    console.log("Filtered out by active filters:", item);
-                }
-                return isYear2050 && matchesFilters;
-            });
+            console.log("Filtered data:", filteredData);
 
-            console.log("Entries for 2050:", filteredData.length);
-            console.log("Filtered data for 2050:", filteredData);
+            // Extract unique tech_schematic values from the filtered data
+            const techSchematics = Array.from(new Set(filteredData.map(item => item.tech_schematic)));
 
-            const schematicsEmissionRange = {};
-            filteredData.forEach(item => {
-                const schematic = item.tech_schematic;
-                if (!schematicsEmissionRange[schematic]) {
-                    schematicsEmissionRange[schematic] = { min: Infinity, max: -Infinity };
-                }
-                schematicsEmissionRange[schematic].min = Math.min(schematicsEmissionRange[schematic].min, item.emission);
-                schematicsEmissionRange[schematic].max = Math.max(schematicsEmissionRange[schematic].max, item.emission);
-            });
-
-            console.log("Tech Schematics and their Ranges:", schematicsEmissionRange);
-
+            // Clear the dropdown and populate with indexes
             dropdown.innerHTML = '';
-            Object.keys(schematicsEmissionRange).forEach(schematic => {
-                const { min, max } = schematicsEmissionRange[schematic];
+            techSchematics.forEach((schematic, index) => {
                 const option = document.createElement('option');
-                option.value = schematic;
-                option.textContent = `${schematic} (Emissions 2050 range: ${min.toFixed(2)} - ${max.toFixed(2)} MT-CO2)`;
+                option.value = schematic; // You could use index + 1 if you want to start numbering from 1
+                option.textContent = index + 1; // Display just the index as the dropdown text
                 dropdown.appendChild(option);
             });
 
+            // Update the image upon selecting a schematic
             dropdown.addEventListener('change', function() {
-                const selectedSchematic = dropdown.value.split(' ')[0]; // Assuming the schematic name is the first part before the space
+                const selectedSchematic = dropdown.value;
                 techImage.src = `images/${selectedSchematic}.png`;
                 techImage.alt = selectedSchematic;
             });
         };
 
 
-        
+
+
 
 
         fields.forEach(field => {
