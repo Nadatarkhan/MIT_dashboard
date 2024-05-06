@@ -32,6 +32,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
+    // Define the resetAllCheckboxes function
+    function resetAllCheckboxes() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        filters = {}; // Assuming filters are directly related to checkbox state, reset them as well
+    }
+
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
         let yOffset = -50; // Start 50 pixels above the final position
@@ -407,31 +415,32 @@ document.addEventListener('DOMContentLoaded', function() {
         // Scenario 2
         const scenario2Button = document.getElementById('scenario2Button');
         let isRecording = false;
-        let recordedLines = [];
 
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
+            document.querySelector('.lb-l').checked = isRecording; // Turn on light bulb when recording starts
 
-            if (!isRecording) {
-                // Stop recording, save the lines
-                recordedLines = recordedLines.concat(temporaryStorage); // Assumes temporaryStorage holds lines drawn during recording
-                temporaryStorage = [];
+            if (isRecording) {
+                resetAllCheckboxes(); // Custom function to clear all checkboxes
+                recordedLines = []; // Clear previous recorded lines if any
+            } else {
+                // Recording stops, save the lines
+                drawRecordedLines(recordedLines); // Ensure lines are drawn
             }
         });
+
 
         // Toggle visibility event listener and function
         const lightBulbToggle = document.querySelector('.lb-l');
-
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
-                drawRecordedLines(recordedLines);
+                drawRecordedLines(recordedLines); // Draw only the recorded lines
             } else {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // This should redraw only the necessary lines
+                updatePlot(); // Redraw the plot without the recorded lines
             }
         });
-
 
         function drawRecordedLines(lines) {
             lines.forEach(line => {
@@ -443,8 +452,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
         }
-
-
 
 
 // Helper function to reset all checkboxes
@@ -534,14 +541,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-
-                    if (isRecording && d.scenario === 'scenario2') {
-                        // If recording and the scenario is 'scenario2', draw in blue and store
+                    if (isRecording) {
                         context.strokeStyle = 'blue';
                         context.lineWidth = 2;
-                        temporaryStorage.push({ start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2 });
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2});
                     } else {
-                        // If not recording, or not scenario2, draw normally
                         const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
                         context.strokeStyle = color;
                         context.lineWidth = lineWidth;
