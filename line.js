@@ -441,17 +441,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const lightBulbToggle = document.querySelector('.lb-l');
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
-                drawRecordedLines(recordedLines); // Draw only the recorded lines
+                drawRecordedLines(recordedLines); // Draw only the recorded lines on top of existing plot
             } else {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // Redraw the plot without the recorded lines
+                updatePlot(); // Redraw the plot to remove the recorded lines
             }
         });
 
+
         function drawRecordedLines(lines) {
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);  // Clear the canvas first
             context.save();  // Save the current state of the context
-            context.translate(margin.left, margin.top);  // Re-apply translation to align with the plot area
+            context.translate(margin.left, margin.top);  // Apply translation to align with the plot area
 
             lines.forEach(line => {
                 context.beginPath();
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            context.restore();  // Restore the context to the saved state, undoing the translation
+            context.restore();  // Restore the context to the saved state
         }
 
 
