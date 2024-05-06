@@ -501,16 +501,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Ensure the dropdown is present
             }
 
-            // Debug: Check what the filters object looks like when updating the dropdown
-            console.log("Active filters", filters);
-
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
             }, {});
-
-            // Debug: Log activeFilters to see if they are correctly identified
-            console.log("Computed active filters", activeFilters);
 
             const filteredData = data.filter(item =>
                 Object.keys(activeFilters).every(field =>
@@ -518,19 +512,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 )
             );
 
-            // Debug: Check what the filtered data looks like
-            console.log("Filtered data for dropdown", filteredData);
-
-            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
-
-            // Debug: Log the tech schematics found
-            console.log("Tech schematics to be added to dropdown", techSchematics);
+            // Prepare to compute emission ranges
+            const schematicsEmissionRange = {};
+            filteredData.forEach(item => {
+                if (item.year.getFullYear() === 2050) {  // Check if the data is for the year 2050
+                    if (!schematicsEmissionRange[item.tech_schematic]) {
+                        schematicsEmissionRange[item.tech_schematic] = { min: Infinity, max: -Infinity };
+                    }
+                    schematicsEmissionRange[item.tech_schematic].min = Math.min(schematicsEmissionRange[item.tech_schematic].min, item.emission);
+                    schematicsEmissionRange[item.tech_schematic].max = Math.max(schematicsEmissionRange[item.tech_schematic].max, item.emission);
+                }
+            });
 
             dropdown.innerHTML = ''; // Clear current options
-            techSchematics.forEach(schematic => {
+            Object.keys(schematicsEmissionRange).forEach(schematic => {
                 const option = document.createElement('option');
+                const { min, max } = schematicsEmissionRange[schematic];
                 option.value = schematic;
-                option.textContent = schematic;
+                option.textContent = `Emissions 2050 range ${min.toFixed(2)}-${max.toFixed(2)}`; // Display range in the dropdown
                 dropdown.appendChild(option);
             });
         }
