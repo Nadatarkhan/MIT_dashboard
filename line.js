@@ -421,6 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
+            this.classList.toggle('active', isRecording);
             const toggle = document.querySelector('.lb-l');
 
             if (toggle.checked !== isRecording) {
@@ -464,7 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();  // Restore the context to the saved state, undoing the translation
         }
-
 
 
 
