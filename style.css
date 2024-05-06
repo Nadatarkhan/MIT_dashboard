@@ -205,6 +205,12 @@ background-color: #f4f4f4; // Light background color for active state
     flex-direction: column; /* Arrange buttons and toggles vertically */
     align-items: flex-start; /* Align items to the left */
     margin-bottom: 20px; /* Add some space between the controls and the plot */
+    flex-wrap: nowrap;
+}
+
+.controls .pheasant-demure-button, .controls .lb-main {
+    flex: none;  /* Prevents flex items from growing or shrinking */
+    margin-right: 10px;
 }
 
 .icon-row img {
@@ -653,6 +659,15 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
     .toggle-wrapper, .toggleContainer {
         transform: scale(0.8); /* Scale down the toggle switch */
+    }
+
+    .controls {
+        flex-direction: column;  /* Stacks items vertically on small screens */
+    }
+
+    .controls .pheasant-demure-button, .controls .lb-main {
+        margin-right: 0;  /* Removes margin on small screens */
+        margin-bottom: 10px;  /* Adds vertical spacing between items */
     }
 }
 
