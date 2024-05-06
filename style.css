@@ -194,7 +194,7 @@ background-color: #f4f4f4; // Light background color for active state
 
 .controls {
     position: relative;
-    width: 80%; /* Adjust as needed */
+    width: 50%; /* Adjust as needed */
     display: flex;
     flex-direction: column; /* Arrange buttons and toggles vertically */
     align-items: flex-start; /* Align items to the left */
