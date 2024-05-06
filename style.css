@@ -571,6 +571,9 @@ input[type='radio']:checked + label {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* Ensure sufficient width to display typical content without clipping */
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
