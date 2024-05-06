@@ -721,7 +721,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 .lb-l:before {
     background-color: #d7d7d7;
-    border-radius: 50%;
+    border-radius: 60%;
     width: 1.2em;
     height: 1.2em;
     transition: background-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
@@ -760,7 +760,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 .lb-l:focus {
-    outline: 0; /* Usually an anti-A11Y practice but set to remove an annoyance just for this demo */
+    outline: 0;
 }
 
 
