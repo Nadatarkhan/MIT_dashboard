@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Clear the entire canvas first
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = "italic 16px Arial"; // Set the font for the text to italic
+        context.font = "italic 12px Arial"; // Set the font for the text to italic
         context.fillStyle = "#666"; // Set the text color
         context.textAlign = "center"; // Center the text horizontally
         context.textBaseline = "middle"; // Center the text vertically
