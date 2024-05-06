@@ -199,19 +199,30 @@ background-color: #f4f4f4; // Light background color for active state
 
 .controls {
     position: relative;
-    width: 100%; /* Adjust this based on how wide you want the container to be */
+    flex: 1;  /* Smaller flex value means less space */
+    width: 50%; /* Adjust as needed */
     display: flex;
-    flex-direction: row; /* Ensures items are arranged horizontally */
-    align-items: center; /* Align items in the center vertically */
-    margin-bottom: 20px; /* Adds some space between the controls and the plot */
-    flex-wrap: nowrap; /* Prevents items from wrapping to the next line */
+    flex-direction: column; /* Arrange buttons and toggles vertically */
+    align-items: flex-start; /* Align items to the left */
+    margin-bottom: 20px; /* Add some space between the controls and the plot */
+    flex-wrap: nowrap;
+}
+
+
+.inline-controls {
+    display: flex; /* This will place the button and toggle side by side */
+    align-items: center; /* Centers the items vertically */
+    margin-bottom: 10px; /* Optional: space below this group */
 }
 
 .controls .pheasant-demure-button, .controls .lb-main {
-    flex: none; /* Prevents flex items from growing or shrinking */
-    margin-right: 10px; /* Adds spacing to the right of each button and label */
+    margin-bottom: 10px; /* Adds space below each button */
 }
 
+.inline-controls .pheasant-demure-button, .inline-controls .lb-main {
+    margin-right: 10px; /* Adds space to the right of each inline item */
+    margin-bottom: 0; /* Removes bottom margin for items in this group */
+}
 
 .icon-row img {
     height: 50px;
