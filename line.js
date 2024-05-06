@@ -412,46 +412,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        // Scenario 2
+// "Scenario 2" button event handler
         const scenario2Button = document.getElementById('scenario2Button');
-        let isRecording = false;
+        const lightBulbToggle = document.querySelector('.lb-l');  // Ensure this selector matches your HTML
 
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            lightBulbToggle.checked = isRecording; // Automatically toggle the light bulb when starting/stopping
+            lightBulbToggle.checked = isRecording;  // Toggle light bulb switch
 
             if (isRecording) {
-                resetAllCheckboxes(); // Clear all checkboxes
-                recordedLines = []; // Reset recorded lines storage
-            } else {
-                // Ensure no additional drawing happens here; just stop recording
+                resetAllCheckboxes();
+                recordedLines = [];  // Clear previous recordings
             }
         });
 
-
-        // Toggle visibility event listener and function
-        const lightBulbToggle = document.querySelector('.lb-l');
+// Light bulb toggle event handler
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas first
-                drawRecordedLines(recordedLines); // Redraw only the recorded lines
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                drawRecordedLines(recordedLines);  // Redraw only recorded lines
             } else {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // Redraw the plot without the recorded lines
+                updatePlot();  // Redraw the plot with non-recorded state
             }
         });
-
-        function drawRecordedLines(lines) {
-            lines.forEach(line => {
-                context.beginPath();
-                context.moveTo(x(line.start.year), y(line.start.emission));
-                context.lineTo(x(line.end.year), y(line.end.emission));
-                context.strokeStyle = line.color;
-                context.lineWidth = line.lineWidth;
-                context.stroke();
-            });
-        }
 
 
 
@@ -510,19 +495,15 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if not all fields have active filters
+                showInitialMessage();
+                return;
             }
 
-            const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
-                );
-            });
+            const filteredData = emissionsData.filter(d => Object.keys(filters).every(field =>
+                filters[field].length > 0 && filters[field].includes(d[field])));
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -544,12 +525,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.lineTo(x(d.year), y(d.emission));
 
                     if (isRecording && d.scenario === 'scenario2') {
-                        // Record lines in blue if recording for scenario 2
                         context.strokeStyle = 'blue';
                         context.lineWidth = 2;
-                        if (!recordedLines.find(line => line.start === filteredData[i - 1] && line.end === d)) {
-                            recordedLines.push({start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2});
-                        }
+                        recordedLines.push({ start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2 });
                     } else {
                         const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
                         context.strokeStyle = color;
@@ -561,6 +539,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
             drawAxis();
+        }
+
+        function drawRecordedLines(lines) {
+            lines.forEach(line => {
+                context.beginPath();
+                context.moveTo(x(line.start.year), y(line.start.emission));
+                context.lineTo(x(line.end.year), y(line.end.emission));
+                context.strokeStyle = line.color;
+                context.lineWidth = line.lineWidth;
+                context.stroke();
+            });
         }
 
 
