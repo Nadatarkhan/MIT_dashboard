@@ -145,19 +145,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Collect all currently active filters
+            console.log("Active filters", filters);
+
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
             }, {});
 
-            // Filter emissionsData based on active filters, then specifically for the year 2050
+            console.log("Filtered active filters", activeFilters);
+
             const filteredData = emissionsData.filter(item =>
-                item.year.getFullYear() === 2050 && // Filter data specifically for the year 2050
+                item.year.getFullYear() === 2050 &&
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            // Calculate emission ranges for each tech_schematic
+            console.log("Entries for 2050:", filteredData.length);
+            console.log(filteredData);  // Output the actual filtered items to check data
+
             const schematicsEmissionRange = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
@@ -168,8 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 schematicsEmissionRange[schematic].max = Math.max(schematicsEmissionRange[schematic].max, item.emission);
             });
 
-            // Update the dropdown with tech_schematics and their emission ranges
-            dropdown.innerHTML = ''; // Clear current options
+            console.log("Tech Schematics and their Ranges:", schematicsEmissionRange);
+
+            dropdown.innerHTML = '';
             Object.keys(schematicsEmissionRange).forEach(schematic => {
                 const { min, max } = schematicsEmissionRange[schematic];
                 const option = document.createElement('option');
@@ -178,13 +183,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.appendChild(option);
             });
 
-            // Add an event listener to update the image when the dropdown selection changes
             dropdown.addEventListener('change', function() {
                 const selectedSchematic = dropdown.value.split(' ')[0]; // Assuming the schematic name is the first part before the space
                 techImage.src = `images/${selectedSchematic}.png`;
                 techImage.alt = selectedSchematic;
             });
         };
+
 
 
 
