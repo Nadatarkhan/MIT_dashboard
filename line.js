@@ -428,9 +428,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             } else {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // Redraw the plot without the recorded lines
+                updatePlot(); // This should redraw only the necessary lines
             }
         });
+
 
         function drawRecordedLines(lines) {
             lines.forEach(line => {
