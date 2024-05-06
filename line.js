@@ -50,42 +50,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
-        let yOffset = -Math.max(50, containerHeight * 0.2); // Start even higher above the final position
+        let yOffset = -Math.max(100, containerHeight * 0.3); // Start significantly above the final position
         const maxOpacity = 1; // Target opacity
         const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
-        const incrementYOffset = 2; // Move the text down by 2 pixels each frame, adjusted based on the height
+        const incrementYOffset = 2; // Move the text down by 2 pixels each frame
         const maxWidth = containerWidth * dpi - 100; // Maximum width for text, with margins
         const lineHeight = 20; // Line height for wrapping text
-
-        // Clear the entire canvas first
-        context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = "italic 16px Arial"; // Set the font for the text to italic
-        context.fillStyle = "#666"; // Set the text color
-        context.textAlign = "center"; // Center the text horizontally
-        context.textBaseline = "middle"; // Center the text vertically
-
-        const text = "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.";
 
         function fadeIn() {
             if (opacity < maxOpacity || yOffset < 0) {
                 opacity += incrementOpacity; // Increase the opacity
                 yOffset += incrementYOffset; // Decrease the vertical offset to move the text down
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
                 context.save();
                 context.globalAlpha = opacity; // Set the current opacity for the drawing
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
                 // Calculate the current y position of the text to animate it
                 const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
-                wrapText(context, text, containerWidth * dpi / 2, yPos, maxWidth, lineHeight);
+                context.font = "italic 16px Arial"; // Set the font for the text to italic
+                context.fillStyle = "#666"; // Set the text color
+                context.textAlign = "center"; // Center the text horizontally
+                context.textBaseline = "middle"; // Center the text vertically
+                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos, maxWidth, lineHeight);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             } else {
-                context.globalAlpha = 1;
-                wrapText(context, text, containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
+                context.globalAlpha = 1; // Ensure full opacity for the final draw
+                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
             }
         }
 
         fadeIn();
     }
+
 
 
 // Function to handle text wrapping
