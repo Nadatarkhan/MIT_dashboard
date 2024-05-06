@@ -439,6 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Toggle visibility event listener and function
+        let lightBulbOn = false; // Track the state of the lightbulb toggle
         const lightBulbToggle = document.querySelector('.lb-l');
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
@@ -568,8 +569,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-
             context.restore();
+
+            // Redraw recorded lines if the lightbulb is on
+            if (lightBulbOn) {
+                drawRecordedLines(recordedLines);
+            }
             drawAxis();
         }
 
