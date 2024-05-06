@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
+    // Declare temporaryStorage here
+    let temporaryStorage = [];
+
     const margin = {top: 30, right: 30, bottom: 30, left: 100},
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
@@ -400,7 +403,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        
+
+        // Scenario 2
+        const scenario2Button = document.getElementById('scenario2Button');
+        let isRecording = false;
+        let recordedLines = [];
+
+        scenario2Button.addEventListener('click', function() {
+            isRecording = !isRecording;
+            this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
+
+            if (!isRecording) {
+                // Stop recording, save the lines
+                recordedLines = recordedLines.concat(temporaryStorage); // Assumes temporaryStorage holds lines drawn during recording
+                temporaryStorage = [];
+            }
+        });
+
+        // Toggle visibility event listener and function
+        const lightBulbToggle = document.querySelector('.lb-l');
+
+        lightBulbToggle.addEventListener('change', function() {
+            if (this.checked) {
+                drawRecordedLines(recordedLines);
+            } else {
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                updatePlot(); // Redraw the plot without the recorded lines
+            }
+        });
+
+        function drawRecordedLines(lines) {
+            lines.forEach(line => {
+                context.beginPath();
+                context.moveTo(x(line.start.year), y(line.start.emission));
+                context.lineTo(x(line.end.year), y(line.end.emission));
+                context.strokeStyle = line.color;
+                context.lineWidth = line.lineWidth;
+                context.stroke();
+            });
+        }
+
+
+
 
 // Helper function to reset all checkboxes
         function resetAllCheckboxes() {
@@ -490,15 +534,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                    let lineProps;
+                    if (isRecording && d.scenario === 'scenario2') {
+                        lineProps = { color: 'blue', lineWidth: 2 };
+                        temporaryStorage.push({ start: filteredData[i - 1], end: d, ...lineProps }); // Save line for toggling
+                    } else {
+                        lineProps = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                    }
 
-                    console.log(`Scenario: ${d.scenario}, Color: ${color}`);
-
-                    context.strokeStyle = color;
-                    context.lineWidth = lineWidth;
+                    context.strokeStyle = lineProps.color;
+                    context.lineWidth = lineProps.lineWidth;
                     context.stroke();
                 }
             });
+
 
             context.restore();
             drawAxis();
