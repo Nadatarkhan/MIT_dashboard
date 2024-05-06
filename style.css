@@ -655,6 +655,8 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 .lb-main {
     padding: 1.5em 0 0 0;
     text-align: center;
+    margin-left: 10px; /* Space between the button and the toggle */
+    vertical-align: middle;
 }
 
 .lb-l {
