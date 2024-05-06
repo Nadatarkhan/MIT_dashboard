@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
-            const techImage = document.getElementById('techImage');
+            const techImage = document.getElementById('techImage'); // Target the image element by ID
 
             if (!dropdown || !techImage) {
                 console.error('Dropdown or image element not found');
@@ -156,26 +156,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            // Extract unique tech_schematic values from the filtered data and compute the emissions range for 2050
-            const techSchematics = new Map();
-            filteredData.forEach(item => {
-                if (new Date(item.year).getFullYear() === 2050) {
-                    const schematic = item.tech_schematic;
-                    if (!techSchematics.has(schematic)) {
-                        techSchematics.set(schematic, { min: Infinity, max: -Infinity });
-                    }
-                    const range = techSchematics.get(schematic);
-                    range.min = Math.min(range.min, item.emission);
-                    range.max = Math.max(range.max, item.emission);
-                }
-            });
+            // Extract unique tech_schematic values from the filtered data
+            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
 
-            // Populate the dropdown with unique schematics and include emission ranges for 2050
+            // Populate the dropdown with unique schematics
             dropdown.innerHTML = '';  // Clear current options
-            techSchematics.forEach((range, schematic) => {
+            techSchematics.forEach(schematic => {
                 const option = document.createElement('option');
                 option.value = schematic;
-                option.textContent = `Emissions 2050 range ${range.min.toFixed(2)}-${range.max.toFixed(2)}`; // Adjust the display name
+                option.textContent = schematic;
                 dropdown.appendChild(option);
             });
 
@@ -503,8 +492,48 @@ document.addEventListener('DOMContentLoaded', function() {
             filters = {}; // This line can be adjusted based on how your filter logic is implemented
         }
 
+        /*Drop down function */
 
-        
+        function updateTechSchematicDropdown(data) {
+            const dropdown = document.getElementById('techSchematicDropdown');
+            if (!dropdown) {
+                console.error("Dropdown element not found");
+                return; // Ensure the dropdown is present
+            }
+
+            // Debug: Check what the filters object looks like when updating the dropdown
+            console.log("Active filters", filters);
+
+            const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+                if (value.length > 0) acc[key] = value;
+                return acc;
+            }, {});
+
+            // Debug: Log activeFilters to see if they are correctly identified
+            console.log("Computed active filters", activeFilters);
+
+            const filteredData = data.filter(item =>
+                Object.keys(activeFilters).every(field =>
+                    activeFilters[field].includes(item[field])
+                )
+            );
+
+            // Debug: Check what the filtered data looks like
+            console.log("Filtered data for dropdown", filteredData);
+
+            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
+
+            // Debug: Log the tech schematics found
+            console.log("Tech schematics to be added to dropdown", techSchematics);
+
+            dropdown.innerHTML = ''; // Clear current options
+            techSchematics.forEach(schematic => {
+                const option = document.createElement('option');
+                option.value = schematic;
+                option.textContent = schematic;
+                dropdown.appendChild(option);
+            });
+        }
 
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
