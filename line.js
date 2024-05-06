@@ -138,53 +138,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
-            const techImage = document.getElementById('techImage'); // Target the image element by ID
+            const techImage = document.getElementById('techImage');
 
             if (!dropdown || !techImage) {
                 console.error('Dropdown or image element not found');
                 return;
             }
 
-            // Collect all currently active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, values]) => {
                 if (values.length > 0) acc[key] = values;
                 return acc;
             }, {});
 
-            // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            // Prepare to compute emission ranges for the year 2050
-            const schematicsEmissionRange = {};
-            filteredData.forEach(item => {
-                if (item.year.getFullYear() === 2050) {  // Check if the data is for the year 2050
-                    if (!schematicsEmissionRange[item.tech_schematic]) {
-                        schematicsEmissionRange[item.tech_schematic] = { min: Infinity, max: -Infinity };
-                    }
-                    schematicsEmissionRange[item.tech_schematic].min = Math.min(schematicsEmissionRange[item.tech_schematic].min, item.emission);
-                    schematicsEmissionRange[item.tech_schematic].max = Math.max(schematicsEmissionRange[item.tech_schematic].max, item.emission);
-                }
-            });
+            console.log("Filtered Data after active filters applied:", filteredData);
 
-            // Update dropdown options to reflect emission ranges
+            const techSchematics = new Set(filteredData.map(item => item.tech_schematic).filter(Boolean));
+            console.log("Unique Tech Schematics:", techSchematics);
+
             dropdown.innerHTML = ''; // Clear current options
-            Object.keys(schematicsEmissionRange).forEach(schematic => {
+            techSchematics.forEach(schematic => {
                 const option = document.createElement('option');
-                const { min, max } = schematicsEmissionRange[schematic];
                 option.value = schematic;
-                option.textContent = `Emissions 2050 range ${min.toFixed(2)}-${max.toFixed(2)}`; // Display range in the dropdown
+                option.textContent = schematic;
                 dropdown.appendChild(option);
             });
 
-            // Add an event listener to update the image when the dropdown selection changes
             dropdown.addEventListener('change', function() {
                 const selectedSchematic = dropdown.value;
                 techImage.src = `images/${selectedSchematic}.png`;
                 techImage.alt = selectedSchematic;
             });
         };
+
 
 
         fields.forEach(field => {
