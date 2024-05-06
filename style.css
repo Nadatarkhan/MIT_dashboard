@@ -208,20 +208,9 @@ background-color: #f4f4f4; // Light background color for active state
     flex-wrap: nowrap;
 }
 
-
-.inline-controls {
-    display: flex; /* This will place the button and toggle side by side */
-    align-items: center; /* Centers the items vertically */
-    margin-bottom: 10px; /* Optional: space below this group */
-}
-
 .controls .pheasant-demure-button, .controls .lb-main {
-    margin-bottom: 10px; /* Adds space below each button */
-}
-
-.inline-controls .pheasant-demure-button, .inline-controls .lb-main {
-    margin-right: 10px; /* Adds space to the right of each inline item */
-    margin-bottom: 0; /* Removes bottom margin for items in this group */
+    flex: none;  /* Prevents flex items from growing or shrinking */
+    margin-right: 10px;
 }
 
 .icon-row img {
