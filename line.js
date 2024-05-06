@@ -50,13 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
-        let yOffset = -50; // Start 50 pixels above the final position
+        let yOffset = Math.min(-50, -containerHeight * 0.1); // Start above the final position, adjusted to be more responsive
         const maxOpacity = 1; // Target opacity
         const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
-        const incrementYOffset = 2; // Move the text down by 2 pixels each frame
+        const incrementYOffset = 2; // Move the text down by 2 pixels each frame, adjusted based on the height
         const maxWidth = containerWidth * dpi - 100; // Maximum width for text, with margins
         const lineHeight = 20; // Line height for wrapping text
-
 
         // Clear the entire canvas first
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
