@@ -49,43 +49,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function showInitialMessage() {
-        let opacity = 0; // Start with an opacity of 0
-        let yOffset = Math.min(-100, -containerHeight * 0.1); // Start above the final position, adjusted to be more responsive
-        const maxOpacity = 1; // Target opacity
-        const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
-        const incrementYOffset = 2; // Move the text down by 2 pixels each frame, adjusted based on the height
-        const maxWidth = containerWidth * dpi - 100; // Maximum width for text, with margins
-        const lineHeight = 20; // Line height for wrapping text
+        let opacity = 0;  // Start with an opacity of 0
+        let yOffset = -50;  // Start closer to the center
+        const maxOpacity = 1;  // Target opacity
+        const incrementOpacity = 0.05;  // Increment the opacity by this amount each frame
+        const incrementYOffset = 5;  // Move the text down by 5 pixels each frame
 
-        // Clear the entire canvas first
+        const maxWidth = Math.max(300, containerWidth - 100);  // Ensure a minimum maxWidth for very small screens
+        const lineHeight = 20;  // Line height for wrapping text
+
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = "italic 12px Arial"; // Set the font for the text to italic
-        context.fillStyle = "#666"; // Set the text color
-        context.textAlign = "center"; // Center the text horizontally
-        context.textBaseline = "middle"; // Center the text vertically
+        context.font = "italic 12px Arial";  // Adjust font size dynamically if needed
+        context.fillStyle = "#666";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
 
         const text = "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.";
 
         function fadeIn() {
-            if (opacity < maxOpacity || yOffset < 0) {
-                opacity += incrementOpacity; // Increase the opacity
-                yOffset += incrementYOffset; // Decrease the vertical offset to move the text down
+            if (opacity < maxOpacity || yOffset < containerHeight / 2) {
+                opacity += incrementOpacity;
+                yOffset += incrementYOffset;
                 context.save();
-                context.globalAlpha = opacity; // Set the current opacity for the drawing
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear the canvas to avoid overlapping text
-                // Calculate the current y position of the text to animate it
-                const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
-                wrapText(context, text, containerWidth * dpi / 2, yPos, maxWidth, lineHeight);
+                context.globalAlpha = opacity;
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                const yPos = Math.max(containerHeight / 2, yOffset + margin.top);
+                wrapText(context, text, containerWidth / 2, yPos, maxWidth, lineHeight);
                 context.restore();
-                requestAnimationFrame(fadeIn); // Request the next frame of the animation
-            } else {
-                context.globalAlpha = 1;
-                wrapText(context, text, containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
+                requestAnimationFrame(fadeIn);
             }
         }
-
         fadeIn();
     }
+
 
 // Function to handle text wrapping
     function wrapText(context, text, x, y, maxWidth, lineHeight) {
