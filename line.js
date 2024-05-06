@@ -423,18 +423,16 @@ document.addEventListener('DOMContentLoaded', function() {
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
             const toggle = document.querySelector('.lb-l');
 
-            // Check if the current state of the toggle doesn't match the desired state
             if (toggle.checked !== isRecording) {
-                toggle.click(); // Simulate a click to properly trigger CSS transitions and any attached event handlers
+                toggle.click();
             }
 
             if (isRecording) {
-                resetAllCheckboxes(); // Clears all checkboxes
-                recordedLines = []; // Clears previously recorded lines
-                // Enable recording, which should start drawing blue lines as per the updatePlot logic
+                resetAllCheckboxes();
+                recordedLines = [];
             } else {
-                // Stop recording, ensure lines are drawn if not already and not draw them again
-                drawRecordedLines(recordedLines); // Ensure lines are drawn only if not already drawn
+                drawRecordedLines(recordedLines);
+                updatePlot();  // Optionally redraw the entire plot to re-align everything
             }
         });
 
@@ -451,6 +449,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function drawRecordedLines(lines) {
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);  // Clear the canvas first
+            context.save();  // Save the current state of the context
+            context.translate(margin.left, margin.top);  // Re-apply translation to align with the plot area
+
             lines.forEach(line => {
                 context.beginPath();
                 context.moveTo(x(line.start.year), y(line.start.emission));
@@ -459,7 +461,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.lineWidth = line.lineWidth;
                 context.stroke();
             });
+
+            context.restore();  // Restore the context to the saved state, undoing the translation
         }
+
 
 
 // Helper function to reset all checkboxes
