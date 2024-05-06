@@ -507,17 +507,16 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();  // Draw axes first to ensure context
 
             // Draw horizontal grid lines
-            const numGridLines = 5; // Adjust as needed
-            const gridLineColor = '#c2c2c2'; // Light grey color
+            const numGridLines = 5; // Number of horizontal grid lines
+            const gridLineColor = '#c2c2c2'; // Color of the grid lines
             context.beginPath();
             context.strokeStyle = gridLineColor;
-            context.lineWidth = 0.5; // Thin line
-            const yStep = (y.domain()[1] - y.domain()[0]) / (numGridLines - 1);
-            for (let i = 0; i < numGridLines; i++) {
-                const yValue = y.domain()[0] + i * yStep;
-                const yPos = y(yValue);
+            context.lineWidth = 1; // Set line width for grid lines
+            for (let i = 0; i <= numGridLines; i++) {
+                const yValue = y.domain()[0] + (y.domain()[1] - y.domain()[0]) * i / numGridLines;
+                const yPos = y(yValue) + margin.top; // Adjust position by top margin
                 context.moveTo(margin.left, yPos);
-                context.lineTo(containerWidth * dpi - margin.right, yPos);
+                context.lineTo(containerWidth - margin.right, yPos);
             }
             context.stroke();
 
@@ -582,7 +581,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             drawAxis();
         }
-
 
 
         function drawAxis() {
