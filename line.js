@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
-        let yOffset = Math.min(-50, -containerHeight * 0.1); // Start above the final position, adjusted to be more responsive
+        let yOffset = -Math.max(50, containerHeight * 0.2); // Start even higher above the final position
         const maxOpacity = 1; // Target opacity
         const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
         const incrementYOffset = 2; // Move the text down by 2 pixels each frame, adjusted based on the height
