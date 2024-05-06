@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
             };
         });
-            //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
+        //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
@@ -420,16 +420,16 @@ document.addEventListener('DOMContentLoaded', function() {
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            document.querySelector('.lb-l').checked = isRecording; // Ensure this targets the correct element
+            document.querySelector('.lb-l').checked = isRecording; // Turn on light bulb when recording starts
 
             if (isRecording) {
-                resetAllCheckboxes(); // Clears all checkboxes
-                recordedLines = []; // Clears previously recorded lines
+                resetAllCheckboxes(); // Custom function to clear all checkboxes
+                recordedLines = []; // Clear previous recorded lines if any
             } else {
-                // When stopping recording, nothing additional happens here that affects the toggle
+                // Recording stops, save the lines
+                drawRecordedLines(recordedLines); // Ensure lines are drawn
             }
         });
-
 
 
         // Toggle visibility event listener and function
