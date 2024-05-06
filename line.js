@@ -414,22 +414,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Scenario 2
-        const scenario2Button = document.getElementById('scenario2Button');
-        let isRecording = false;
-
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            document.querySelector('.lb-l').checked = isRecording; // Turn on light bulb when recording starts
+            const toggle = document.querySelector('.lb-l');
+
+            if (toggle.checked !== isRecording) {
+                toggle.click(); // Simulate a click on the toggle
+            }
 
             if (isRecording) {
-                resetAllCheckboxes(); // Custom function to clear all checkboxes
-                recordedLines = []; // Clear previous recorded lines if any
-            } else {
-                // Recording stops, save the lines
-                drawRecordedLines(recordedLines); // Ensure lines are drawn
+                resetAllCheckboxes();
+                recordedLines = [];
             }
         });
+
+
 
 
         // Toggle visibility event listener and function
