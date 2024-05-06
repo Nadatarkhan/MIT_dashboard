@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Draw horizontal grid lines
             const numGridLines = 5; // Number of horizontal grid lines
-            const gridLineColor = '#c2c2c2'; // Color of the grid lines
+            const gridLineColor = '#707070'; // Color of the grid lines
             context.beginPath();
             context.strokeStyle = gridLineColor;
             context.lineWidth = 1; // Set line width for grid lines
