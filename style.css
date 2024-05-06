@@ -213,6 +213,12 @@ background-color: #f4f4f4; // Light background color for active state
     margin-right: 10px;
 }
 
+.inline-control {
+    display: flex;
+    align-items: center; /* Ensures vertical alignment is centered */
+}
+
+
 .icon-row img {
     height: 50px;
 }
