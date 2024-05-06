@@ -551,6 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             filteredData.forEach((d, i) => {
+                console.log("Scenario:", d.scenario, "Baseline:", d.baseline); // Debug log
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
@@ -562,6 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         if (d.baseline && fields.every(field => filters[field].includes("Baseline"))) {
                             // Color baseline scenarios purple when all baseline checkboxes are selected
+                            console.log("Baseline line found!"); // Debug log
                             context.strokeStyle = '#b937b8'; // Purple color
                             context.lineWidth = 2;
                         } else if (d.scenario === 2) {
@@ -577,6 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.stroke();
                 }
             });
+
 
             context.restore();
 
