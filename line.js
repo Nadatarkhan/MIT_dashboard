@@ -451,12 +451,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const lightBulbToggle = document.querySelector('.lb-l');
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
-                drawRecordedLines(recordedLines); // Draw only the recorded lines on top of existing plot
+                if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+                    // If no filters are active and no plot is currently shown, clear and prepare to draw just the axes and lines
+                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                    drawAxis();  // Draw axes first
+                }
+                drawRecordedLines(recordedLines); // Then draw the recorded lines over the axes
             } else {
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // Redraw the plot to remove the recorded lines
+                updatePlot(); // Redraw the plot without the recorded lines
             }
         });
+
 
 
         function drawRecordedLines(lines) {
