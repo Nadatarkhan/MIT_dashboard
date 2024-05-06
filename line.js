@@ -138,25 +138,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
-            const techImage = document.getElementById('techImage'); // Target the image element by ID
+            const techImage = document.getElementById('techImage');
 
             if (!dropdown || !techImage) {
                 console.error('Dropdown or image element not found');
                 return;
             }
 
-            // Collect all currently active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, values]) => {
                 if (values.length > 0) acc[key] = values;
                 return acc;
             }, {});
 
-            // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            // Compute emission ranges specifically for the year 2050
+            console.log("Entries for 2050: ", filteredData.filter(item => item.year.getFullYear() === 2050).length);
+
             const techSchematics = new Map();
             filteredData.forEach(item => {
                 if (item.year.getFullYear() === 2050) {
@@ -170,22 +169,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Populate the dropdown with unique schematics and their emission ranges for 2050
-            dropdown.innerHTML = '';  // Clear current options
+            console.log("Tech Schematics and their Ranges: ", Array.from(techSchematics.entries()));
+
+            dropdown.innerHTML = ''; // Clear current options
             techSchematics.forEach((range, schematic) => {
                 const option = document.createElement('option');
                 option.value = schematic;
-                option.textContent = `Emissions 2050 range ${range.min.toFixed(2)}-${range.max.toFixed(2)}`; // Display range in the dropdown
+                option.textContent = schematic; // Temporarily remove range for testing
                 dropdown.appendChild(option);
             });
-
-            // Add an event listener to update the image when the dropdown selection changes
-            dropdown.addEventListener('change', function() {
-                const selectedSchematic = dropdown.value;
-                techImage.src = `images/${selectedSchematic}.png`;
-                techImage.alt = selectedSchematic;
-            });
         };
+
 
 
 
