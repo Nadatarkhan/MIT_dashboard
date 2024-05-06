@@ -413,21 +413,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        // Scenario 2
+// Scenario 2
         const scenario2Button = document.getElementById('scenario2Button');
         let isRecording = false;
+        let recordedLines = []; // Ensure this is defined here if not already globally defined
 
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            document.querySelector('.lb-l').checked = isRecording; // Turn on light bulb when recording starts
+            const toggle = document.querySelector('.lb-l');
+
+            // Check if the current state of the toggle doesn't match the desired state
+            if (toggle.checked !== isRecording) {
+                toggle.click(); // Simulate a click to properly trigger CSS transitions and any attached event handlers
+            }
 
             if (isRecording) {
-                resetAllCheckboxes(); // Custom function to clear all checkboxes
-                recordedLines = []; // Clear previous recorded lines if any
+                resetAllCheckboxes(); // Clears all checkboxes
+                recordedLines = []; // Clears previously recorded lines
+                // Enable recording, which should start drawing blue lines as per the updatePlot logic
             } else {
-                // Recording stops, save the lines
-                drawRecordedLines(recordedLines); // Ensure lines are drawn
+                // Stop recording, ensure lines are drawn if not already and not draw them again
+                drawRecordedLines(recordedLines); // Ensure lines are drawn only if not already drawn
             }
         });
 
