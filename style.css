@@ -192,8 +192,14 @@ background-color: #f4f4f4; // Light background color for active state
     cursor: pointer;
 }
 
+.flex-container {
+    display: flex;
+    width: 100%;  /* Ensure the container takes full width of its parent */
+}
+
 .controls {
     position: relative;
+    flex: 1;  /* Smaller flex value means less space */
     width: 50%; /* Adjust as needed */
     display: flex;
     flex-direction: column; /* Arrange buttons and toggles vertically */
@@ -231,6 +237,7 @@ background-color: #f4f4f4; // Light background color for active state
 
 .bottom-visual .bottom-content {
     display: flex;
+    flex: 2;
     width: 100%; /* Ensures full container width usage */
     align-items: flex-start; /* Aligns the image to the top of the container */
     justify-content: left; /* Distributes space evenly around items */
