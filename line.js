@@ -569,7 +569,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
 
-
             context.restore();
             drawAxis();
         }
@@ -583,9 +582,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'scenario1':
                         return { color: '#00897b', lineWidth: 2 }; // Teal
                     case 'scenario2':
-                        return { color: '#055f8a', lineWidth: 2 }; // Dark Blue
+                        return { color: '#b64f1d', lineWidth: 1 }; // Dark orange
                     default:
-                        return { color: '#565656', lineWidth: 1 }; // Default gray
+                        return { color: '#565656', lineWidth: 0.7 }; // Default gray
                 }
             } else {
                 return { color: '#565656', lineWidth: 1 }; // Default gray when not active
