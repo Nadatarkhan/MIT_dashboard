@@ -215,7 +215,14 @@ background-color: #f4f4f4; // Light background color for active state
 
 .inline-control {
     display: flex;
-    align-items: center; /* Ensures vertical alignment is centered */
+    align-items: center;
+    margin-right: 10px;
+}
+
+
+/* Optional: Fine-tuning alignment */
+.lb-main {
+    transform: translateY(-2px); /* Adjust as needed */
 }
 
 
