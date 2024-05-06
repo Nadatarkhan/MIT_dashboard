@@ -556,13 +556,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d';
+                        context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()), d.baseline);
-                        context.strokeStyle = color;
-                        context.lineWidth = lineWidth;
+                        if (d.baseline) {
+                            // Color baseline scenarios purple
+                            context.strokeStyle = '#b937b8'; // Purple color
+                            context.lineWidth = 2;
+                        } else if (d.scenario === 2) {
+                            // Color scenario 2 lines orange
+                            context.strokeStyle = '#b64f1d'; // Orange color
+                            context.lineWidth = 1.2;
+                        } else {
+                            // Color other scenarios grey
+                            context.strokeStyle = '#808080'; // Grey color
+                            context.lineWidth = 1;
+                        }
                     }
                     context.stroke();
                 }
@@ -575,17 +585,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
             drawAxis();
-
-            function getColor(scenario, isActive, isBaseline) {
-                // Custom function to determine color and lineWidth based on scenario, isActive flag, and baseline flag
-                if (isBaseline) {
-                    return { color: '#b937b8', lineWidth: 2 }; // Purple for baseline
-                } else if (isActive) {
-                    return { color: '#b64f1d', lineWidth: 1.2 }; // Orange for active non-baseline scenarios
-                } else {
-                    return { color: '#565656', lineWidth: 1 }; // Default grey for inactive scenarios
-                }
-            }
         }
 
 
