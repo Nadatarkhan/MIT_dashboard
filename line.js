@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const lineHeight = 20;  // Line height for wrapping text
 
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = "italic 12px Arial";  // Adjust font size dynamically if needed
+        context.font = "italic 14px Arial";  // Adjust font size dynamically if needed
         context.fillStyle = "#666";
         context.textAlign = "center";
         context.textBaseline = "middle";
@@ -174,9 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 techImage.alt = selectedSchematic;
             });
         };
-
-
-
 
 
 
