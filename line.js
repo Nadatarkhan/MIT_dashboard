@@ -288,12 +288,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        let scenarioLines = {
+            baseline: [],
+            scenario1: []
+        };
 
 
 // Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
-        let baselineActive = false;  // Track the activation state of the baseline scenario
-        let baselineScenarios = new Set();  // To track which scenarios are affected by the baseline button
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
@@ -327,8 +329,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     baselineScenarios.clear();
                 }
 
-                console.log("Current baselineScenarios:", Array.from(baselineScenarios));
-                console.log("Filters after update:", filters);
 
                 // Sync the state of grid-related checkboxes with the baseline button
                 const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
@@ -354,8 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
-
+        
 
 //Scenario 1 Function
         const scenario1Button = document.getElementById('scenario1Button');
