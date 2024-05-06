@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-        
+
 
         function drawAxis() {
             context.save();
