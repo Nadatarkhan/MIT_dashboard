@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Debug: Log all the active filters currently applied
             console.log("Active filters", filters);
 
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
@@ -153,21 +152,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 return acc;
             }, {});
 
-            // Debug: Log filtered active filters to confirm they are correctly processed
             console.log("Filtered active filters", activeFilters);
 
-            // Debug: Log all years to verify they are correctly parsed as date objects
-            console.log("All years in data:", emissionsData.map(d => d.year.getFullYear()));
+            // Check year parsing and log if any dates are incorrectly parsed
+            emissionsData.forEach(item => {
+                if (isNaN(item.year.getFullYear())) {
+                    console.error("Date parsing error for item", item);
+                }
+            });
 
-            // Filter the data based on the active filters and specifically for the year 2050
-            const filteredData = emissionsData.filter(item =>
-                item.year.getFullYear() === 2050 &&
-                Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
-            );
+            // Filter data for the year 2050 and log the process
+            const filteredData = emissionsData.filter(item => {
+                const isYear2050 = item.year.getFullYear() === 2050;
+                const matchesFilters = Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]));
+                if (!matchesFilters && isYear2050) {
+                    console.log("Filtered out by active filters:", item);
+                }
+                return isYear2050 && matchesFilters;
+            });
 
-            // Debug: Log how many entries are found for the year 2050 after applying filters
             console.log("Entries for 2050:", filteredData.length);
-            console.log("Filtered data for 2050:", filteredData);  // Output the actual filtered items to check data
+            console.log("Filtered data for 2050:", filteredData);
 
             const schematicsEmissionRange = {};
             filteredData.forEach(item => {
@@ -179,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 schematicsEmissionRange[schematic].max = Math.max(schematicsEmissionRange[schematic].max, item.emission);
             });
 
-            // Debug: Log the computed emission ranges for each tech schematic
             console.log("Tech Schematics and their Ranges:", schematicsEmissionRange);
 
             dropdown.innerHTML = '';
@@ -199,8 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-
-
+        
 
 
         fields.forEach(field => {
