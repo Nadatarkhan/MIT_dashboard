@@ -560,8 +560,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        if (d.baseline) {
-                            // Color baseline scenarios purple
+                        if (d.baseline && fields.every(field => filters[field].includes("Baseline"))) {
+                            // Color baseline scenarios purple when all baseline checkboxes are selected
                             context.strokeStyle = '#b937b8'; // Purple color
                             context.lineWidth = 2;
                         } else if (d.scenario === 2) {
@@ -586,6 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             drawAxis();
         }
+
 
 
 
