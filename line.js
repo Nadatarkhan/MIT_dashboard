@@ -451,18 +451,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function drawRecordedLines(lines) {
-            if (lines.length > 0) {
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                lines.forEach(line => {
-                    context.beginPath();
-                    context.moveTo(x(line.start.year), y(line.start.emission));
-                    context.lineTo(x(line.end.year), y(line.end.emission));
-                    context.strokeStyle = line.color;
-                    context.lineWidth = line.lineWidth;
-                    context.stroke();
-                });
-                // Optionally redraw the rest of the plot here or handle this in a more global update/draw function
-            }
+            lines.forEach(line => {
+                context.beginPath();
+                context.moveTo(x(line.start.year), y(line.start.emission));
+                context.lineTo(x(line.end.year), y(line.end.emission));
+                context.strokeStyle = line.color;
+                context.lineWidth = line.lineWidth;
+                context.stroke();
+            });
         }
 
 
