@@ -327,6 +327,13 @@ h2 {
     z-index: 1050; /* Ensures tooltips float above other content */
 }
 
+.tooltip-inner {
+    font-size: 8px !important;
+    background-color: #fff !important;
+    color: #333 !important;
+}
+
+
 .icon-container:hover .tooltip {
     opacity: 1; /* Show the tooltip when hovering over the icon */
 }
