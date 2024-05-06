@@ -534,19 +534,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    let lineProps;
                     if (isRecording && d.scenario === 'scenario2') {
-                        lineProps = { color: 'blue', lineWidth: 2 };
-                        temporaryStorage.push({ start: filteredData[i - 1], end: d, ...lineProps }); // Save line for toggling
+                        // If recording and the scenario is 'scenario2', draw in blue and store
+                        context.strokeStyle = 'blue';
+                        context.lineWidth = 2;
+                        temporaryStorage.push({ start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2 });
                     } else {
-                        lineProps = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                        // If not recording, or not scenario2, draw normally
+                        const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                        context.strokeStyle = color;
+                        context.lineWidth = lineWidth;
                     }
-
-                    context.strokeStyle = lineProps.color;
-                    context.lineWidth = lineProps.lineWidth;
                     context.stroke();
                 }
             });
+
 
 
             context.restore();
