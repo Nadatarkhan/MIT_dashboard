@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
 
-        
+
 
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container${field === 'grid' ? '-2' : ''}[data-field="${field}"]`);
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             baselineButton.addEventListener('click', function() {
                 baselineActive = !baselineActive;
                 this.classList.toggle('active', baselineActive);
-                this.textContent = baselineActive ? "Deactivate Scenario" : "Activate Scenario";
+                this.textContent = baselineActive ? "Business as Usual" : "Business as Usual";
 
                 document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
                     checkbox.checked = baselineActive;
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scenario1Button.addEventListener('click', function() {
                 scenario1Active = !scenario1Active;  // Toggle the activation state
                 this.classList.toggle('active', scenario1Active);
-                this.textContent = scenario1Active ? "Deactivate Scenario 1" : "Activate Scenario 1";
+                this.textContent = scenario1Active ? "Best Practice" : "Best Practice";
 
                 // Clear existing filters when toggling this scenario
                 Object.keys(filters).forEach(field => {
