@@ -538,15 +538,16 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Always draw the base axis first, regardless of data state
+            // Always clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure context
 
             // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();  // Optional: Display a message to select more filters
-                return; // Keep the axes displayed, but do not plot any data
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
             }
 
             const filteredData = emissionsData.filter(d => {
@@ -556,35 +557,42 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (filteredData.length === 0) {
-                console.log("No data to display, but axes will remain visible.");
-                return;  // Exit without clearing the axes
+                console.log("No data to display.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                return;
             }
 
-            // Prepare to draw the data
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            // Proceed to plot the data
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             context.save();
             context.translate(margin.left, margin.top);
+
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
-                    context.strokeStyle = color;
-                    context.lineWidth = lineWidth;
+                    if (isRecording) {
+                        context.strokeStyle = '#b64f1d';
+                        context.lineWidth = 1.2;
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
+                    } else {
+                        const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                        context.strokeStyle = color;
+                        context.lineWidth = lineWidth;
+                    }
                     context.stroke();
                 }
             });
+
             context.restore();
 
             // Redraw recorded lines if the lightbulb is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
-            drawAxis();
         }
 
         function getColor(scenario, isActive) {
