@@ -288,10 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        let scenarioLines = {
-            baseline: [],
-            scenario1: []
-        };
 
 
 // Scenario button functionality
@@ -356,7 +352,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePlot();  // Redraw the plot with the new settings
             });
         }
-        
+
+
+
 
 
 //Scenario 1 Function
