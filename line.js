@@ -593,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
+            drawAxis();
         }
 
         function getColor(scenario, isActive) {
