@@ -40,6 +40,15 @@ document.addEventListener('DOMContentLoaded', function() {
         filters = {}; // Assuming filters are directly related to checkbox state, reset them as well
     }
 
+    // Example of how to use this function with a toggle
+    const onOffToggle = document.getElementById('onOffToggle');
+    onOffToggle.addEventListener('change', function() {
+        if (this.checked) {
+            resetAllCheckboxes();
+            updatePlot(); // Optional: Update the plot to reflect the reset if necessary
+        }
+    });
+
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
         let yOffset = -50; // Start 50 pixels above the final position
