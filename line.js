@@ -400,55 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-
-        // Scenario 2 button functionality
-        const scenario2Button = document.getElementById('scenario2Button');  // Make sure the ID matches your HTML
-        let scenario2Active = false;  // Track the state of Scenario 2 activation
-
-        if (scenario2Button) {
-            scenario2Button.addEventListener('click', function() {
-                scenario2Active = !scenario2Active;  // Toggle the active state
-                this.classList.toggle('active', scenario2Active); // Toggle class for styling
-                this.textContent = scenario2Active ? "Deactivate Scenario 2" : "Activate Scenario 2"; // Update button text
-                if (scenario2Active) {
-                    updateFiltersForScenario2();  // Update the filters based on current checkbox state when activated
-                } else {
-                    resetScenario2Filters();  // Reset filters when deactivated
-                }
-                updatePlot();  // Re-draw the plot with updated filters
-            });
-        }
-
-        function updateFiltersForScenario2() {
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                const field = checkbox.name.replace('Filter', '');
-                const value = checkbox.value;
-                updateFilterArray(field, value, true);
-            });
-        }
-
-        function updateFiltersForScenario2(active) {
-            const filtersToUpdate = {
-                baseline: ['deepgeo', 'nuclear', 'ccs'],
-                partial: ['retrofit', 'schedules', 'lab', 'pv', 'district'],
-                grid: ['bau', 'cheap_ng', 'decarbonization']
-            };
-
-            // Set or reset filters based on the active state
-            Object.entries(filtersToUpdate).forEach(([type, fields]) => {
-                fields.forEach(field => {
-                    document.querySelectorAll(`input[name="${field}Filter"][value="${type}"]`).forEach(checkbox => {
-                        checkbox.checked = active; // Set checked state based on the scenario button state
-                        updateFilterArray(field, type, active);
-                    });
-                });
-            });
-
-            // Additionally reset all checkboxes if the scenario is being deactivated
-            if (!active) {
-                resetAllCheckboxes();
-            }
-        }
+        
 
 // Helper function to reset all checkboxes
         function resetAllCheckboxes() {
