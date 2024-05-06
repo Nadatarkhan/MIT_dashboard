@@ -529,17 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const filteredData = emissionsData.filter(d => {
-                // Check if the data point belongs to a baseline scenario
-                const isBaseline = Object.keys(filters).every(field => {
-                    if (filters[field].includes('baseline')) {
-                        // If baseline is selected, check if the data point has the baseline value for the field
-                        return d[field] === 'baseline';
-                    } else {
-                        // If baseline is not selected, include all data points for the field
-                        return filters[field].includes(d[field]);
-                    }
-                });
-                return isBaseline && Object.keys(filters).every(field =>
+                return Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
                 );
             });
@@ -562,17 +552,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d';
+                        context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        // Color lines based on scenario
-                        if (d.scenario === '2') {
-                            // Scenario 2 lines are orange
-                            context.strokeStyle = '#ffa500'; // Orange color
+                        if (d.baseline && fields.every(field => filters[field].includes("Baseline"))) {
+                            // Color baseline scenarios purple when all baseline checkboxes are selected
+                            context.strokeStyle = '#b937b8'; // Purple color
+                            context.lineWidth = 2;
+                        } else if (d.scenario === 2) {
+                            // Color scenario 2 lines orange
+                            context.strokeStyle = '#b64f1d'; // Orange color
                             context.lineWidth = 1.2;
                         } else {
-                            // All other lines are grey
+                            // Color other scenarios grey
                             context.strokeStyle = '#808080'; // Grey color
                             context.lineWidth = 1;
                         }
@@ -590,9 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-
-
-
+        
 
         function drawAxis() {
             context.save();
