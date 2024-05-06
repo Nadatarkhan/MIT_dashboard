@@ -561,12 +561,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
+                        const scenario = parseInt(d.scenario); // Convert scenario to integer
                         if (d.baseline && fields.every(field => filters[field].includes("Baseline"))) {
                             // Color baseline scenarios purple when all baseline checkboxes are selected
                             console.log("Baseline line found!"); // Debug log
                             context.strokeStyle = '#b937b8'; // Purple color
                             context.lineWidth = 2;
-                        } else if (d.scenario === 2) {
+                        } else if (scenario === 2) {
                             // Color scenario 2 lines orange
                             context.strokeStyle = '#b64f1d'; // Orange color
                             context.lineWidth = 1.2;
@@ -579,6 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.stroke();
                 }
             });
+
 
 
             context.restore();
