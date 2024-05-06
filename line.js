@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    if (isRecording) {
+                    if (isRecording && d.scenario === 'scenario2') {
                         context.strokeStyle = 'blue';
                         context.lineWidth = 2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: 'blue', lineWidth: 2});
