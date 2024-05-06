@@ -560,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
+                        const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()), d.baseline);
                         context.strokeStyle = color;
                         context.lineWidth = lineWidth;
                     }
@@ -575,23 +575,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
             drawAxis();
-        }
 
-        function getColor(scenario, isActive) {
-            // Custom function to determine color and lineWidth based on scenario and isActive flag
-            if (isActive) {
-                switch(scenario) {
-                    case 'baseline':
-                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
-                    case 'scenario1':
-                        return { color: '#00897b', lineWidth: 2 }; // Teal
-                    case 'scenario2':
-                        return { color: '#b64f1d', lineWidth: 1.2 }; // Dark orange
-                    default:
-                        return { color: '#565656', lineWidth: 0.7 }; // Default gray
+            function getColor(scenario, isActive, isBaseline) {
+                // Custom function to determine color and lineWidth based on scenario, isActive flag, and baseline flag
+                if (isBaseline) {
+                    return { color: '#b937b8', lineWidth: 2 }; // Purple for baseline
+                } else if (isActive) {
+                    return { color: '#b64f1d', lineWidth: 1.2 }; // Orange for active non-baseline scenarios
+                } else {
+                    return { color: '#565656', lineWidth: 1 }; // Default grey for inactive scenarios
                 }
-            } else {
-                return { color: '#565656', lineWidth: 1 }; // Default gray when not active
             }
         }
 
