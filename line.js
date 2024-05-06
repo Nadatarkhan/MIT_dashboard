@@ -414,21 +414,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Scenario 2
+        const scenario2Button = document.getElementById('scenario2Button');
+        let isRecording = false;
+
         scenario2Button.addEventListener('click', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            const toggle = document.querySelector('.lb-l');
-
-            if (toggle.checked !== isRecording) {
-                toggle.click(); // Simulate a click on the toggle
-            }
+            document.querySelector('.lb-l').checked = isRecording; // Ensure this targets the correct element
 
             if (isRecording) {
-                resetAllCheckboxes();
-                recordedLines = [];
+                resetAllCheckboxes(); // Clears all checkboxes
+                recordedLines = []; // Clears previously recorded lines
+            } else {
+                // When stopping recording, nothing additional happens here that affects the toggle
             }
         });
-
 
 
 
