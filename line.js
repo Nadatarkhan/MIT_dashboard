@@ -587,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'scenario1':
                         return { color: '#00897b', lineWidth: 2 }; // Teal
                     case 'scenario2':
-                        return { color: '#b64f1d', lineWidth: 1 }; // Dark orange
+                        return { color: '#b64f1d', lineWidth: 1.2 }; // Dark orange
                     default:
                         return { color: '#565656', lineWidth: 0.7 }; // Default gray
                 }
