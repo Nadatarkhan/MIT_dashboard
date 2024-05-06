@@ -294,9 +294,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-        //Baseline
+// Scenario button functionality
         const baselineButton = document.getElementById('baselineButton');
         let baselineActive = false;  // Track the activation state of the baseline scenario
+        let baselineScenarios = new Set();  // To track which scenarios are affected by the baseline button
 
         if (baselineButton) {
             baselineButton.addEventListener('click', function() {
@@ -322,6 +323,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
+                // Ensure all relevant scenario identifiers are correctly captured or removed
+                const allScenarios = emissionsData.map(d => d.scenario);
+                if (baselineActive) {
+                    allScenarios.forEach(scenario => baselineScenarios.add(scenario));
+                } else {
+                    baselineScenarios.clear();
+                }
+
+                console.log("Current baselineScenarios:", Array.from(baselineScenarios));
+                console.log("Filters after update:", filters);
+
                 // Sync the state of grid-related checkboxes with the baseline button
                 const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
                 gridFilters.forEach(filter => {
@@ -341,35 +353,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
 
-                if (baselineActive) {
-                    // Capture current data that matches the baseline filters for special coloring
-                    updateScenarioLines('baseline');
-                } else {
-                    scenarioLines.baseline = [];
-                    baselineScenarios.clear();
-                }
-
-                console.log("Current baselineScenarios:", Array.from(baselineScenarios));
-                console.log("Filters after update:", filters);
-
-                updatePlot();  // Redraw the plot with potentially new settings
+                updatePlot();  // Redraw the plot with the new settings
             });
         }
-
-        function updateScenarioLines(scenario) {
-            const currentData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
-                );
-            });
-            scenarioLines[scenario] = currentData.map((d, i, arr) => {
-                return i > 0 && d.scenario === arr[i - 1].scenario ? { start: arr[i - 1], end: d } : null;
-            }).filter(d => d !== null);
-        }
-
-
-
-
+        
 
 
 //Scenario 1 Function
@@ -589,17 +576,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-
                     if (isRecording) {
                         context.strokeStyle = '#b64f1d';
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
-                    } else if (baselineActive && scenarioLines.baseline.some(line => line.start.year === filteredData[i - 1].year && line.end.year === d.year)) {
-                        context.strokeStyle = '#b937b8';  // Color for baseline scenario lines
-                        context.lineWidth = 2;
-                    } else if (scenario1Active && scenarioLines.scenario1.some(line => line.start.year === filteredData[i - 1].year && line.end.year === d.year)) {
-                        context.strokeStyle = '#00897b';  // Color for scenario1 scenario lines
-                        context.lineWidth = 2;
                     } else {
                         const { color, lineWidth } = getColor(d.scenario, baselineScenarios.has(d.scenario.toString()));
                         context.strokeStyle = color;
@@ -618,15 +598,18 @@ document.addEventListener('DOMContentLoaded', function() {
             drawAxis();
         }
 
-// Adjust the getColor function to default styling without scenario checks
         function getColor(scenario, isActive) {
-            // This remains unchanged and provides default colors for other scenarios
+            // Custom function to determine color and lineWidth based on scenario and isActive flag
             if (isActive) {
                 switch(scenario) {
-                    case 'baseline': return { color: '#b937b8', lineWidth: 2 };
-                    case 'scenario1': return { color: '#00897b', lineWidth: 2 };
-                    case 'scenario2': return { color: '#055f8a', lineWidth: 2 };
-                    default: return { color: '#565656', lineWidth: 1 };
+                    case 'baseline':
+                        return { color: '#b937b8', lineWidth: 2 }; // Purple when active
+                    case 'scenario1':
+                        return { color: '#00897b', lineWidth: 2 }; // Teal
+                    case 'scenario2':
+                        return { color: '#b64f1d', lineWidth: 1.2 }; // Dark orange
+                    default:
+                        return { color: '#565656', lineWidth: 0.7 }; // Default gray
                 }
             } else {
                 return { color: '#565656', lineWidth: 1 }; // Default gray when not active
