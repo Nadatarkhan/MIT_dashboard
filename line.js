@@ -50,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showInitialMessage() {
         let opacity = 0; // Start with an opacity of 0
-        let yOffset = -Math.max(100, containerHeight * 0.3); // Start significantly above the final position
+        let yOffset = -Math.max(100, containerHeight * 0.4); // Start significantly above the final position, adjusted for smaller screens
         const maxOpacity = 1; // Target opacity
         const incrementOpacity = 0.05; // Increment the opacity by this amount each frame
         const incrementYOffset = 2; // Move the text down by 2 pixels each frame
-        const maxWidth = containerWidth * dpi - 100; // Maximum width for text, with margins
+        const maxWidth = containerWidth * dpi - 150; // Maximum width for text, with increased margins
         const lineHeight = 20; // Line height for wrapping text
 
         function fadeIn() {
@@ -66,22 +66,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.globalAlpha = opacity; // Set the current opacity for the drawing
                 // Calculate the current y position of the text to animate it
                 const yPos = (containerHeight * dpi / 2) + yOffset + margin.top;
-                context.font = "italic 16px Arial"; // Set the font for the text to italic
+                context.font = "italic 12px Arial"; // Set the font for the text to smaller and italic
                 context.fillStyle = "#666"; // Set the text color
-                context.textAlign = "center"; // Center the text horizontally
+                context.textAlign = "left"; // Align the text to the left
                 context.textBaseline = "middle"; // Center the text vertically
-                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, yPos, maxWidth, lineHeight);
+                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2 - containerWidth * 0.1, yPos, maxWidth, lineHeight);
                 context.restore();
                 requestAnimationFrame(fadeIn); // Request the next frame of the animation
             } else {
                 context.globalAlpha = 1; // Ensure full opacity for the final draw
-                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
+                wrapText(context, "To explore the data, select one of the preset scenarios from the left pane or build your own! Select at least one option from each category to display the plot.", containerWidth * dpi / 2 - containerWidth * 0.1, (containerHeight * dpi / 2) + margin.top, maxWidth, lineHeight);
             }
         }
 
         fadeIn();
     }
-
 
 
 // Function to handle text wrapping
