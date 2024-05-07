@@ -541,6 +541,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Debug: Check the scenario and baseline condition
+                    console.log(`Data Point: ${i}, Scenario: ${d.scenario}, Grid: ${d.grid}, Baseline Condition: ${d.retrofit === 'baseline' && d.schedules === 'baseline'}`);
+
                     // Check if all non-grid fields are 'baseline' and grid is one of the specified types
                     const isBaselineScenario = fields.filter(f => f !== 'grid').every(f => d[f] === 'baseline') &&
                         ['bau', 'cheap_ng', 'decarbonization'].includes(d['grid']);
