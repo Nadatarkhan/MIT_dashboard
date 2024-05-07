@@ -495,7 +495,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
@@ -503,32 +502,39 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Regular data filtering based on checkboxes
+            // Check if any filters are active or if the special scenario toggle is active
+            if (!fields.every(field => filters[field] && filters[field].length > 0) && !toggleBaselineActive) {
+                console.log("Not all conditions met for drawing plot.");
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if no filters are active and toggle is off
+            }
+
+            // Filter data based on active filters if any
             const filteredData = emissionsData.filter(d =>
                 Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
                 )
             );
 
-            if (filteredData.length === 0 && !toggleBaselineActive) {
+            // Set domains for scales based on filtered or all data if toggle is active
+            let dataToPlot = filteredData;
+            if (toggleBaselineActive) {
+                dataToPlot = emissionsData.filter(d => specialScenarios.includes(Number(d.scenario)));
+            }
+
+            if (dataToPlot.length === 0) {
                 console.log("No data to display.");
-                showInitialMessage();  // Display message indicating the need to select filters
                 return;
             }
 
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
+            x.domain(d3.extent(dataToPlot, d => d.year));
+            y.domain([0, d3.max(dataToPlot, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw all applicable lines based on filters
-            drawLines(filteredData);
-
-            // Draw special scenarios if toggle is active
-            if (toggleBaselineActive) {
-                drawSpecialScenarios(emissionsData);
-            }
+            // Draw lines based on the data to plot
+            drawLines(dataToPlot);
 
             context.restore();
 
