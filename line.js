@@ -502,22 +502,23 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Ensure that every required field has at least one active filter
-            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+            // Check if there are any active filters or if the toggle for special scenarios is active
+            if (!fields.every(field => filters[field] && filters[field].length > 0) && !toggleBaselineActive) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if not all fields have active filters
+                return; // Exit the function if no filters are active and toggle is off
             }
 
-            // Regular data filtering based on checkboxes
+            // Filter data based on active filters if any
             const filteredData = emissionsData.filter(d =>
                 Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
                 )
             );
 
-            if (filteredData.length === 0) {
+            if (filteredData.length === 0 && !toggleBaselineActive) {
                 console.log("No data to display.");
+                // If no data matches and toggle is not active, just show the axis
                 return;
             }
 
@@ -532,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Draw special scenarios if toggle is active
             if (toggleBaselineActive) {
-                drawSpecialScenarios(emissionsData);
+                drawSpecialScenarios(emissionsData);  // This will draw the special scenarios even if no other data is displayed
             }
 
             context.restore();
@@ -542,6 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
+
 
         function drawLines(data) {
             data.forEach((d, i) => {
