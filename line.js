@@ -503,13 +503,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Ensure that every required field has at least one active filter
-            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
-                console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if not all fields have active filters
-            }
-
             // Regular data filtering based on checkboxes
             const filteredData = emissionsData.filter(d =>
                 Object.keys(filters).every(field =>
@@ -517,8 +510,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 )
             );
 
-            if (filteredData.length === 0) {
+            if (filteredData.length === 0 && !toggleBaselineActive) {
                 console.log("No data to display.");
+                showInitialMessage();  // Display message indicating the need to select filters
                 return;
             }
 
@@ -595,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Set y-axis to always reach up to 180,000
-            y.domain([0, 180000]);
+            y.domain([0, 190000]);
 
             // Define the x-axis to cover from 2025 to 2050, but start labeling from 2026
             x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
