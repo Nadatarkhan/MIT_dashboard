@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Toggle control setup
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function()
             const baselineToggle = document.getElementById('baselineToggle');
             if (!baselineToggle) {
                 console.error("Baseline toggle not found!");
@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             updatePlot();  // Initial plot
-        });
+        );
 
 
         function drawAxis() {
