@@ -544,8 +544,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Debug: Check the scenario and baseline condition
                     console.log(`Data Point: ${i}, Scenario: ${d.scenario}, Grid: ${d.grid}, Baseline Condition: ${d.retrofit === 'baseline' && d.schedules === 'baseline'}`);
 
-                    // Check if all non-grid fields are 'baseline' and grid is one of the specified types
-                    const isBaselineScenario = fields.filter(f => f !== 'grid').every(f => d[f] === 'baseline') &&
+                    // Here, we check if all relevant fields are 'baseline'
+                    const isBaselineScenario = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv']
+                            .every(field => d[field] === 'baseline') &&
                         ['bau', 'cheap_ng', 'decarbonization'].includes(d['grid']);
 
                     if (isRecording) {
