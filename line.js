@@ -534,10 +534,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if all baseline and grid filters are checked
-            const allBaselineChecked = fields.every(field => filters[field] && filters[field].includes('baseline'));
-            const allGridChecked = ['bau', 'cheap_ng', 'decarbonization'].every(grid => filters['grid'] && filters['grid'].includes(grid));
-
             // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
@@ -569,25 +565,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if recording is active and adjust color accordingly
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Recording uses a specific color (e.g., Orange)
-                        context.lineWidth = 1.2; // Slightly thicker line when recording
+                        context.strokeStyle = '#b64f1d'; // Orange color
+                        context.lineWidth = 1.2;
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        // Apply special coloring for baseline scenarios if all conditions are met
-                        if (baselineActive && allBaselineChecked && allGridChecked) {
+                        if (baselineActive && baselineScenarios.has(d.scenario.toString())) {
                             context.strokeStyle = '#b937b8'; // Purple color for baseline scenarios
-                            context.lineWidth = 2; // Thicker line for emphasis
+                            context.lineWidth = 2;
                         } else {
                             // Default color for other scenarios
                             context.strokeStyle = '#808080'; // Grey color
-                            context.lineWidth = 1; // Standard line width
+                            context.lineWidth = 1;
                         }
                     }
                     context.stroke();
                 }
             });
-
+            
             context.restore();
 
             // Redraw recorded lines if the lightbulb is on
