@@ -353,6 +353,45 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+//Drawing Baseline lines and toggle
+
+        function drawConditionalLines(data) {
+            context.save();
+            context.translate(margin.left, margin.top);
+
+            data.forEach((d, i) => {
+                if (i > 0 && d.scenario === data[i - 1].scenario) {
+                    context.beginPath();
+                    context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.strokeStyle = '#FF69B4'; // Pink color for conditional lines
+                    context.lineWidth = 2;
+                    context.stroke();
+                }
+            });
+
+            context.restore();
+        }
+
+        document.getElementById('baselineToggle').addEventListener('change', function() {
+            if (this.checked) {
+                // Check if both baseline and grid filters are activated
+                if (filters['baseline'].length > 0 && filters['grid'].length === 3) { // Assuming 'grid' should have all 3 filters active
+                    const conditionalData = emissionsData.filter(d =>
+                        filters['baseline'].includes('baseline') &&
+                        filters['grid'].every(g => filters['grid'].includes(g))
+                    );
+                    drawConditionalLines(conditionalData);
+                } else {
+                    console.log("Not all required filters (baseline and all grids) are active.");
+                }
+            } else {
+                updatePlot(); // Redraw the original plot without the conditional lines
+            }
+        });
+
+
+
 
 
 
