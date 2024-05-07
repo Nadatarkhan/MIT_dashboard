@@ -545,13 +545,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawLines(data) {
+            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798]; // Define special scenarios
+
             data.forEach((d, i) => {
                 if (i > 0 && d.scenario === data[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    if (isRecording) {
+                    // Check if current data point is in special scenarios
+                    if (specialScenarios.includes(Number(d.scenario)) && toggleBaselineActive) {
+                        context.strokeStyle = '#b937b8'; // Purple for special scenarios
+                        context.lineWidth = 2;
+                    } else if (isRecording) {
                         context.strokeStyle = '#b64f1d'; // Orange for scenario 2
                         context.lineWidth = 1.2;
                         recordedLines.push({start: data[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
@@ -563,6 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
 
         function drawSpecialScenarios(data) {
             const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
