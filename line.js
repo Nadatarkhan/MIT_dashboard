@@ -617,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawBestScenarios(data) {
-            const bestScenarios = [5, 6, 7, 8];
+            const bestScenarios = [3240, 9799, 16360, 22919, 29478, 36039];
             data.filter(d => bestScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
                 if (i > 0 && d.scenario === arr[i - 1].scenario) {
                     context.beginPath();
