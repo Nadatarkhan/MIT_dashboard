@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             // Set y-axis to always reach up to 180,000
-            y.domain([0, 190000]);
+            y.domain([0, 200000]);
 
             // Define the x-axis to cover from 2025 to 2050, but start labeling from 2026
             x.domain([new Date(2025, 0, 1), new Date(2050, 0, 1)]);
