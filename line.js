@@ -590,9 +590,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.lineTo(x(d.year), y(d.emission));
 
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Orange for scenario 2
+                        context.strokeStyle = '#dc5d5d'; // Orange for scenario 2
                         context.lineWidth = 1.2;
-                        recordedLines.push({start: data[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
+                        recordedLines.push({start: data[i - 1], end: d, color: '#dc5d5d', lineWidth: 1.2});
                     } else {
                         context.strokeStyle = '#808080'; // Default grey color
                         context.lineWidth = 1;

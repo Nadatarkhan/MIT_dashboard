@@ -599,7 +599,7 @@ input[type='radio']:checked + label {
 }
 
 .scenario2.active, .scenario2:active {
-    background-color: #b64f1d; /* Red */
+    background-color: #dc5d5d; /* Red */
 }
 
 .scenario3.active, .scenario3:active {
