@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             isRecording = !isRecording;
             this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
             this.classList.toggle('active', isRecording);
-            const toggle = document.querySelector('.lb-l');
+            const toggle = document.getElementById('scenario2Toggle');
 
             if (toggle.checked !== isRecording) {
                 toggle.click();
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Toggle visibility event listener and function
         let lightBulbOn = false; // Track the state of the lightbulb toggle
-        const lightBulbToggle = document.querySelector('.lb-l');
+        const lightBulbToggle = document.getElementById('scenario2Toggle'); 
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
                 if (!fields.every(field => filters[field] && filters[field].length > 0)) {
