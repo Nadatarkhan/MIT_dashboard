@@ -502,39 +502,38 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if any filters are active or if the special scenario toggle is active
-            if (!fields.every(field => filters[field] && filters[field].length > 0) && !toggleBaselineActive) {
+            // Ensure that every required field has at least one active filter
+            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if no filters are active and toggle is off
+                return; // Exit the function if not all fields have active filters
             }
 
-            // Filter data based on active filters if any
+            // Regular data filtering based on checkboxes
             const filteredData = emissionsData.filter(d =>
                 Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
                 )
             );
 
-            // Set domains for scales based on filtered or all data if toggle is active
-            let dataToPlot = filteredData;
-            if (toggleBaselineActive) {
-                dataToPlot = emissionsData.filter(d => specialScenarios.includes(Number(d.scenario)));
-            }
-
-            if (dataToPlot.length === 0) {
+            if (filteredData.length === 0) {
                 console.log("No data to display.");
                 return;
             }
 
-            x.domain(d3.extent(dataToPlot, d => d.year));
-            y.domain([0, d3.max(dataToPlot, d => d.emission)]);
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw lines based on the data to plot
-            drawLines(dataToPlot);
+            // Draw all applicable lines based on filters
+            drawLines(filteredData);
+
+            // Draw special scenarios if toggle is active
+            if (toggleBaselineActive) {
+                drawSpecialScenarios(emissionsData);
+            }
 
             context.restore();
 
@@ -545,19 +544,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawLines(data) {
-            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798]; // Define special scenarios
-
             data.forEach((d, i) => {
                 if (i > 0 && d.scenario === data[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Check if current data point is in special scenarios
-                    if (specialScenarios.includes(Number(d.scenario)) && toggleBaselineActive) {
-                        context.strokeStyle = '#b937b8'; // Purple for special scenarios
-                        context.lineWidth = 2;
-                    } else if (isRecording) {
+                    if (isRecording) {
                         context.strokeStyle = '#b64f1d'; // Orange for scenario 2
                         context.lineWidth = 1.2;
                         recordedLines.push({start: data[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
@@ -569,7 +562,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
 
         function drawSpecialScenarios(data) {
             const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
@@ -584,6 +576,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
+
 
 
 
