@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            const baselineConditionsMet = checkBaselineConditions(); // Check conditions using your previously defined function
+            const baselineConditionsMet = checkBaselineConditions();
 
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -542,41 +542,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Check the recording and baseline toggle conditions
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Orange color
+                        context.strokeStyle = '#b64f1d'; // Orange color for recording
                         context.lineWidth = 1.2;
-                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
+                    } else if (toggleBaselineActive && baselineConditionsMet) {
+                        context.strokeStyle = '#b937b8'; // Purple color for baseline conditions
+                        context.lineWidth = 2;
                     } else {
-                        if (toggleBaselineActive && baselineConditionsMet) {
-                            context.strokeStyle = '#b937b8'; // Purple color for baseline scenarios
-                            context.lineWidth = 2;
-                        } else {
-                            // Default color for other scenarios
-                            context.strokeStyle = '#808080'; // Grey color
-                            context.lineWidth = 1;
-                        }
+                        context.strokeStyle = '#808080'; // Grey color for other conditions
+                        context.lineWidth = 1;
                     }
                     context.stroke();
                 }
             });
 
             context.restore();
-
-            // Redraw recorded lines if the lightbulb is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
         }
 
-// Initialize or update toggleBaselineActive based on the toggle checkbox state
+// Add event listener to the toggle to control the baseline coloring
         document.getElementById('baselineToggle').addEventListener('change', function() {
             toggleBaselineActive = this.checked;
             updatePlot();  // Trigger plot update whenever the toggle changes
         });
 
-// Set initial state of the toggle based on the checkbox at document load
+// Initialize the toggle state based on the checkbox at document load
         let toggleBaselineActive = document.getElementById('baselineToggle').checked;
         updatePlot();  // Initial plot rendering to apply the initial state of the toggle
+
 
 
 
