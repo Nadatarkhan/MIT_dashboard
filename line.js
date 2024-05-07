@@ -493,14 +493,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filters = {}; // This line can be adjusted based on how your filter logic is implemented
         }
 
-        /*Baseline toggle */
-        // This function will check if all baseline and grid conditions are met
-        function checkBaselineConditions() {
-            const allBaseline = fields.every(field => filters[field] && filters[field].includes('baseline'));
-            const allGrid = ['bau', 'cheap_ng', 'decarbonization'].every(filter =>
-                filters['grid'] && filters['grid'].includes(filter));
-            return allBaseline && allGrid;
-        }
 
 
         function updatePlot() {
@@ -535,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left, margin.top);
 
             const baselineConditionsMet = checkBaselineConditions();
+            console.log("Baseline conditions met:", baselineConditionsMet);
 
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -544,8 +537,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Check the recording and baseline toggle conditions
                     if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Orange color for recording
+                        context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else if (toggleBaselineActive && baselineConditionsMet) {
                         context.strokeStyle = '#b937b8'; // Purple color for baseline conditions
                         context.lineWidth = 2;
@@ -563,15 +557,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+// Function to check if baseline conditions are met
+        function checkBaselineConditions() {
+            const allBaseline = fields.every(field => filters[field] && filters[field].includes('baseline'));
+            const allGrid = ['bau', 'cheap_ng', 'decarbonization'].every(filter =>
+                filters['grid'] && filters['grid'].includes(filter));
+            console.log("All baseline fields checked:", allBaseline, "All grid filters checked:", allGrid);
+            return allBaseline && allGrid;
+        }
+
 // Add event listener to the toggle to control the baseline coloring
         document.getElementById('baselineToggle').addEventListener('change', function() {
             toggleBaselineActive = this.checked;
+            console.log("Toggle state changed:", toggleBaselineActive);
             updatePlot();  // Trigger plot update whenever the toggle changes
         });
 
 // Initialize the toggle state based on the checkbox at document load
         let toggleBaselineActive = document.getElementById('baselineToggle').checked;
         updatePlot();  // Initial plot rendering to apply the initial state of the toggle
+
 
 
 
