@@ -595,7 +595,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.fillText(d.toLocaleString(), -10, y(d));
                 context.beginPath();
                 context.moveTo(-10, y(d));
-                context.lineTo(0, y(d));
+                context.lineTo(width, y(d)); // Extend the line across the width
+                context.strokeStyle = '#ccc'; // Light grey color for the horizontal lines
                 context.stroke();
             });
 
@@ -619,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
-
+        
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
