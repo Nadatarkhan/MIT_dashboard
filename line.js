@@ -129,10 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
             };
         });
-
-        // Prepare the filtered data for specific criteria after data is ready
-        prepareBaselineAndGridData(emissionsData);
-
+        //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
@@ -367,35 +364,12 @@ document.addEventListener('DOMContentLoaded', function() {
             );
         }
 
-        function drawBaselineAndGridLines(data) {
-            context.save();
-            context.translate(margin.left, margin.top);
-
-            data.forEach((d, i) => {
-                if (i > 0 && d.scenario === data[i - 1].scenario) {
-                    context.beginPath();
-                    context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = '#FF69B4'; // Pink color for these specific lines
-                    context.lineWidth = 2;
-                    context.stroke();
-                }
-            });
-
-            context.restore();
-        }
-
-        document.getElementById('baselineToggle').addEventListener('change', function() {
-            if (this.checked) {
-                drawBaselineAndGridLines(baselineAndGridFilteredData);
-            } else {
-                updatePlot(); // Redraw the original plot to hide the specific lines
-            }
-        });
 
 
 
-        
+
+
+
 
 
 //Scenario 1 Function
