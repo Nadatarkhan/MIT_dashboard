@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Exit the function if not all fields have active filters
             }
 
-            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];  // Specific scenario numbers for purple lines
+            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798]; // Specific scenario numbers for purple lines
             const filteredData = emissionsData.filter(d => {
                 return Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
@@ -528,7 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-
             // Iterate over filtered data and draw lines
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -536,17 +535,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Apply special coloring for specific scenarios when toggle is active
+                    // Draw special scenarios in purple if the toggle is active, regardless of filter state
                     if (toggleBaselineActive && specialScenarios.includes(Number(d.scenario))) {
-                        context.strokeStyle = '#b937b8'; // Purple color
+                        context.strokeStyle = '#b937b8'; // Purple color for special scenarios
                         context.lineWidth = 2;
-                    } else if (isRecording && d.scenario === filteredData[i - 1].scenario) {
-                        // Scenario 2 coloring (orange)
-                        context.strokeStyle = '#b64f1d';
+                    } else if (isRecording) {
+                        // Handling for orange color in scenario 2
+                        context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        // Default coloring
+                        // Default color for other scenarios when special scenarios toggle is off
                         context.strokeStyle = '#808080'; // Grey color
                         context.lineWidth = 1;
                     }
@@ -562,6 +561,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+
+        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
         const baselineToggle = document.getElementById('baselineToggle');
         let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
 
