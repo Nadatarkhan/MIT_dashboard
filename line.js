@@ -503,12 +503,18 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Filter data but always include special scenarios regardless of other filters
-            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
+            // Ensure that every required field has at least one active filter
+            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+                console.log("Not all conditions met for drawing plot.");
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
+            }
+
+            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];  // Specific scenario numbers for purple lines
             const filteredData = emissionsData.filter(d => {
-                return specialScenarios.includes(Number(d.scenario)) || Object.keys(filters).every(field =>
+                return Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
-                );
+                ) || (toggleBaselineActive && specialScenarios.includes(Number(d.scenario)));
             });
 
             if (filteredData.length === 0) {
@@ -522,6 +528,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+
             // Iterate over filtered data and draw lines
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -529,16 +536,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
-                    // Draw special scenarios in purple if toggle is active
-                    if (specialScenarios.includes(Number(d.scenario)) && toggleBaselineActive) {
-                        context.strokeStyle = '#b937b8'; // Purple color for special scenarios
+                    // Apply special coloring for specific scenarios when toggle is active
+                    if (toggleBaselineActive && specialScenarios.includes(Number(d.scenario))) {
+                        context.strokeStyle = '#b937b8'; // Purple color
                         context.lineWidth = 2;
-                    } else if (isRecording) {
-                        context.strokeStyle = '#b64f1d'; // Orange color for scenario 2
+                    } else if (isRecording && d.scenario === filteredData[i - 1].scenario) {
+                        // Scenario 2 coloring (orange)
+                        context.strokeStyle = '#b64f1d';
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        context.strokeStyle = '#808080'; // Default grey color for other scenarios
+                        // Default coloring
+                        context.strokeStyle = '#808080'; // Grey color
                         context.lineWidth = 1;
                     }
                     context.stroke();
@@ -552,7 +561,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
-
 
         const baselineToggle = document.getElementById('baselineToggle');
         let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
