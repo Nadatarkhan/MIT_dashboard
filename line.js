@@ -527,9 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Specific scenario numbers for purple lines
-            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
-
             // Iterate over filtered data and draw lines
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -537,14 +534,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Debug: Check the scenario and baseline condition
+                    console.log(`Data Point: ${i}, Scenario: ${d.scenario}, Grid: ${d.grid}, Baseline Condition: ${d.retrofit === 'baseline' && d.schedules === 'baseline'}`);
+
+                    // Here, we check if all relevant fields are 'baseline'
+                    const isBaselineScenario = ['retrofit', 'schedules', 'lab', 'district', 'nuclear', 'deepgeo', 'ccs', 'pv']
+                            .every(field => d[field] === 'baseline') &&
+                        ['bau', 'cheap_ng', 'decarbonization'].includes(d['grid']);
 
                     if (isRecording) {
                         context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        if (specialScenarios.includes(Number(d.scenario)) && toggleBaselineActive) {
-                            context.strokeStyle = '#b937b8'; // Purple color for specified scenarios
+                        if (toggleBaselineActive && isBaselineScenario) {
+                            context.strokeStyle = '#b937b8'; // Purple color for baseline scenarios
                             context.lineWidth = 2;
                         } else {
                             // Default color for other scenarios
@@ -565,23 +569,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-// Toggle control setup
-        document.addEventListener('DOMContentLoaded', function()
-            const baselineToggle = document.getElementById('baselineToggle');
-            if (!baselineToggle) {
-                console.error("Baseline toggle not found!");
-                return;
-            }
-            let toggleBaselineActive = baselineToggle.checked;  // Initial toggle state
+        const baselineToggle = document.getElementById('baselineToggle');
+        let toggleBaselineActive = baselineToggle.checked;  // Control visibility of baseline scenario lines
 
-            baselineToggle.addEventListener('change', function() {
-                toggleBaselineActive = this.checked;
-                console.log("Toggle baseline active state:", toggleBaselineActive);
-                updatePlot();  // Update the plot based on toggle state
-            });
-
-            updatePlot();  // Initial plot
-        );
+        baselineToggle.addEventListener('change', function() {
+            toggleBaselineActive = this.checked;
+            updatePlot();  // Update the plot based on toggle state
+        });
 
 
         function drawAxis() {
