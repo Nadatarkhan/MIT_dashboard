@@ -20,13 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const context = canvas.node().getContext("2d");
     context.scale(dpi, dpi);
 
-    const baselineToggle = document.getElementById('baselineToggle');
-    let toggleBaselineActive = baselineToggle.checked;  // Control visibility of baseline scenario lines
-
-    baselineToggle.addEventListener('change', function() {
-        toggleBaselineActive = this.checked;
-        updatePlot();  // Update the plot based on toggle state
-    });
 
     // Declare temporaryStorage here
     let temporaryStorage = [];
@@ -574,6 +567,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
+
+
+        const baselineToggle = document.getElementById('baselineToggle');
+        let toggleBaselineActive = baselineToggle.checked;  // Control visibility of baseline scenario lines
+
+        baselineToggle.addEventListener('change', function() {
+            toggleBaselineActive = this.checked;
+            updatePlot();  // Update the plot based on toggle state
+        });
 
 
         function drawAxis() {
