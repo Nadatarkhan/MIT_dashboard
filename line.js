@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Toggle visibility event listener and function
         let lightBulbOn = false; // Track the state of the lightbulb toggle
-        const lightBulbToggle = document.getElementById('scenario2Toggle'); 
+        const lightBulbToggle = document.getElementById('scenario2Toggle');
         lightBulbToggle.addEventListener('change', function() {
             if (this.checked) {
                 if (!fields.every(field => filters[field] && filters[field].length > 0)) {
