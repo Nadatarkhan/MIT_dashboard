@@ -33,20 +33,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let filters = {}; // Object to hold the active filters for each technology
 
-    // Define the resetAllCheckboxes function
+// Define the resetAllCheckboxes function
     function resetAllCheckboxes() {
+        // Reset all checkboxes
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
+
+        // Reset the scenario toggles specifically if they exist
+        const baselineToggle = document.getElementById('baselineToggle');
+        const bestToggle = document.getElementById('best');
+        if (baselineToggle) baselineToggle.checked = false;
+        if (bestToggle) bestToggle.checked = false;
+
+        // Reset the filter settings
         filters = {}; // Assuming filters are directly related to checkbox state, reset them as well
+
+        // Reset toggle states
+        toggleBaselineActive = false;
+        toggleBestActive = false;
+
+        // Update the plot to reflect the reset state
         updatePlot();
     }
 
-    // Example of how to use this function with a toggle
+// Example of how to use this function with a button
     const resetButton = document.getElementById('resetCheckboxesButton');
     resetButton.addEventListener('click', function() {
         resetAllCheckboxes();
     });
+
 
 
     function showInitialMessage() {
