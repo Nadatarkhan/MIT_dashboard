@@ -553,6 +553,10 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Log scenarios that meet the current filter conditions
+            console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
+
+
             // Draw all applicable lines based on filters, if any are active
             if (anyActiveFilters) {
                 drawLines(filteredData);
