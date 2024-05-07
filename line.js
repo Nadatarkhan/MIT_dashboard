@@ -503,19 +503,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure context
 
-            // Draw horizontal grid lines
-            const numGridLines = 5; // Number of horizontal grid lines
-            const gridLineColor = '#707070'; // Color of the grid lines
-            context.beginPath();
-            context.strokeStyle = gridLineColor;
-            context.lineWidth = 1; // Set line width for grid lines
-            for (let i = 0; i <= numGridLines; i++) {
-                const yValue = y.domain()[0] + (y.domain()[1] - y.domain()[0]) * i / numGridLines;
-                const yPos = y(yValue) + margin.top; // Adjust position by top margin
-                context.moveTo(margin.left, yPos);
-                context.lineTo(containerWidth - margin.right, yPos);
-            }
-            context.stroke();
 
             // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
