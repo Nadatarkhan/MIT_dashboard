@@ -698,7 +698,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 /* light bulb */
 
 .lb-main {
-    padding: 1em 0 0 0;  /* Keep padding aligned with the toggle size */
+    padding: 1.5em 0 0 0;
     text-align: center;
     margin-left: 10px; /* Space between the button and the toggle */
     vertical-align: middle;
@@ -706,15 +706,15 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 .lb-l {
     background-color: rgba(0,0,0,0.7);
-    border-radius: 0.5em; /* Rounded border for aesthetic */
-    box-shadow: 0.1em 0.1em 0 0.1em rgba(0,0,0,0.3) inset; /* Inner shadow for depth */
+    border-radius: 0.75em;
+    box-shadow: 0.125em 0.125em 0 0.125em rgba(0,0,0,0.3) inset;
     color: #fdea7b;
     display: inline-flex;
     align-items: center;
     margin: auto;
-    padding: 0.2em;  /* Slightly increased padding to create a bigger border effect */
-    width: 2.4em;  /* Slightly wider to accommodate increased padding */
-    height: 1.3em;  /* Slightly taller to accommodate increased padding */
+    padding: 0.15em;
+    width: 3em;
+    height: 1.5em;
     transition: background-color 0.1s 0.3s ease-out, box-shadow 0.1s 0.3s ease-out;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -728,9 +728,9 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 .lb-l:before {
     background-color: #d7d7d7;
-    border-radius: 50%;  /* Fully rounded for the bulb */
-    width: 0.9em;  /* Unchanged bulb size */
-    height: 0.9em;  /* Unchanged bulb size */
+    border-radius: 60%;
+    width: 1.2em;
+    height: 1.2em;
     transition: background-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
     z-index: 1;
 }
@@ -738,22 +738,22 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 .lb-l:after {
     background:
             linear-gradient(transparent 50%, rgba(0,0,0,0.15) 0) 0 50% / 50% 100%,
-            repeating-linear-gradient(90deg, #bbb 0, #bbb, #bbb 20%, #999 20%, #999 40%) 0 50% / 50% 100%,
-            radial-gradient(circle at 50% 50%, #888 25%, transparent 26%);
+            repeating-linear-gradient(90deg,#bbb 0,#bbb,#bbb 20%,#999 20%,#999 40%) 0 50% / 50% 100%,
+            radial-gradient(circle at 50% 50%,#888 25%, transparent 26%);
     background-repeat: no-repeat;
-    border: 0.3em solid transparent; /* Increased border for visual effect */
-    border-left: 0.4em solid #d8d8d8; /* Thicker left border */
+    border: 0.25em solid transparent;
+    border-left: 0.4em solid #d8d8d8;
     border-right: 0 solid transparent;
     transition: border-left-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
     transform: translateX(-22.5%);
     transform-origin: 25% 50%;
-    width: 0.9em;  /* Unchanged decorative part */
-    height: 0.8em;  /* Unchanged decorative part */
+    width: 1.2em;
+    height: 1em;
 }
 
 .lb-l:checked {
     background-color: rgba(0,0,0,0.45);
-    box-shadow: 0.1em 0.1em 0 0.1em rgba(0,0,0,0.1) inset; /* Softened inner shadow on check */
+    box-shadow: 0.125em 0.125em 0 0.125em rgba(0,0,0,0.1) inset;
 }
 
 .lb-l:checked:before {
@@ -769,7 +769,6 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 .lb-l:focus {
     outline: 0;
 }
-
 
 
 
