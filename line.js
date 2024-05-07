@@ -499,10 +499,9 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
-            // Always clear the canvas and draw the base axis first, regardless of data state
+            // Clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            drawAxis();  // Draw axes first to ensure context
-
+            drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
             // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
@@ -525,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            // Avoid clearing the entire canvas; only start translating context for plotting
             context.save();
             context.translate(margin.left, margin.top);
 
@@ -563,8 +562,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
-            drawAxis();
         }
+
 
 
         function drawAxis() {
@@ -620,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
-        
+
 
     }).catch(function(error) {
         console.error("Error loading or processing data:", error);
