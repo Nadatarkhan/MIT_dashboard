@@ -353,16 +353,79 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+
+        
 //Drawing Baseline lines and toggle
 
-        let baselineAndGridFilteredData;
+// Global flag to track visibility of special lines
+        let specialLinesVisible = false;
 
-        function prepareBaselineAndGridData() {
-            baselineAndGridFilteredData = emissionsData.filter(d =>
-                fields.every(field => d[field] === 'baseline') && // Check if all fields are 'baseline'
-                ['bau', 'cheap_ng', 'decarbonization'].every(cond => d.grid.includes(cond)) // Check if grid has all conditions
-            );
+        document.addEventListener('DOMContentLoaded', function() {
+            const specialLinesToggle = document.getElementById("baselineToggle");  // Get the toggle by its ID
+            if (specialLinesToggle) {
+                specialLinesToggle.addEventListener('change', function() {
+                    specialLinesVisible = this.checked;
+                    updatePlot();  // Redraw the plot with new visibility settings
+                });
+            }
+        });
+
+        function updatePlot() {
+            console.log("Updating plot with current filters:", filters);
+
+            if (!fields.every(field => filters[field] && filters[field].length > 0)) {
+                console.log("Not all conditions met for drawing plot.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
+            }
+
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length > 0 && filters[field].includes(d[field])
+                );
+            });
+
+            if (filteredData.length === 0) {
+                console.log("No data to display.");
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                return;
+            }
+
+            x.domain(d3.extent(filteredData, d => d.year));
+            y.domain([0, d3.max(filteredData, d => d.emission)]);
+
+            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+            context.save();
+            context.translate(margin.left, margin.top);
+
+            filteredData.forEach((d, i) => {
+                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
+                    context.beginPath();
+                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+
+                    // Apply color based on special criteria and toggle status
+                    const isActive = specialLinesVisible && meetsSpecialCriteria(d);
+                    context.strokeStyle = isActive ? '#800080' : '#565656';  // Purple if active, grey otherwise
+                    context.lineWidth = 0.9;  // Adjust line width for visibility
+                    context.stroke();  // Execute the drawing
+                }
+            });
+
+            context.restore();
+            drawAxis();
         }
+
+// Utility function to check if a data point meets the special criteria based on baseline button logic
+        function meetsSpecialCriteria(dataPoint) {
+            // Check if the data point's scenario is part of the scenarios affected by the baseline button
+            return baselineScenarios.has(dataPoint.scenario);
+        }
+
+
+
+
 
 
 
