@@ -502,38 +502,47 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if there are any active filters or if the toggle for special scenarios is active
-            if (!fields.every(field => filters[field] && filters[field].length > 0) && !toggleBaselineActive) {
+            // Check if there are any active filters
+            const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
+
+            // Check conditions for drawing
+            if (!anyActiveFilters && !toggleBaselineActive) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Display message indicating the need to select filters
                 return; // Exit the function if no filters are active and toggle is off
             }
 
-            // Filter data based on active filters if any
-            const filteredData = emissionsData.filter(d =>
-                Object.keys(filters).every(field =>
-                    filters[field].length > 0 && filters[field].includes(d[field])
-                )
-            );
+            // Filter data based on active filters if any, or just prepare for special scenarios if toggle is active
+            let filteredData = [];
+            if (anyActiveFilters) {
+                filteredData = emissionsData.filter(d =>
+                    Object.keys(filters).every(field =>
+                        filters[field].length > 0 && filters[field].includes(d[field])
+                    )
+                );
+            }
 
             if (filteredData.length === 0 && !toggleBaselineActive) {
-                console.log("No data to display.");
-                // If no data matches and toggle is not active, just show the axis
+                console.log("No data to display with current filters and toggle is not active.");
                 return;
             }
 
-            x.domain(d3.extent(filteredData, d => d.year));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
+            if (filteredData.length > 0 || toggleBaselineActive) {
+                x.domain(d3.extent(emissionsData, d => new Date(d.year)));
+                y.domain([0, d3.max(emissionsData, d => d.emission)]);
+            }
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw all applicable lines based on filters
-            drawLines(filteredData);
+            // Draw all applicable lines based on filters, if there are any active filters
+            if (anyActiveFilters) {
+                drawLines(filteredData);
+            }
 
             // Draw special scenarios if toggle is active
             if (toggleBaselineActive) {
-                drawSpecialScenarios(emissionsData);  // This will draw the special scenarios even if no other data is displayed
+                drawSpecialScenarios(emissionsData);
             }
 
             context.restore();
@@ -567,11 +576,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function drawSpecialScenarios(data) {
             const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
-            data.forEach((d, i) => {
-                if (i > 0 && d.scenario === data[i - 1].scenario && specialScenarios.includes(Number(d.scenario))) {
+            data.filter(d => specialScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
+                if (i > 0 && d.scenario === arr[i - 1].scenario) {
                     context.beginPath();
-                    context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
+                    context.moveTo(x(new Date(arr[i - 1].year)), y(arr[i - 1].emission));
+                    context.lineTo(x(new Date(d.year)), y(d.emission));
                     context.strokeStyle = '#b937b8'; // Purple for special scenarios
                     context.lineWidth = 2;
                     context.stroke();
