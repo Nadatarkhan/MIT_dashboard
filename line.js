@@ -129,7 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
             };
         });
-        //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
+
+        // Prepare the filtered data for specific criteria after data is ready
+        prepareBaselineAndGridData(emissionsData);
+
 
         window.tryUpdateDropdown = function() {
             const dropdown = document.getElementById('techSchematicDropdown');
@@ -355,7 +358,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //Drawing Baseline lines and toggle
 
-        function drawConditionalLines(data) {
+        let baselineAndGridFilteredData;
+
+        function prepareBaselineAndGridData() {
+            baselineAndGridFilteredData = emissionsData.filter(d =>
+                fields.every(field => d[field] === 'baseline') && // Check if all fields are 'baseline'
+                ['bau', 'cheap_ng', 'decarbonization'].every(cond => d.grid.includes(cond)) // Check if grid has all conditions
+            );
+        }
+
+        function drawBaselineAndGridLines(data) {
             context.save();
             context.translate(margin.left, margin.top);
 
@@ -364,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.beginPath();
                     context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
-                    context.strokeStyle = '#FF69B4'; // Pink color for conditional lines
+                    context.strokeStyle = '#FF69B4'; // Pink color for these specific lines
                     context.lineWidth = 2;
                     context.stroke();
                 }
@@ -375,25 +387,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('baselineToggle').addEventListener('change', function() {
             if (this.checked) {
-                // Check if both baseline and grid filters are activated
-                if (filters['baseline'].length > 0 && filters['grid'].length === 3) { // Assuming 'grid' should have all 3 filters active
-                    const conditionalData = emissionsData.filter(d =>
-                        filters['baseline'].includes('baseline') &&
-                        filters['grid'].every(g => filters['grid'].includes(g))
-                    );
-                    drawConditionalLines(conditionalData);
-                } else {
-                    console.log("Not all required filters (baseline and all grids) are active.");
-                }
+                drawBaselineAndGridLines(baselineAndGridFilteredData);
             } else {
-                updatePlot(); // Redraw the original plot without the conditional lines
+                updatePlot(); // Redraw the original plot to hide the specific lines
             }
         });
 
 
 
-
-
+        
 
 
 //Scenario 1 Function
