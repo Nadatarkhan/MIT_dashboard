@@ -498,18 +498,22 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
+            // Clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            drawAxis();
+            drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
+            // Ensure that every required field has at least one active filter
             if (!fields.every(field => filters[field] && filters[field].length > 0)) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();
-                return;
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if not all fields have active filters
             }
 
-            const filteredData = emissionsData.filter(d =>
-                Object.keys(filters).every(field => filters[field].length > 0 && filters[field].includes(d[field]))
-            );
+            const filteredData = emissionsData.filter(d => {
+                return Object.keys(filters).every(field =>
+                    filters[field].length > 0 && filters[field].includes(d[field])
+                );
+            });
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -531,15 +535,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Check the recording and baseline toggle conditions
                     if (isRecording) {
-                        context.strokeStyle = '#1f74e7';
+                        context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
-                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#1f74e7', lineWidth: 1.2});
+                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else if (toggleBaselineActive && baselineConditionsMet) {
-                        context.strokeStyle = '#b937b8';
+                        context.strokeStyle = '#b937b8'; // Purple color for baseline conditions
                         context.lineWidth = 2;
                     } else {
-                        context.strokeStyle = '#808080';
+                        context.strokeStyle = '#808080'; // Grey color for other conditions
                         context.lineWidth = 1;
                     }
                     context.stroke();
@@ -552,26 +557,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+// Function to check if baseline conditions are met
         function checkBaselineConditions() {
-            return emissionsData.some(d =>
-                d.scenario.includes('baseline') &&
-                ['bau', 'cheap_ng', 'decarbonization'].every(g => d.gridOptions.includes(g))
-            );
+            const baselineEligibleData = emissionsData.filter(d =>
+                d.scenario.includes('baseline') && // Assuming 'scenario' field contains this information
+                ['bau', 'cheap_ng', 'decarbonization'].every(g => d.gridOptions.includes(g)) // Assuming data structure supports this
+            return baselineEligibleData;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('baselineToggle');
-            toggleBaselineActive = toggle.checked;
-
-            toggle.addEventListener('change', function() {
-                toggleBaselineActive = this.checked;
-                console.log("Toggle state changed:", toggleBaselineActive);
-                updatePlot();
-            });
-
-            updatePlot();  // Initial plot rendering
+// Add event listener to the toggle to control the baseline coloring
+        document.getElementById('baselineToggle').addEventListener('change', function() {
+            toggleBaselineActive = this.checked;
+            console.log("Toggle state changed:", toggleBaselineActive);
+            updatePlot();  // Trigger plot update whenever the toggle changes
         });
 
+// Initialize the toggle state based on the checkbox at document load
+        let toggleBaselineActive = document.getElementById('baselineToggle').checked;
+        updatePlot();  // Initial plot rendering to apply the initial state of the toggle
 
 
 
