@@ -493,14 +493,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filters = {}; // This line can be adjusted based on how your filter logic is implemented
         }
 
-        /*Baseline toggle */
-        // This function will check if all baseline and grid conditions are met
-        function checkBaselineConditions() {
-            const allBaseline = fields.every(field => filters[field] && filters[field].includes('baseline'));
-            const allGrid = ['bau', 'cheap_ng', 'decarbonization'].every(filter =>
-                filters['grid'] && filters['grid'].includes(filter));
-            return allBaseline && allGrid;
-        }
 
 
         function updatePlot() {
@@ -534,20 +526,23 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            const baselineConditionsMet = checkBaselineConditions(); // Check conditions using your previously defined function
-
+            // Iterate over filtered data and draw lines
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
                     context.beginPath();
                     context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
                     context.lineTo(x(d.year), y(d.emission));
 
+                    // Check if all non-grid fields are 'baseline' and grid is one of the specified types
+                    const isBaselineScenario = fields.filter(f => f !== 'grid').every(f => d[f] === 'baseline') &&
+                        ['bau', 'cheap_ng', 'decarbonization'].includes(d['grid']);
+
                     if (isRecording) {
                         context.strokeStyle = '#b64f1d'; // Orange color
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        if (toggleBaselineActive && baselineConditionsMet) {
+                        if (toggleBaselineActive && isBaselineScenario) {
                             context.strokeStyle = '#b937b8'; // Purple color for baseline scenarios
                             context.lineWidth = 2;
                         } else {
@@ -568,17 +563,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-// Initialize or update toggleBaselineActive based on the toggle checkbox state
-        document.getElementById('baselineToggle').addEventListener('change', function() {
-            toggleBaselineActive = this.checked;
-            updatePlot();  // Trigger plot update whenever the toggle changes
-        });
-
-// Set initial state of the toggle based on the checkbox at document load
-        let toggleBaselineActive = document.getElementById('baselineToggle').checked;
-        updatePlot();  // Initial plot rendering to apply the initial state of the toggle
-
-        
 
         function drawAxis() {
             context.save();
