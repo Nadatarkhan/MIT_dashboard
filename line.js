@@ -559,11 +559,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to check if baseline conditions are met
         function checkBaselineConditions() {
-            const allBaseline = fields.every(field => filters[field] && filters[field].includes('baseline'));
-            const allGrid = ['bau', 'cheap_ng', 'decarbonization'].every(filter =>
-                filters['grid'] && filters['grid'].includes(filter));
-            console.log("All baseline fields checked:", allBaseline, "All grid filters checked:", allGrid);
-            return allBaseline && allGrid;
+            const baselineEligibleData = emissionsData.filter(d =>
+                d.scenario.includes('baseline') && // Assuming 'scenario' field contains this information
+                ['bau', 'cheap_ng', 'decarbonization'].every(g => d.gridOptions.includes(g)) // Assuming data structure supports this
+            return baselineEligibleData;
         }
 
 // Add event listener to the toggle to control the baseline coloring
