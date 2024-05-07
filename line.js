@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);
             context.stroke();
 
-            context.font = "10px Arial";
+            context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
             y.ticks(10).forEach(d => {
