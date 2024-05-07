@@ -353,29 +353,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-
-//Drawing Baseline lines and toggle
-
-// Global flag to track visibility of special lines
-        let specialLinesVisible = false;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const specialLinesToggle = document.getElementById("baselineToggle");  // Get the toggle by its ID
-            if (specialLinesToggle) {
-                specialLinesToggle.addEventListener('change', function() {
-                    specialLinesVisible = this.checked;
-                    console.log("Toggle special lines visibility:", specialLinesVisible);
-                    updatePlot();  // Redraw the plot with new visibility settings
-                });
-            }
-        });
+        
 
 
-// Utility function to check if a data point meets the special criteria based on baseline button logic
-        function meetsSpecialCriteria(dataPoint) {
-            // Check if the data point's scenario is part of the scenarios affected by the baseline button
-            return baselineScenarios.has(dataPoint.scenario);
-        }
 
 
 
@@ -555,9 +535,13 @@ document.addEventListener('DOMContentLoaded', function() {
             x.domain(d3.extent(filteredData, d => d.year));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
-            // Avoid clearing the entire canvas; only start translating context for plotting
             context.save();
             context.translate(margin.left, margin.top);
+
+            const baselineConditionsMet = fields.every(field =>
+                    filters[field] && filters[field].includes('baseline')) &&
+                filters['grid'] && ['bau', 'cheap_ng', 'decarbonization'].every(filter =>
+                    filters['grid'].includes(filter));
 
             filteredData.forEach((d, i) => {
                 if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
@@ -570,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         context.lineWidth = 1.2;
                         recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
                     } else {
-                        if (baselineActive && baselineScenarios.has(d.scenario.toString())) {
+                        if (baselineActive && baselineConditionsMet) {
                             context.strokeStyle = '#b937b8'; // Purple color for baseline scenarios
                             context.lineWidth = 2;
                         } else {
@@ -582,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     context.stroke();
                 }
             });
-            
+
             context.restore();
 
             // Redraw recorded lines if the lightbulb is on
@@ -590,6 +574,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
+
+        // Listen to the toggle change event
+        document.getElementById('baselineToggle').addEventListener('change', function() {
+            baselineActive = this.checked;  // Update the global baselineActive based on toggle state
+            updatePlot();  // Re-render the plot whenever the toggle is flipped
+        });
 
 
 
