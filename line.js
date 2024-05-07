@@ -602,55 +602,33 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        let lineData = []; // Array to store line metadata for hover detection
-
         function drawSpecialScenarios(data) {
             const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
-            lineData = []; // Clear previous data
             data.filter(d => specialScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
                 if (i > 0 && d.scenario === arr[i - 1].scenario) {
-                    let startX = xScale(new Date(arr[i - 1].year));
-                    let startY = yScale(arr[i - 1].emission);
-                    let endX = xScale(new Date(d.year));
-                    let endY = yScale(d.emission);
-
-                    // Draw the line
                     context.beginPath();
-                    context.moveTo(startX, startY);
-                    context.lineTo(endX, endY);
-                    context.strokeStyle = '#b937b8';
+                    context.moveTo(x(new Date(arr[i - 1].year)), y(arr[i - 1].emission));
+                    context.lineTo(x(new Date(d.year)), y(d.emission));
+                    context.strokeStyle = '#b937b8'; // Purple for special scenarios
                     context.lineWidth = 2;
                     context.stroke();
-
-                    // Store line data for hover detection
-                    lineData.push({ startX, startY, endX, endY, type: 'baseline' });
                 }
             });
         }
 
         function drawBestScenarios(data) {
-            const bestScenarios = [5, 6, 7, 8];
+            const bestScenarios = [3240, 9799, 16360, 22919, 29478, 36039];
             data.filter(d => bestScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
                 if (i > 0 && d.scenario === arr[i - 1].scenario) {
-                    let startX = xScale(new Date(arr[i - 1].year));
-                    let startY = yScale(arr[i - 1].emission);
-                    let endX = xScale(new Date(d.year));
-                    let endY = yScale(d.emission);
-
-                    // Draw the line
                     context.beginPath();
-                    context.moveTo(startX, startY);
-                    context.lineTo(endX, endY);
-                    context.strokeStyle = '#32cd32';
+                    context.moveTo(x(new Date(arr[i - 1].year)), y(arr[i - 1].emission));
+                    context.lineTo(x(new Date(d.year)), y(d.emission));
+                    context.strokeStyle = '#23756b'; // Green for best scenarios
                     context.lineWidth = 2;
                     context.stroke();
-
-                    // Store line data for hover detection
-                    lineData.push({ startX, startY, endX, endY, type: 'best' });
                 }
             });
         }
-
 
 
         const baselineToggle = document.getElementById('baselineToggle');
@@ -735,22 +713,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //TOOLTIPS
 
+const canvas = document.querySelector('canvas');
+const tooltip = document.getElementById('tooltip');
+
 canvas.addEventListener('mousemove', function(event) {
     const rect = this.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const hoverData = checkHover(x, y);
 
-    const hoverItem = lineData.find(line =>
-        mouseX >= line.startX && mouseX <= line.endX &&
-        Math.abs(mouseY - line.startY) <= 5 && Math.abs(mouseY - line.endY) <= 5
-    );
-
-    if (hoverItem) {
+    if (hoverData) {
         tooltip.style.display = 'block';
-        tooltip.style.left = `${event.clientX}px`;
-        tooltip.style.top = `${event.clientY}px`;
-        tooltip.textContent = hoverItem.type;  // Display the line type
+        tooltip.style.left = event.pageX + 'px';
+        tooltip.style.top = (event.pageY + 20) + 'px';
+        tooltip.textContent = hoverData.tooltipText;  // Set tooltip text based on data
     } else {
         tooltip.style.display = 'none';
     }
 });
+
+function checkHover(mouseX, mouseY) {
+    // Tolerance in pixels around the line
+    const tolerance = 5;
+
+    for (let data of emissionsData) {
+        // Calculate line start and end positions
+        let startX = xScale(new Date(data.start.year));  // Assume xScale and yScale are set up
+        let startY = yScale(data.start.emission);
+        let endX = xScale(new Date(data.end.year));
+        let endY = yScale(data.end.emission);
+
+        // Check if mouse is near the line
+        if (Math.abs(mouseY - startY) < tolerance && mouseX >= startX && mouseX <= endX) {
+            return { tooltipText: `Scenario: ${data.scenario}, Emission: ${data.emission}` };
+        }
+    }
+
+    return null;
+}
