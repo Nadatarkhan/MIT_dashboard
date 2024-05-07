@@ -510,12 +510,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Exit the function if not all fields have active filters
             }
 
-            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798]; // Specific scenario numbers for purple lines
-            const filteredData = emissionsData.filter(d => {
-                return Object.keys(filters).every(field =>
+            // Regular data filtering based on checkboxes
+            const filteredData = emissionsData.filter(d =>
+                Object.keys(filters).every(field =>
                     filters[field].length > 0 && filters[field].includes(d[field])
-                ) || (toggleBaselineActive && specialScenarios.includes(Number(d.scenario)));
-            });
+                )
+            );
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -528,30 +528,13 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Iterate over filtered data and draw lines
-            filteredData.forEach((d, i) => {
-                if (i > 0 && d.scenario === filteredData[i - 1].scenario) {
-                    context.beginPath();
-                    context.moveTo(x(filteredData[i - 1].year), y(filteredData[i - 1].emission));
-                    context.lineTo(x(d.year), y(d.emission));
+            // Draw all applicable lines based on filters
+            drawLines(filteredData);
 
-                    // Draw special scenarios in purple if the toggle is active, regardless of filter state
-                    if (toggleBaselineActive && specialScenarios.includes(Number(d.scenario))) {
-                        context.strokeStyle = '#b937b8'; // Purple color for special scenarios
-                        context.lineWidth = 2;
-                    } else if (isRecording) {
-                        // Handling for orange color in scenario 2
-                        context.strokeStyle = '#b64f1d'; // Orange color
-                        context.lineWidth = 1.2;
-                        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
-                    } else {
-                        // Default color for other scenarios when special scenarios toggle is off
-                        context.strokeStyle = '#808080'; // Grey color
-                        context.lineWidth = 1;
-                    }
-                    context.stroke();
-                }
-            });
+            // Draw special scenarios if toggle is active
+            if (toggleBaselineActive) {
+                drawSpecialScenarios(emissionsData);
+            }
 
             context.restore();
 
@@ -561,8 +544,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        function drawLines(data) {
+            data.forEach((d, i) => {
+                if (i > 0 && d.scenario === data[i - 1].scenario) {
+                    context.beginPath();
+                    context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
 
-        recordedLines.push({start: filteredData[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
+                    if (isRecording) {
+                        context.strokeStyle = '#b64f1d'; // Orange for scenario 2
+                        context.lineWidth = 1.2;
+                        recordedLines.push({start: data[i - 1], end: d, color: '#b64f1d', lineWidth: 1.2});
+                    } else {
+                        context.strokeStyle = '#808080'; // Default grey color
+                        context.lineWidth = 1;
+                    }
+                    context.stroke();
+                }
+            });
+        }
+
+        function drawSpecialScenarios(data) {
+            const specialScenarios = [0, 6559, 13119, 19679, 26238, 32798];
+            data.forEach((d, i) => {
+                if (i > 0 && d.scenario === data[i - 1].scenario && specialScenarios.includes(Number(d.scenario))) {
+                    context.beginPath();
+                    context.moveTo(x(data[i - 1].year), y(data[i - 1].emission));
+                    context.lineTo(x(d.year), y(d.emission));
+                    context.strokeStyle = '#b937b8'; // Purple for special scenarios
+                    context.lineWidth = 2;
+                    context.stroke();
+                }
+            });
+        }
+
+
+
         const baselineToggle = document.getElementById('baselineToggle');
         let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
 
