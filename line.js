@@ -502,17 +502,17 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if there are any active filters
+            // Check if there are any active filters or if either toggle is active
             const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
 
             // Check conditions for drawing
-            if (!anyActiveFilters && !toggleBaselineActive) {
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if no filters are active and toggle is off
+                return; // Exit the function if no filters are active and no toggles are active
             }
 
-            // Filter data based on active filters if any, or just prepare for special scenarios if toggle is active
+            // Filter data based on active filters if any
             let filteredData = [];
             if (anyActiveFilters) {
                 filteredData = emissionsData.filter(d =>
@@ -522,12 +522,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             }
 
-            if (filteredData.length === 0 && !toggleBaselineActive) {
-                console.log("No data to display with current filters and toggle is not active.");
+            // If no data matches filters and toggles are not active
+            if (filteredData.length === 0 && !toggleBaselineActive && !toggleBestActive) {
+                console.log("No data to display.");
                 return;
             }
 
-            if (filteredData.length > 0 || toggleBaselineActive) {
+            // Update domains for scales based on existing data or full dataset if toggles are active
+            if (filteredData.length > 0 || toggleBaselineActive || toggleBestActive) {
                 x.domain(d3.extent(emissionsData, d => new Date(d.year)));
                 y.domain([0, d3.max(emissionsData, d => d.emission)]);
             }
@@ -535,14 +537,19 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Draw all applicable lines based on filters, if there are any active filters
+            // Draw all applicable lines based on filters, if any are active
             if (anyActiveFilters) {
                 drawLines(filteredData);
             }
 
-            // Draw special scenarios if toggle is active
+            // Draw special scenarios if the baseline toggle is active
             if (toggleBaselineActive) {
                 drawSpecialScenarios(emissionsData);
+            }
+
+            // Draw best scenarios if the best toggle is active
+            if (toggleBestActive) {
+                drawBestScenarios(emissionsData);
             }
 
             context.restore();
@@ -552,6 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
+
 
 
         function drawLines(data) {
@@ -588,8 +596,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-
-
+        function drawBestScenarios(data) {
+            const bestScenarios = [5, 6, 7, 8];
+            data.filter(d => bestScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
+                if (i > 0 && d.scenario === arr[i - 1].scenario) {
+                    context.beginPath();
+                    context.moveTo(x(new Date(arr[i - 1].year)), y(arr[i - 1].emission));
+                    context.lineTo(x(new Date(d.year)), y(d.emission));
+                    context.strokeStyle = '#23756b'; // Green for best scenarios
+                    context.lineWidth = 2;
+                    context.stroke();
+                }
+            });
+        }
 
 
         const baselineToggle = document.getElementById('baselineToggle');
@@ -599,6 +618,15 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleBaselineActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
         });
+
+        const bestToggle = document.getElementById('best');
+        let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
+
+        bestToggle.addEventListener('change', function() {
+            toggleBestActive = this.checked;
+            updatePlot();  // Update the plot based on toggle state
+        });
+
 
 
 
