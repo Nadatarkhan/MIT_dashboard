@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-        function modifyLabelName(field, value) {
+        /*function modifyLabelName(field, value) {
             const replacements = {
                 'schedules': {'baseline': 'As is', 'partial': 'Partial', 'full': 'Full'},
                 'retrofit': {'baseline': 'As is', 'partial': 'Partial', 'full': 'Full'},
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check for a replacement in the predefined dictionary; otherwise, format the value normally
             return replacements[field] && replacements[field][value] ? replacements[field][value] :
                 value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
-        }
+        }*/
 
         fields.forEach(field => {
             const iconContainer = document.querySelector(`.icon-container${field === 'grid' ? '-2' : ''}[data-field="${field}"]`);
@@ -234,15 +234,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const label = document.createElement('label');
                     label.htmlFor = `${field}-${value}`;
-                    label.textContent = modifyLabelName(field, value); // Apply custom or default label text
+                    label.textContent = value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ');
                     label.style.fontSize = '12px';
+
+                    // Set descriptive text for grid values
+                    if (field === 'grid') {
+                        if (value === "bau") {
+                            label.textContent = "Business as usual";
+                        } else if (value === "cheap_ng") {
+                            label.textContent = "Cheap Natural Gas";
+                        } else if (value === "decarbonization") {
+                            label.textContent = "95% Decarbonization";
+                        }
+                    }
 
                     checkboxContainer.appendChild(input);
                     checkboxContainer.appendChild(label);
                     form.appendChild(checkboxContainer);
-                });
 
+                    input.addEventListener('change', function() {
+                        if (!filters[field]) filters[field] = [];
+                        const isChecked = this.checked;
+                        const value = this.value;
+
+                        // Prevent unchecking if it's the last checked checkbox in this group
+                        if (!isChecked && filters[field].length <= 1) {
+                            this.checked = true; // Revert unchecking action
+                            return; // Stop further execution
+                        }
+
+                        // Update filters based on checkbox state
+                        if (isChecked && !filters[field].includes(value)) {
+                            filters[field].push(value);
+                        } else if (!isChecked) {
+                            const index = filters[field].indexOf(value);
+                            if (index !== -1) {
+                                filters[field].splice(index, 1);
+                            }
+                        }
+
+                        // Update the plot if all technologies have at least one checkbox checked
+                        if (fields.every(f => filters[f] && filters[f].length > 0)) {
+                            updatePlot();
+                        } else {
+                            // Optionally clear the plot if not all conditions are met
+                            context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                        }
+                    });
+                });
                 iconContainer.appendChild(form);
+
             }
         });
 
