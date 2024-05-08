@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right + 70, margin.top);  // Adjust for right edge alignment
+            context.translate(width + margin.right + 80, margin.top);  // Adjust for right edge alignment
             context.textAlign = "right";
             context.fillStyle = 'black'; // Ensure the same color as the primary Y-axis
             yRight.ticks(10).forEach(d => {
@@ -731,7 +731,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             context.textAlign = "center";
-            context.translate(60, height / 2);  // Move further to the right for label
+            context.translate(40, height / 2);  // Move further to the right for label
             context.rotate(-Math.PI / 2);
             context.fillText("% Emissions Reduction", 0, 0);
 
