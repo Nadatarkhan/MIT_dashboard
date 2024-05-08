@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.beginPath();
                 context.moveTo(-10, y(d));
                 context.lineTo(width, y(d)); // Extend the line across the width
-                context.strokeStyle = '#cbcbcb'; // Light grey color for the horizontal lines
+                context.strokeStyle = '#e1e1e1'; // Light grey color for the horizontal lines
                 context.lineWidth = 0.6;  // Set the line width for horizontal grid lines
                 context.stroke();
             });
