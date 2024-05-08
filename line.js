@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 form.style.display = 'flex';
                 form.style.flexDirection = 'column';
 
-                const options = field === 'grid' ? ['bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
+                const options = field === 'grid' ? ['static','bau', 'cheap_ng', 'decarbonization'] : ['static','baseline', 'partial', 'full'];
                 const checkboxes = []; // Array to store references to all checkboxes within this field
 
                 options.forEach(value => {
@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             label.textContent = "Cheap Natural Gas";
                         } else if (value === "decarbonization") {
                             label.textContent = "95% Decarbonization";
+                        } else if (value === "static") {
+                                label.textContent = "static";
                         }
                     }
 
@@ -303,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function resetScenario1Filters() {
             const baselineFields = ['deepgeo', 'nuclear', 'ccs'];
             const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district'];
-            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];
+            const gridFilters = ['static','bau', 'cheap_ng', 'decarbonization'];
 
             baselineFields.concat(partialFields, ['grid']).forEach(field => {
                 document.querySelectorAll(`input[name="${field}Filter"]`).forEach(checkbox => {
@@ -362,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Filters after update:", filters);
 
                 // Sync the state of grid-related checkboxes with the baseline button
-                const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
+                const gridFilters = ['static','bau', 'cheap_ng', 'decarbonization'];  // Grid scenario identifiers
                 gridFilters.forEach(filter => {
                     document.querySelectorAll(`input[name="gridFilter"][value="${filter}"]`).forEach(checkbox => {
                         checkbox.checked = baselineActive;
@@ -413,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateFiltersForScenario1(active) {
             const baselineFields = ['deepgeo', 'nuclear', 'ccs']; // Fields to set as 'baseline'
             const partialFields = ['retrofit', 'schedules', 'lab', 'pv', 'district']; // Fields to set as 'partial'
-            const gridFilters = ['bau', 'cheap_ng', 'decarbonization'];  // Grid checkboxes
+            const gridFilters = ['static','bau', 'cheap_ng', 'decarbonization'];  // Grid checkboxes
 
             baselineFields.forEach(field => {
                 document.querySelectorAll(`input[name="${field}Filter"][value="baseline"]`).forEach(checkbox => {
