@@ -719,8 +719,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .range([height, 0]);
 
             context.translate(width + margin.right - 5, margin.top);  // Adjust for right edge alignment
-            context.textAlign = "left";
-            context.fillStyle = 'black'; // Different color for the secondary Y-axis
+            context.textAlign = "right";
+            context.fillStyle = 'black'; // Ensure the same color as the primary Y-axis
             yRight.ticks(10).forEach(d => {
                 context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
                 context.beginPath();
@@ -730,10 +730,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            context.textAlign = "left";
-            context.translate(20, height / 2);  // Move to the right of the axis for label
+            context.textAlign = "right";
+            context.translate(40, height / 2);  // Move further to the right for label
             context.rotate(-Math.PI / 2);
-            context.fillText("% Emission Reduction", 0, 0);
+            context.fillText("% Reduction", 0, 0);
 
             context.restore();
 
