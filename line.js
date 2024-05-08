@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 form.style.display = 'flex';
                 form.style.flexDirection = 'column';
 
-                const options = field === 'grid' ? ['static','bau', 'cheap_ng', 'decarbonization'] : ['static','baseline', 'partial', 'full'];
+                const options = field === 'grid' ? ['static','bau', 'cheap_ng', 'decarbonization'] : ['baseline', 'partial', 'full'];
                 const checkboxes = []; // Array to store references to all checkboxes within this field
 
                 options.forEach(value => {
