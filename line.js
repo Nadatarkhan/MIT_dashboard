@@ -607,11 +607,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (isRecording) {
                         context.strokeStyle = '#dc5d5d'; // Orange for scenario 2
-                        context.lineWidth = 1.2;
+                        context.lineWidth = 1.7;
                         recordedLines.push({start: data[i - 1], end: d, color: '#dc5d5d', lineWidth: 1.2});
                     } else {
                         context.strokeStyle = '#4b4b4b'; // Default grey color
-                        context.lineWidth = 1;
+                        context.lineWidth = 1.7;
                     }
                     context.stroke();
                 }
