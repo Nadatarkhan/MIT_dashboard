@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right + 82, margin.top);  // Adjust for right edge alignment
+            context.translate(width + margin.right + 65, margin.top);  // Adjust for right edge alignment
             context.textAlign = "right";
             context.fillStyle = 'black'; // Ensure the same color as the primary Y-axis
             yRight.ticks(10).forEach(d => {
