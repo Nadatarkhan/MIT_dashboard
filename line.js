@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Declare temporaryStorage here
     let temporaryStorage = [];
 
-    const margin = {top: 30, right: 30, bottom: 30, left: 100},
+    const margin = {top: 30, right: 60, bottom: 30, left: 100},
         width = containerWidth - margin.left - margin.right,
         height = containerHeight - margin.top - margin.bottom;
 
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const lineHeight = 20;  // Line height for wrapping text
 
         context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-        context.font = "italic 14px Arial";  // Adjust font size dynamically if needed
+        context.font = "12px Arial";  // Adjust font size dynamically if needed
         context.fillStyle = "#666";
         context.textAlign = "center";
         context.textBaseline = "middle";
@@ -610,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         context.lineWidth = 1.2;
                         recordedLines.push({start: data[i - 1], end: d, color: '#dc5d5d', lineWidth: 1.2});
                     } else {
-                        context.strokeStyle = '#808080'; // Default grey color
+                        context.strokeStyle = '#4b4b4b'; // Default grey color
                         context.lineWidth = 1;
                     }
                     context.stroke();
@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right + 95, margin.top);  // Adjust for right edge alignment
+            context.translate(width + margin.right + 92, margin.top);  // Adjust for right edge alignment
             context.textAlign = "right";
             context.fillStyle = 'black'; // Ensure the same color as the primary Y-axis
             yRight.ticks(10).forEach(d => {
