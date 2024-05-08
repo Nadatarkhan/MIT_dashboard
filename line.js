@@ -687,6 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);
             context.stroke();
 
+            // Font settings for primary axes
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
@@ -699,6 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
+            // Labeling for x-axis
             context.textAlign = 'center';
             context.textBaseline = 'top';
             x.ticks(d3.timeYear.every(2)).forEach(d => {
@@ -716,9 +718,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right, margin.top);  // Position the axis on the right
+            context.translate(width + margin.right - 30, margin.top);  // Adjust position to align with the end of the x-axis
             context.textAlign = "left";
-            context.fillStyle = 'black'; // Different color to distinguish from the primary Y-axis
+            context.fillStyle = 'blue'; // Different color to distinguish from the primary Y-axis
+            context.font = "12px Arial";  // Match the font style with the x-axis
             yRight.ticks(10).forEach(d => {
                 context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
                 context.beginPath();
@@ -743,6 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
 
 
