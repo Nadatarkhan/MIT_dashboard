@@ -670,7 +670,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Set y-axis to always reach up to 180,000
+            // Set y-axis to always reach up to 180,000 for emissions
             y.domain([0, 200000]);
 
             // Define the x-axis to cover from 2025 to 2050, but start labeling from 2026
@@ -701,17 +701,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.textAlign = 'center';
             context.textBaseline = 'top';
-            // Generate ticks every two years starting from 2026
             x.ticks(d3.timeYear.every(2)).forEach(d => {
-                // Only label starting from 2026 to 2050
                 if (d.getFullYear() >= 2026) {
                     context.fillText(d.getFullYear(), x(d), height + 5);
                 }
             });
 
             context.fillText("Year", width / 2, height + 20);
+            context.restore();
+
+            // Secondary Y-axis for Percent Reduction
+            context.save();
+            const yRight = d3.scaleLinear()
+                .domain([1, 0])  // 100% to 0%
+                .range([height, 0]);
+
+            context.translate(width + margin.right, margin.top);  // Position the axis on the right
+            context.textAlign = "left";
+            context.fillStyle = 'black'; // Different color to distinguish from the primary Y-axis
+            yRight.ticks(10).forEach(d => {
+                context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
+                context.beginPath();
+                context.moveTo(-5, yRight(d));  // Small tick marks inside the plot area
+                context.lineTo(0, yRight(d));
+                context.strokeStyle = 'blue'; // Same color as text for consistency
+                context.stroke();
+            });
+
+            context.textAlign = "center";
+            context.translate(-20, height / 2);
+            context.rotate(-Math.PI / 2);
+            context.fillText("% Reduction", 0, 0);
 
             context.restore();
+
+            // Primary Y-axis title for Emissions
             context.save();
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
@@ -719,6 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
 
     }).catch(function(error) {
