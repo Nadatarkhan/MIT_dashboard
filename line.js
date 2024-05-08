@@ -619,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function drawSpecialScenarios(data) {
-            const specialScenarios = [0, 2, 18, 20, 54, 56, 72, 74, 243, 245, 261, 263, 297, 299, 315, 317];
+            const specialScenarios = [0, 1, 2, 3, 4, 5 ,6, 7, 18, 20];
             data.filter(d => specialScenarios.includes(Number(d.scenario))).forEach((d, i, arr) => {
                 if (i > 0 && d.scenario === arr[i - 1].scenario) {
                     context.beginPath();
