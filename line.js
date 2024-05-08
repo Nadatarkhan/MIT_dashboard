@@ -718,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right - 30, margin.top);  // Adjust position to align with the end of the x-axis
+            context.translate(width + margin.right - 80, margin.top);  // Adjust position to align with the end of the x-axis
             context.textAlign = "left";
             context.fillStyle = 'blue'; // Different color to distinguish from the primary Y-axis
             context.font = "12px Arial";  // Match the font style with the x-axis
