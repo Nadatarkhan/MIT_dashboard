@@ -665,6 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
         function drawAxis() {
             context.save();
             context.translate(margin.left, margin.top);
@@ -686,7 +687,6 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);
             context.stroke();
 
-            // Font settings for primary axes
             context.font = "12px Arial";
             context.textAlign = 'right';
             context.textBaseline = 'middle';
@@ -699,7 +699,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            // Labeling for x-axis
             context.textAlign = 'center';
             context.textBaseline = 'top';
             x.ticks(d3.timeYear.every(2)).forEach(d => {
@@ -717,10 +716,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right - 5, margin.top);  // Adjust position to align with the end of the x-axis
+            context.translate(width + margin.right, margin.top);  // Position the axis on the right
             context.textAlign = "left";
             context.fillStyle = 'blue'; // Different color to distinguish from the primary Y-axis
-            context.font = "12px Arial";  // Match the font style with the x-axis
             yRight.ticks(10).forEach(d => {
                 context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
                 context.beginPath();
@@ -730,8 +728,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.stroke();
             });
 
-            context.textAlign = "left";
-            context.translate(60, height / 2); // Move further right for the label
+            context.textAlign = "center";
+            context.translate(-20, height / 2);
             context.rotate(-Math.PI / 2);
             context.fillText("% Reduction", 0, 0);
 
@@ -742,12 +740,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.translate(margin.left - 60, margin.top + height / 2);
             context.rotate(-Math.PI / 2);
             context.textAlign = "center";
-            context.font = "12px Arial"; // Ensure consistent font style
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
-
-
 
 
 
