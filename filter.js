@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Create a new container for each metric
                 const metricContainer = container.appendChild(document.createElement('div'));
                 metricContainer.classList.add('metric-container');
+                metricContainer.style.marginBottom = '20px'; // Set smaller margins here
 
                 // Append SVG canvas to the container
                 const svg = d3.select(metricContainer)
