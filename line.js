@@ -718,20 +718,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right + 90, margin.top);  // Adjust for right edge alignment
+            context.translate(width + margin.right + 95, margin.top);  // Adjust for right edge alignment
             context.textAlign = "right";
             context.fillStyle = 'black'; // Ensure the same color as the primary Y-axis
             yRight.ticks(10).forEach(d => {
-                context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
-                context.beginPath();
-                context.moveTo(-5, yRight(d));  // Small tick marks inside the plot area
-                context.lineTo(0, yRight(d));
-                context.strokeStyle = 'black'; // Same color as text for consistency
-                context.stroke();
+                context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));  // Removed small ticks drawing
             });
 
             context.textAlign = "center";
-            context.translate(20, height / 2);  // Move closer to the axis for label
+            context.translate(5, height / 2);  // Move closer to the axis for label
             context.rotate(-Math.PI / 2);
             context.fillText("% Emissions Reduction", 0, 0);
 
@@ -745,6 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
 
 
