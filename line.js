@@ -687,7 +687,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.lineTo(0, height);
             context.stroke();
 
+            // Unified font settings for all axis labels
             context.font = "12px Arial";
+            context.fillStyle = 'black'; // Ensure consistent color for text
             context.textAlign = 'right';
             context.textBaseline = 'middle';
             y.ticks(10).forEach(d => {
@@ -716,22 +718,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 .domain([1, 0])  // 100% to 0%
                 .range([height, 0]);
 
-            context.translate(width + margin.right, margin.top);  // Position the axis on the right
+            context.translate(width + margin.right - 5, margin.top);  // Adjust for right edge alignment
             context.textAlign = "left";
-            context.fillStyle = 'blue'; // Different color to distinguish from the primary Y-axis
+            context.fillStyle = 'black'; // Different color for the secondary Y-axis
             yRight.ticks(10).forEach(d => {
                 context.fillText((d * 100).toFixed(0) + '%', 10, yRight(d));
                 context.beginPath();
                 context.moveTo(-5, yRight(d));  // Small tick marks inside the plot area
                 context.lineTo(0, yRight(d));
-                context.strokeStyle = 'blue'; // Same color as text for consistency
+                context.strokeStyle = 'black'; // Same color as text for consistency
                 context.stroke();
             });
 
-            context.textAlign = "center";
-            context.translate(-20, height / 2);
+            context.textAlign = "left";
+            context.translate(20, height / 2);  // Move to the right of the axis for label
             context.rotate(-Math.PI / 2);
-            context.fillText("% Reduction", 0, 0);
+            context.fillText("% Emission Reduction", 0, 0);
 
             context.restore();
 
@@ -743,6 +745,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.fillText("Emissions (MT-CO2)", 0, 0);
             context.restore();
         }
+
 
 
 
