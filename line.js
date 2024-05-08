@@ -726,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             context.textAlign = "center";
-            context.translate(1, height / 2);  // Move closer to the axis for label
+            context.translate(10, height / 2);  // Move closer to the axis for label
             context.rotate(-Math.PI / 2);
             context.fillText("% Emissions Reduction", 0, 0);
 
