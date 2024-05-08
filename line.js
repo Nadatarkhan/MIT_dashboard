@@ -288,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
-
         // reset buttons
         function resetBaselineFilters() {
             document.querySelectorAll(`input[name$="Filter"][value="baseline"]`).forEach(checkbox => {
