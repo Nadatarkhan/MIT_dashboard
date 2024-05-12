@@ -653,59 +653,60 @@ document.addEventListener('DOMContentLoaded', function() {
         //////////
 
         let currentlyDisplayedScenarios = [];
-        
+
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
-                const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
-                return totalEmissions >= minVal && totalEmissions <= maxVal;
-            });
+            const visibleScenarios = Object.keys(cumulativeEmissionsData)
+                .filter(key => cumulativeEmissionsData[key].totalEmissions >= minVal && cumulativeEmissionsData[key].totalEmissions <= maxVal)
+                .map(key => key);
 
-            console.log("Filtered visible scenarios:", visibleScenarios);
-            updatePlot(visibleScenarios);
+            // Assuming updatePlot function or similar to redraw the line plot
+            updatePlot(visibleScenarios);  // You may need to modify updatePlot to accept scenario filters
         }
 
 
 
-        function updatePlot(visibleScenarios = []) {
+
+
+        function updatePlot(visibleScenarios) {
             console.log("Updating plot with current filters:", filters);
 
-            // Clear the canvas and redraw the base axes
+            // Clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            drawAxis();
+            drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if there are any filters or toggles affecting the visibility
+            // Check if there are any active filters or toggles
             const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
-            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && !visibleScenarios) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();  // Show initial message if no scenarios are selected
-                return;
+                showInitialMessage();  // Display message indicating the need to select filters
+                return; // Exit the function if no conditions to draw are met
             }
 
-            // Filter the data based on the current visible scenarios or other active filters
+            // Filter data based on active filters and visibleScenarios
             let filteredData = emissionsData.filter(d =>
-                visibleScenarios.includes(d.scenario) ||
+                (visibleScenarios && visibleScenarios.includes(d.scenario)) ||
                 (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
             );
 
-            // If after filtering there is no data to display, show a message and return
+            // If no data matches filters and toggles are not active
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 return;
             }
 
-            // Update the scale domains based on the filtered data
+            // Update domains for scales based on existing data or full dataset if toggles are active
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Log which scenarios meet the current filter conditions
+            // Log scenarios that meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
 
-            // Draw lines for all applicable scenarios based on the filtered data
+            // Draw all applicable lines based on filters
             drawLines(filteredData);
 
             // Draw special scenarios if the baseline toggle is active
@@ -720,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
 
-            // Redraw recorded lines if the lightbulb toggle is on
+            // Redraw recorded lines if the lightbulb is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
