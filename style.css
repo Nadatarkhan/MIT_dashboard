@@ -559,7 +559,7 @@ input[type='radio']:checked + label {
 
 /* Titles within controls */
 .controls-title {
-    font-size: 11px; /* Smaller font size for the titles */
+    font-size: 13px; /* Smaller font size for the titles */
     text-align: left; /* Left align the titles */
     margin-bottom: 1px; /* Space below the title */
     margin-top: 10px; /* Space below the title */
