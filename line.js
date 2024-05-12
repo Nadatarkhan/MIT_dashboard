@@ -678,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();
 
-            // Check if there are any scenarios to display based on active filters, toggles, or visible scenarios from the slider
+            // Determine if there are any scenarios to display based on active filters or toggles
             const anyActiveFilters = fields.some(field => filters[field].length > 0);
             if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
@@ -686,23 +686,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Filter data based on the current visible scenarios from the slider or other active filters
+            // Filter data based on the current visible scenarios or other active filters
             let filteredData = emissionsData.filter(d =>
                 visibleScenarios.includes(d.scenario) ||
                 (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
             );
 
-            // If no data matches filters and no special toggles are active, show no data message
+            // Handle the case where no data matches the current filters
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                context.fillText("No data to display.", containerWidth / 2, containerHeight / 2);
+                context.fillText("No data to display.", containerWidth / 2, containerHeight / 2); // Show message on canvas
                 return;
             }
 
-            // Update the list of currently displayed scenarios if filtered by the slider
-            if (visibleScenarios.length > 0) {
-                currentlyDisplayedScenarios = visibleScenarios;
-            }
+            // Update the currently displayed scenarios based on visible scenarios provided
+            currentlyDisplayedScenarios = visibleScenarios;
 
             // Update domains for scales based on the filtered data
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
@@ -730,7 +728,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
-
 
 
 
