@@ -673,15 +673,13 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
+            // Define local variable to handle scenarios specifically for this update
+            let scenariosToDraw = visibleScenarios || [];
+
+
             // Check if there are any active filters or if either toggle is active
             const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
 
-            //for histogram filtering- Redraw only the lines for scenarios that are in visibleScenarios array
-            emissionsData.forEach(data => {
-                if (visibleScenarios.includes(data.scenario)) {
-                    drawLine(data); // drawLine would be your existing function to draw a line based on data
-                }
-            });
 
             // Check conditions for drawing
             if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive) {
