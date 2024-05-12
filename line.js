@@ -557,6 +557,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 width = container.clientWidth - margin.left - margin.right,
                 height = 80 - margin.top - margin.bottom;
 
+            // This ensures that currentlyDisplayedScenarios is set only once and appropriately
+            currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData);
+
             // Load the data
             d3.csv("data/example_data.csv").then(function(data) {
                 const metrics = ['Emissions', 'Innovation', 'Cost', 'Risk'];
@@ -590,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .range([0, width]);
                     const y = d3.scaleLinear()
                         .range([height, 0])
-                        .domain([0, d3.max(metricData, d => d) * 0.1]);  // Adjusting to show up to 10% of the highest value
+                        .domain([0, d3.max(metricData, d => d) * 0.1]);
 
                     // Create histogram bins
                     const histogram = d3.histogram()
@@ -650,19 +653,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+
         //////////
 
         let currentlyDisplayedScenarios = [];
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            console.log("Range from slider:", minVal, maxVal); // Ensure range values are correct
+            console.log("Range from slider:", minVal, maxVal);
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios.length); // Check the count of filtered scenarios
+            console.log("Filtered visible scenarios:", visibleScenarios);
             updatePlot(visibleScenarios);
         }
 
