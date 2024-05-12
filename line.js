@@ -804,11 +804,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const bestToggle = document.getElementById('best');
         let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
+        const bestPracticeText = document.getElementById('bestPracticeText'); // Get the text element
 
         bestToggle.addEventListener('change', function() {
             toggleBestActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
+            if (toggleBestActive) {
+                bestPracticeText.classList.add('green-text');  // Turn text green when toggle is active
+            } else {
+                bestPracticeText.classList.remove('green-text');  // Remove green color when toggle is not active
+            }
         });
+
 
 
 
