@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const baselineToggle = document.getElementById('baselineToggle');
         let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
-        const baselineText = document.getElementById('baselineText'); // Get the text element
+        const baselineText = document.getElementById('baselineHeading'); // Updated to target the h4 element
 
         baselineToggle.addEventListener('change', function() {
             toggleBaselineActive = this.checked;
@@ -799,6 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 baselineText.classList.remove('purple-text');  // Remove purple color when toggle is not active
             }
         });
+
 
 
         const bestToggle = document.getElementById('best');
