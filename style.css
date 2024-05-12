@@ -695,9 +695,10 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 
-.purple-text {
+.baseline-heading.purple-text {
     color: purple;
 }
+
 
 .baseline-heading {
     font-size: 16px; /* Example size */
