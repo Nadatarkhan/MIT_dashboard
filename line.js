@@ -475,43 +475,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Scenario 2
         const scenario2Toggle = document.getElementById('scenario2Toggle');
-        let isRecording = false;
-        let recordedLines = []; // Ensure this is defined here if not already globally defined
+        let isRecording = false;  // Tracks whether we are currently recording lines
+        let recordedLines = [];   // Stores the lines that are recorded during the active session
 
         scenario2Toggle.addEventListener('change', function() {
-            isRecording = this.checked;
-            if (isRecording) {
-                // Start recording and reset any previous recordings if starting new
-                resetAllCheckboxes(); // Resets all checkboxes, assuming it clears the plot or other filters
-                recordedLines = [];
-                drawRecordedLines([]); // Optionally clear previously drawn lines
+            if (!isRecording && this.checked) {
+                // Start recording
+                isRecording = true;
                 this.classList.add('active');
-            } else {
-                // No longer recording, toggle visibility of recorded lines based on 'checked' state
-                if (this.checked) {
-                    drawRecordedLines(recordedLines); // Draw recorded lines
-                } else {
-                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear canvas
-                    updatePlot(); // Redraw the plot without the recorded lines
-                }
+                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);  // Clear the canvas before starting recording
+                recordedLines = [];  // Clear previously recorded lines if any
+                resetAllCheckboxes();  // Reset all controls that may affect recording
+                // Note: Make sure to insert code here that starts the actual recording if not handled by another function
+            } else if (isRecording && !this.checked) {
+                // Stop recording and save the lines
+                isRecording = false;
                 this.classList.remove('active');
+                drawRecordedLines(recordedLines);  // Draw the recorded lines to store them visually
+                updatePlot();  // Optionally redraw the entire plot to re-align everything
+            } else {
+                // Toggle the visibility of the recorded lines
+                if (this.checked) {
+                    drawRecordedLines(recordedLines);  // Redraw stored lines if toggle is turned on
+                } else {
+                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);  // Clear the canvas
+                    updatePlot();  // Optionally redraw the plot to show the current state without recorded lines
+                }
             }
         });
 
         function drawRecordedLines(lines) {
-            context.save();  // Save the current state of the context
-            context.translate(margin.left, margin.top);  // Ensure this translation matches exactly as in the main plot drawing
-
+            context.save();
+            context.translate(margin.left, margin.top);
             lines.forEach(line => {
                 context.beginPath();
                 context.moveTo(x(line.start.year), y(line.start.emission));
                 context.lineTo(x(line.end.year), y(line.end.emission));
-                context.strokeStyle = line.color;
-                context.lineWidth = line.lineWidth;
+                context.strokeStyle = line.color;  // Ensure you define how the color is set elsewhere or use a default
+                context.lineWidth = line.lineWidth;  // Ensure line width is set or use a default
                 context.stroke();
             });
-
-            context.restore();  // Restore the context to the saved state, undoing the translation
+            context.restore();
         }
 
 
