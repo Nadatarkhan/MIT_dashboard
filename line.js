@@ -551,6 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!container) {
                 console.error("Container for innovation plot not found");
                 return;
+
             }
 
             const margin = { top: 10, right: 50, bottom: 30, left: 50 },
@@ -570,6 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Continue using data from example_data.csv for other metrics
                         metricData = data.map(d => parseFloat(d[metric]));
                     }
+
 
                     // Create a new container for each metric
                     const metricContainer = container.appendChild(document.createElement('div'));
@@ -650,28 +652,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-//////////
+        //////////
 
         let currentlyDisplayedScenarios = [];
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            console.log("Slider range:", minVal, maxVal);
-
-            // Assuming 'currentlyDisplayedScenarios' should contain all scenarios initially
-            if (currentlyDisplayedScenarios.length === 0) {
-                currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData);
-            }
-
+            console.log("Range from slider:", minVal, maxVal);
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
-                console.log(`Checking scenario ${scenario} with emissions ${totalEmissions}`);
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios.length);
+            console.log("Filtered visible scenarios:", visibleScenarios);
             updatePlot(visibleScenarios);
         }
+
 
         function updatePlot(visibleScenarios = []) {
             console.log("Updating plot with visible scenarios:", visibleScenarios);
