@@ -653,20 +653,23 @@ document.addEventListener('DOMContentLoaded', function() {
 //////////
 
         let currentlyDisplayedScenarios = [];
-        let allScenarios = [];  // This will hold all scenarios ever loaded into the plot
 
-// Use currentlyDisplayedScenarios to filter based on slider.
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
             console.log("Slider range:", minVal, maxVal);
 
+            // Assuming 'currentlyDisplayedScenarios' should contain all scenarios initially
+            if (currentlyDisplayedScenarios.length === 0) {
+                currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData);
+            }
+
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
-                const totalEmissions = cumulativeEmissionsData[scenario] ? cumulativeEmissionsData[scenario].totalEmissions : 0;
+                const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
                 console.log(`Checking scenario ${scenario} with emissions ${totalEmissions}`);
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios);
+            console.log("Filtered visible scenarios:", visibleScenarios.length);
             updatePlot(visibleScenarios);
         }
 
@@ -675,29 +678,44 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();
 
-            if (visibleScenarios.length === 0) {
+            // Check if there are any scenarios to display based on active filters, toggles, or visible scenarios from the slider
+            const anyActiveFilters = fields.some(field => filters[field].length > 0);
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Show initial message directly on the plot
                 return;
             }
 
-            let filteredData = emissionsData.filter(d => visibleScenarios.includes(d.scenario));
+            // Filter data based on the current visible scenarios from the slider or other active filters
+            let filteredData = emissionsData.filter(d =>
+                visibleScenarios.includes(d.scenario) ||
+                (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
+            );
 
+            // If no data matches filters and no special toggles are active, show no data message
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 context.fillText("No data to display.", containerWidth / 2, containerHeight / 2);
                 return;
             }
 
+            // Update the list of currently displayed scenarios if filtered by the slider
+            if (visibleScenarios.length > 0) {
+                currentlyDisplayedScenarios = visibleScenarios;
+            }
+
+            // Update domains for scales based on the filtered data
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
+            // Log and draw lines for scenarios that meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
             drawLines(filteredData);
 
+            // Draw special and best scenarios if respective toggles are active
             if (toggleBaselineActive) {
                 drawSpecialScenarios(filteredData);
             }
@@ -707,12 +725,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
 
+            // Redraw recorded lines if the lightbulb toggle is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
         }
-
-
 
 
 
