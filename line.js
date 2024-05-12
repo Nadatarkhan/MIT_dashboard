@@ -551,14 +551,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!container) {
                 console.error("Container for innovation plot not found");
                 return;
+
             }
 
             const margin = { top: 10, right: 50, bottom: 30, left: 50 },
                 width = container.clientWidth - margin.left - margin.right,
                 height = 80 - margin.top - margin.bottom;
-
-            // This ensures that currentlyDisplayedScenarios is set only once and appropriately
-            currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData);
 
             // Load the data
             d3.csv("data/example_data.csv").then(function(data) {
@@ -573,6 +571,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Continue using data from example_data.csv for other metrics
                         metricData = data.map(d => parseFloat(d[metric]));
                     }
+
+                    currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData); // Initialize with all scenarios
 
                     // Create a new container for each metric
                     const metricContainer = container.appendChild(document.createElement('div'));
@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .range([0, width]);
                     const y = d3.scaleLinear()
                         .range([height, 0])
-                        .domain([0, d3.max(metricData, d => d) * 0.1]);
+                        .domain([0, d3.max(metricData, d => d) * 0.1]);  // Adjusting to show up to 10% of the highest value
 
                     // Create histogram bins
                     const histogram = d3.histogram()
@@ -652,7 +652,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Error loading or processing data:", error);
             });
         }
-
 
         //////////
 
