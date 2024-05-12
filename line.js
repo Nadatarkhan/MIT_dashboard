@@ -658,71 +658,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 .filter(key => cumulativeEmissionsData[key].totalEmissions >= minVal && cumulativeEmissionsData[key].totalEmissions <= maxVal)
                 .map(key => key);
 
-            // Assuming updatePlot function or similar to redraw the line plot
-            updatePlot(visibleScenarios);  // You may need to modify updatePlot to accept scenario filters
+            // Call updatePlot with the filtered scenarios
+            updatePlot(visibleScenarios);
         }
 
-
-
-
-
-        function updatePlot(visibleScenarios) {
+        function updatePlot(visibleScenarios = []) {  // Default parameter in case it's not provided
             console.log("Updating plot with current filters:", filters);
 
-            // Clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            drawAxis();  // Draw axes first to ensure they are behind the plot lines
+            drawAxis();
 
-            // Check if there are any active filters or toggles
             const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
-            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && !visibleScenarios) {
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if no conditions to draw are met
+                showInitialMessage();
+                return;
             }
 
-            // Filter data based on active filters and visibleScenarios
             let filteredData = emissionsData.filter(d =>
-                (visibleScenarios && visibleScenarios.includes(d.scenario)) ||
+                visibleScenarios.includes(d.scenario) ||
                 (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
             );
 
-            // If no data matches filters and toggles are not active
             if (filteredData.length === 0) {
                 console.log("No data to display.");
                 return;
             }
 
-            // Update domains for scales based on existing data or full dataset if toggles are active
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Log scenarios that meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
 
-            // Draw all applicable lines based on filters
             drawLines(filteredData);
-
-            // Draw special scenarios if the baseline toggle is active
             if (toggleBaselineActive) {
                 drawSpecialScenarios(filteredData);
             }
-
-            // Draw best scenarios if the best toggle is active
             if (toggleBestActive) {
                 drawBestScenarios(filteredData);
             }
 
             context.restore();
-
-            // Redraw recorded lines if the lightbulb is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
         }
+
 
 
 
