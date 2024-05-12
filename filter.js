@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
+    const container = document.getElementById('test'); // Get the container for innovation plot
     if (container) {
         const margin = { top: 10, right: 50, bottom: 30, left: 50 },
             width = container.clientWidth - margin.left - margin.right,
