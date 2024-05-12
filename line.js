@@ -653,14 +653,19 @@ document.addEventListener('DOMContentLoaded', function() {
         //////////
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
+            console.log("Updating visibility for range:", range);
             const [minVal, maxVal] = range;
             const visibleScenarios = Object.keys(cumulativeEmissionsData)
-                .filter(key => cumulativeEmissionsData[key].totalEmissions >= minVal && cumulativeEmissionsData[key].totalEmissions <= maxVal)
+                .filter(key => {
+                    const totalEmissions = cumulativeEmissionsData[key].totalEmissions;
+                    return totalEmissions >= minVal && totalEmissions <= maxVal;
+                })
                 .map(key => key);
 
-            // Call updatePlot with the filtered scenarios
+            console.log("Visible scenarios after filter:", visibleScenarios);
             updatePlot(visibleScenarios);
         }
+
 
         function updatePlot(visibleScenarios = []) {  // Default parameter in case it's not provided
             console.log("Updating plot with current filters:", filters);
