@@ -474,48 +474,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Scenario 2
-        const scenario2Button = document.getElementById('scenario2Button');
+        const scenario2Toggle = document.getElementById('scenario2Toggle');
         let isRecording = false;
         let recordedLines = []; // Ensure this is defined here if not already globally defined
 
-        scenario2Button.addEventListener('click', function() {
-            isRecording = !isRecording;
-            this.textContent = isRecording ? "Stop Recording" : "Scenario 2";
-            this.classList.toggle('active', isRecording);
-            const toggle = document.getElementById('scenario2Toggle');
-
-            if (toggle.checked !== isRecording) {
-                toggle.click();
-            }
-
+        scenario2Toggle.addEventListener('change', function() {
+            isRecording = this.checked;
             if (isRecording) {
-                resetAllCheckboxes();
+                // Start recording and reset any previous recordings if starting new
+                resetAllCheckboxes(); // Resets all checkboxes, assuming it clears the plot or other filters
                 recordedLines = [];
+                drawRecordedLines([]); // Optionally clear previously drawn lines
+                this.classList.add('active');
             } else {
-                drawRecordedLines(recordedLines);
-                updatePlot();  // Optionally redraw the entire plot to re-align everything
-            }
-        });
-
-
-        // Toggle visibility event listener and function
-        let lightBulbOn = false; // Track the state of the lightbulb toggle
-        const lightBulbToggle = document.getElementById('scenario2Toggle');
-        lightBulbToggle.addEventListener('change', function() {
-            if (this.checked) {
-                if (!fields.every(field => filters[field] && filters[field].length > 0)) {
-                    // If no filters are active and no plot is currently shown, clear and prepare to draw just the axes and lines
-                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                    drawAxis();  // Draw axes first
+                // No longer recording, toggle visibility of recorded lines based on 'checked' state
+                if (this.checked) {
+                    drawRecordedLines(recordedLines); // Draw recorded lines
+                } else {
+                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi); // Clear canvas
+                    updatePlot(); // Redraw the plot without the recorded lines
                 }
-                drawRecordedLines(recordedLines); // Then draw the recorded lines over the axes
-            } else {
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                updatePlot(); // Redraw the plot without the recorded lines
+                this.classList.remove('active');
             }
         });
-
-
 
         function drawRecordedLines(lines) {
             context.save();  // Save the current state of the context
@@ -532,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();  // Restore the context to the saved state, undoing the translation
         }
+
 
 
 
