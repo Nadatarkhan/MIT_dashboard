@@ -655,12 +655,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentlyDisplayedScenarios = [];
         let allScenarios = [];  // This will hold all scenarios ever loaded into the plot
 
+// Use currentlyDisplayedScenarios to filter based on slider.
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
             console.log("Slider range:", minVal, maxVal);
 
-            const visibleScenarios = allScenarios.filter(scenario => {
-                const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
+            const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
+                const totalEmissions = cumulativeEmissionsData[scenario] ? cumulativeEmissionsData[scenario].totalEmissions : 0;
                 console.log(`Checking scenario ${scenario} with emissions ${totalEmissions}`);
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
@@ -674,17 +675,13 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();
 
-            const anyActiveFilters = fields.some(field => filters[field].length > 0);
-            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
+            if (visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();
+                showInitialMessage();  // Show initial message directly on the plot
                 return;
             }
 
-            let filteredData = emissionsData.filter(d =>
-                visibleScenarios.includes(d.scenario) ||
-                (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
-            );
+            let filteredData = emissionsData.filter(d => visibleScenarios.includes(d.scenario));
 
             if (filteredData.length === 0) {
                 console.log("No data to display.");
@@ -692,15 +689,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            if (visibleScenarios.length > 0) {
-                currentlyDisplayedScenarios = visibleScenarios;
-            }
-
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
+
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
             drawLines(filteredData);
 
@@ -717,6 +711,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
+
 
 
 
