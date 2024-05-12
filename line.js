@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else if (value === "decarbonization") {
                             label.textContent = "95% Decarbonization";
                         } else if (value === "static") {
-                                label.textContent = "static";
+                            label.textContent = "static";
                         }
                     }
 
@@ -551,7 +551,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!container) {
                 console.error("Container for innovation plot not found");
                 return;
-
             }
 
             const margin = { top: 10, right: 50, bottom: 30, left: 50 },
@@ -571,7 +570,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Continue using data from example_data.csv for other metrics
                         metricData = data.map(d => parseFloat(d[metric]));
                     }
-
 
                     // Create a new container for each metric
                     const metricContainer = container.appendChild(document.createElement('div'));
@@ -658,13 +656,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            console.log("Range from slider:", minVal, maxVal);
+            console.log("Range from slider:", minVal, maxVal); // Ensure range values are correct
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios);
+            console.log("Filtered visible scenarios:", visibleScenarios.length); // Check the count of filtered scenarios
             updatePlot(visibleScenarios);
         }
 
@@ -674,33 +672,42 @@ document.addEventListener('DOMContentLoaded', function() {
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();
 
-            const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
+            // Determine if there are any scenarios to display based on active filters or toggles
+            const anyActiveFilters = fields.some(field => filters[field].length > 0);
             if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();
+                showInitialMessage();  // Show initial message directly on the plot
                 return;
             }
 
+            // Filter data based on the current visible scenarios or other active filters
             let filteredData = emissionsData.filter(d =>
                 visibleScenarios.includes(d.scenario) ||
                 (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
             );
 
-            currentlyDisplayedScenarios = visibleScenarios; // Update currently displayed scenarios after filtering
-
+            // Handle the case where no data matches the current filters
             if (filteredData.length === 0) {
                 console.log("No data to display.");
+                context.fillText("No data to display.", containerWidth / 2, containerHeight / 2); // Show message on canvas
                 return;
             }
 
+            // Update the currently displayed scenarios based on visible scenarios provided
+            currentlyDisplayedScenarios = visibleScenarios;
+
+            // Update domains for scales based on the filtered data
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
+
+            // Log and draw lines for scenarios that meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
             drawLines(filteredData);
 
+            // Draw special and best scenarios if respective toggles are active
             if (toggleBaselineActive) {
                 drawSpecialScenarios(filteredData);
             }
@@ -710,6 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             context.restore();
 
+            // Redraw recorded lines if the lightbulb toggle is on
             if (lightBulbOn) {
                 drawRecordedLines(recordedLines);
             }
