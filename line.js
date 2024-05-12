@@ -571,8 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Continue using data from example_data.csv for other metrics
                         metricData = data.map(d => parseFloat(d[metric]));
                     }
-
-                    currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData); // Initialize with all scenarios
+                    
 
                     // Create a new container for each metric
                     const metricContainer = container.appendChild(document.createElement('div'));
