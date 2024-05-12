@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    initFilters(); // Initializes the filters
     console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.icon-and-graph');
 
@@ -153,6 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
             acc[d.scenario].details.push(d);
             return acc;
         }, {});
+
+        initFilters(); // Initializes the filters
 
         //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
