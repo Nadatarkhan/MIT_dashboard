@@ -697,12 +697,16 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 
 .baseline-heading.purple-text {
-    color: purple;
+    color: #b937b8;
+}
+
+.baseline-heading.green-text {
+    color: #23756b;
 }
 
 
 .baseline-heading {
-    font-size: 16px; /* Example size */
+    font-size: 11px; /* Example size */
     font-weight: bold; /* Bold text */
     color: #333; /* Dark gray color, easy on the eyes */
     margin: 0 10px 0 0; /* No top or bottom margin, right margin for spacing */
