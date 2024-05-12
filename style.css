@@ -696,26 +696,39 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 
+.baseline-heading {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
 .baseline-heading.purple-text {
-    color: #b937b8 !important;
+    color: #b937b8;
 }
 
-.baseline-heading.green-text {
-    color: #23756b !important;
+.best-practice-heading {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
 }
 
-.baseline-heading.orange-text {
+.best-practice-heading.green-text {
+    color: #23756b;
+}
+
+.scenario-recorder-heading {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+.scenario-recorder-heading.orange-text {
     color: #dc5d5d;
 }
 
-
-.baseline-heading {
-    font-size: 11px; /* Example size */
-    font-weight: bold; /* Bold text */
-    color: #333; /* Dark gray color, easy on the eyes */
-    margin: 0 10px 0 0; /* No top or bottom margin, right margin for spacing */
-    white-space: nowrap; /* Prevents the text from wrapping */
-}
 
 
 

@@ -778,34 +778,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         const baselineToggle = document.getElementById('baselineToggle');
-        let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
-        const baselineText = document.getElementById('baselineHeading'); // Updated to target the h4 element
+        const baselineText = document.getElementById('baselineHeading'); // Make sure this is the correct ID and class
 
         baselineToggle.addEventListener('change', function() {
-            toggleBaselineActive = this.checked;
-            updatePlot();  // Update the plot based on toggle state
-            if (toggleBaselineActive) {
-                baselineText.classList.add('purple-text');  // Turn text purple when toggle is active
-            } else {
-                baselineText.classList.remove('purple-text');  // Remove purple color when toggle is not active
-            }
+            const toggleBaselineActive = this.checked; // Local variable for readability
+            updatePlot(); // Update the plot based on toggle state
+            baselineText.classList.toggle('purple-text', toggleBaselineActive);
         });
-
-
 
         const bestToggle = document.getElementById('best');
-        let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
-        const bestPracticeText = document.getElementById('bestPracticeText'); // Get the text element
+        const bestPracticeText = document.getElementById('bestPracticeText'); // Ensure correct targeting
 
         bestToggle.addEventListener('change', function() {
-            toggleBestActive = this.checked;
-            updatePlot();  // Update the plot based on toggle state
-            if (toggleBestActive) {
-                bestPracticeText.classList.add('green-text');  // Turn text green when toggle is active
-            } else {
-                bestPracticeText.classList.remove('green-text');  // Remove green color when toggle is not active
-            }
+            const toggleBestActive = this.checked; // Local variable for readability
+            updatePlot(); // Update the plot based on toggle state
+            bestPracticeText.classList.toggle('green-text', toggleBestActive);
         });
+
 
 
 
