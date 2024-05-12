@@ -136,24 +136,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const concatenatedData = files[0].concat(files[1]);
 
         // Map and process the concatenated data
-        let cumulativeEmissions = {}; // Track cumulative emissions separately
+        let cumulativeEmissions = {};
 
+// Process data to extract emissions details and calculate cumulative emissions
         const emissionsData = concatenatedData.map(d => {
-            const emission = +d.Emissions / 1000;
+            const emission = +d.Emissions / 1000; // Convert and normalize emission data
             const scenario = d.Scenario;
 
+            // Initialize scenario entry in cumulativeEmissions if not already present
             if (!cumulativeEmissions[scenario]) {
-                cumulativeEmissions[scenario] = { totalEmissions: 0, details: [] };
+                cumulativeEmissions[scenario] = { totalEmissions: 0 };
             }
-            cumulativeEmissions[scenario].totalEmissions += emission;
-            cumulativeEmissions[scenario].details.push({
-                year: new Date(d.epw_year),
-                emission,
-                scenario,
-                tech_schematic: d.tech_schematic,
-                ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
-            });
 
+            // Accumulate emissions for each scenario
+            cumulativeEmissions[scenario].totalEmissions += emission;
+
+            // Return structured data for further processing or visualization
             return {
                 year: new Date(d.epw_year),
                 emission,
@@ -163,7 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
 
-        initFilters(cumulativeEmissions); //check placement
+// Initialize filters with the cumulative emissions data
+        initFilters(cumulativeEmissions);
 
         //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
