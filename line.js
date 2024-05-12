@@ -671,20 +671,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updatePlot(visibleScenarios = []) {
             console.log("Updating plot with visible scenarios:", visibleScenarios);
-
-            // Clear the plot and check if there are scenarios to display
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-            if (visibleScenarios.length === 0) {
-                console.log("No scenarios to display based on the filter.");
-                showInitialMessage();  // Show initial message directly on the plot if no scenarios are visible
-                return;
-            }
-
             drawAxis();
 
             // Determine if there are any scenarios to display based on active filters or toggles
             const anyActiveFilters = fields.some(field => filters[field].length > 0);
-            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive) {
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Show initial message directly on the plot
                 return;
@@ -732,7 +724,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
-
 
 
 
