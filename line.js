@@ -669,36 +669,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-        function updatePlot(visibleScenarios) {
+        function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
             // Clear the canvas and draw the base axis first, regardless of data state
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();  // Draw axes first to ensure they are behind the plot lines
 
-            // Check if there are any active filters or toggles
+            // Check if there are any active filters or if either toggle is active
             const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
-            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && !visibleScenarios) {
+
+            // Check conditions for drawing
+            if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive) {
                 console.log("Not all conditions met for drawing plot.");
                 showInitialMessage();  // Display message indicating the need to select filters
-                return; // Exit the function if no conditions to draw are met
+                return; // Exit the function if no filters are active and no toggles are active
             }
 
-            // Filter data based on active filters and visibleScenarios
-            let filteredData = emissionsData.filter(d =>
-                (visibleScenarios && visibleScenarios.includes(d.scenario)) ||
-                (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
-            );
+            // Filter data based on active filters if any
+            let filteredData = [];
+            if (anyActiveFilters) {
+                filteredData = emissionsData.filter(d =>
+                    Object.keys(filters).every(field =>
+                        filters[field].length > 0 && filters[field].includes(d[field])
+                    )
+                );
+            }
 
             // If no data matches filters and toggles are not active
-            if (filteredData.length === 0) {
+            if (filteredData.length === 0 && !toggleBaselineActive && !toggleBestActive) {
                 console.log("No data to display.");
                 return;
             }
 
             // Update domains for scales based on existing data or full dataset if toggles are active
-            x.domain(d3.extent(filteredData, d => new Date(d.year)));
-            y.domain([0, d3.max(filteredData, d => d.emission)]);
+            if (filteredData.length > 0 || toggleBaselineActive || toggleBestActive) {
+                x.domain(d3.extent(emissionsData, d => new Date(d.year)));
+                y.domain([0, d3.max(emissionsData, d => d.emission)]);
+            }
 
             context.save();
             context.translate(margin.left, margin.top);
@@ -706,17 +714,20 @@ document.addEventListener('DOMContentLoaded', function() {
             // Log scenarios that meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
 
-            // Draw all applicable lines based on filters
-            drawLines(filteredData);
+
+            // Draw all applicable lines based on filters, if any are active
+            if (anyActiveFilters) {
+                drawLines(filteredData);
+            }
 
             // Draw special scenarios if the baseline toggle is active
             if (toggleBaselineActive) {
-                drawSpecialScenarios(filteredData);
+                drawSpecialScenarios(emissionsData);
             }
 
             // Draw best scenarios if the best toggle is active
             if (toggleBestActive) {
-                drawBestScenarios(filteredData);
+                drawBestScenarios(emissionsData);
             }
 
             context.restore();
