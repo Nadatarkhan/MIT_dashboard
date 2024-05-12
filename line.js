@@ -653,64 +653,67 @@ document.addEventListener('DOMContentLoaded', function() {
         //////////
 
         let currentlyDisplayedScenarios = [];
+        
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            console.log("Range from slider:", minVal, maxVal); // Ensure range values are correct
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios.length); // Check the count of filtered scenarios
+            console.log("Filtered visible scenarios:", visibleScenarios);
             updatePlot(visibleScenarios);
         }
 
 
+
         function updatePlot(visibleScenarios = []) {
-            console.log("Updating plot with visible scenarios:", visibleScenarios);
+            console.log("Updating plot with current filters:", filters);
+
+            // Clear the canvas and redraw the base axes
             context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
             drawAxis();
 
-            // Determine if there are any scenarios to display based on active filters or toggles
-            const anyActiveFilters = fields.some(field => filters[field].length > 0);
+            // Check if there are any filters or toggles affecting the visibility
+            const anyActiveFilters = fields.some(field => filters[field] && filters[field].length > 0);
             if (!anyActiveFilters && !toggleBaselineActive && !toggleBestActive && visibleScenarios.length === 0) {
                 console.log("Not all conditions met for drawing plot.");
-                showInitialMessage();  // Show initial message directly on the plot
+                showInitialMessage();  // Show initial message if no scenarios are selected
                 return;
             }
 
-            // Filter data based on the current visible scenarios or other active filters
+            // Filter the data based on the current visible scenarios or other active filters
             let filteredData = emissionsData.filter(d =>
                 visibleScenarios.includes(d.scenario) ||
                 (anyActiveFilters && Object.keys(filters).every(field => filters[field].includes(d[field])))
             );
 
-            // Handle the case where no data matches the current filters
+            // If after filtering there is no data to display, show a message and return
             if (filteredData.length === 0) {
                 console.log("No data to display.");
-                context.fillText("No data to display.", containerWidth / 2, containerHeight / 2); // Show message on canvas
                 return;
             }
 
-            // Update the currently displayed scenarios based on visible scenarios provided
-            currentlyDisplayedScenarios = visibleScenarios;
-
-            // Update domains for scales based on the filtered data
+            // Update the scale domains based on the filtered data
             x.domain(d3.extent(filteredData, d => new Date(d.year)));
             y.domain([0, d3.max(filteredData, d => d.emission)]);
 
             context.save();
             context.translate(margin.left, margin.top);
 
-            // Log and draw lines for scenarios that meet the current filter conditions
+            // Log which scenarios meet the current filter conditions
             console.log("Scenarios meeting current conditions:", filteredData.map(d => d.scenario));
+
+            // Draw lines for all applicable scenarios based on the filtered data
             drawLines(filteredData);
 
-            // Draw special and best scenarios if respective toggles are active
+            // Draw special scenarios if the baseline toggle is active
             if (toggleBaselineActive) {
                 drawSpecialScenarios(filteredData);
             }
+
+            // Draw best scenarios if the best toggle is active
             if (toggleBestActive) {
                 drawBestScenarios(filteredData);
             }
@@ -722,9 +725,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawRecordedLines(recordedLines);
             }
         }
-
-
-
 
 
         function drawLines(data) {
