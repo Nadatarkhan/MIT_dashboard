@@ -656,14 +656,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
-            console.log("Range from slider:", minVal, maxVal);
+            console.log("Slider range:", minVal, maxVal);
+
+            // Assuming 'currentlyDisplayedScenarios' should contain all scenarios initially
+            if (currentlyDisplayedScenarios.length === 0) {
+                currentlyDisplayedScenarios = Object.keys(cumulativeEmissionsData);
+            }
+
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
-                console.log("Checking scenario:", scenario, "with emissions:", totalEmissions, "against range", minVal, maxVal);
+                console.log(`Checking scenario ${scenario} with emissions ${totalEmissions}`);
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios);
+            console.log("Filtered visible scenarios:", visibleScenarios.length);
             updatePlot(visibleScenarios);
         }
 
