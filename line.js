@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    initFilters(); // Initializes the filters
     console.log("DOM fully loaded and parsed");
     const container = document.querySelector('.icon-and-graph');
 
