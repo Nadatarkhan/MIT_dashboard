@@ -726,6 +726,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
         function drawLines(data) {
             data.forEach((d, i) => {
                 if (i > 0 && d.scenario === data[i - 1].scenario) {
