@@ -697,11 +697,11 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 
 .baseline-heading.purple-text {
-    color: #b937b8;
+    color: #b937b8 !important;
 }
 
 .baseline-heading.green-text {
-    color: #23756b;
+    color: #23756b !important;
 }
 
 .baseline-heading.orange-text {
