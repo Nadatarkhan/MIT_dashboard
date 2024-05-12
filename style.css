@@ -704,6 +704,10 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
     color: #23756b;
 }
 
+.baseline-heading.orange-text {
+    color: #dc5d5d;
+}
+
 
 .baseline-heading {
     font-size: 11px; /* Example size */
