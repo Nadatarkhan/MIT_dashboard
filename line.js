@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
 
-        initFilters(); // Initializes the filters
+        initFilters(cumulativeEmissions); //check placement
 
         //.sort((a, b) => a.scenario - b.scenario || a.year - b.year);
 
@@ -547,8 +547,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 ////Filter Code for Emissions slider//
-        function initFilters() {
-            const container = document.getElementById('innovation_plot'); // Get the container for innovation plot
+        function initFilters(cumulativeEmissionsData) {
+            const container = document.getElementById('innovation_plot');
             if (!container) {
                 console.error("Container for innovation plot not found");
                 return;
@@ -563,7 +563,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const metrics = ['Emissions', 'Innovation', 'Cost', 'Risk'];
 
                 metrics.forEach((metric, index) => {
-                    const metricData = data.map(d => parseFloat(d[metric]));
+                    let metricData;
+                    if (metric === 'Emissions') {
+                        // Use cumulative emissions data for the 'Emissions' histogram
+                        metricData = Object.values(cumulativeEmissionsData).map(item => item.totalEmissions);
+                    } else {
+                        // Continue using data from example_data.csv for other metrics
+                        metricData = data.map(d => parseFloat(d[metric]));
+                    }
 
                     // Create a new container for each metric
                     const metricContainer = container.appendChild(document.createElement('div'));
@@ -584,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .range([0, width]);
                     const y = d3.scaleLinear()
                         .range([height, 0])
-                        .domain([0, 0.01]);
+                        .domain([0, d3.max(metricData, d => d) * 0.1]);  // Adjusting to show up to 10% of the highest value
 
                     // Create histogram bins
                     const histogram = d3.histogram()
@@ -613,41 +620,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     svg.append("g")
                         .call(d3.axisLeft(y).tickFormat(""));
 
-                    // Add slider for interactive filtering
-                    const slider = d3.sliderHorizontal()
-                        .min(d3.min(metricData))
-                        .max(d3.max(metricData))
-                        .width(width)
-                        .default([d3.min(metricData), d3.max(metricData)])
-                        .fill('#6b6b6b')
-                        .on('onchange', val => {
-                            svg.selectAll("rect")
-                                .attr("opacity", d => {
-                                    const [minValue, maxValue] = val;
-                                    return (d.x0 >= minValue && d.x1 <= maxValue) ? 1 : 0;
-                                });
-                        });
+                    // Append slider only for 'Emissions' to directly affect the line plot
+                    if (metric === 'Emissions') {
+                        const slider = d3.sliderHorizontal()
+                            .min(d3.min(metricData))
+                            .max(d3.max(metricData))
+                            .width(width)
+                            .default([d3.min(metricData), d3.max(metricData)])
+                            .fill('#6b6b6b')
+                            .on('onchange', val => {
+                                updateLinePlotVisibility(val, cumulativeEmissionsData);
+                            });
 
-                    // Append slider to container
-                    const sliderContainer = d3.select(metricContainer)
-                        .append('div')
-                        .classed('slider-container', true)
-                        .style('width', width + 'px')
-                        .append('svg')
-                        .attr('width', width + margin.left + margin.right)
-                        .attr('height', 50)
-                        .append('g')
-                        .attr('transform', 'translate(' + margin.left + ', 7)')
-                        .call(slider);
+                        // Append slider to container
+                        const sliderContainer = d3.select(metricContainer)
+                            .append('div')
+                            .classed('slider-container', true)
+                            .style('width', width + 'px')
+                            .append('svg')
+                            .attr('width', width + margin.left + margin.right)
+                            .attr('height', 50)
+                            .append('g')
+                            .attr('transform', 'translate(' + margin.left + ', 7)')
+                            .call(slider);
+                    }
                 });
             }).catch(function(error) {
                 console.error("Error loading or processing data:", error);
             });
         }
 
-
-
         //////////
+
+        function updateLinePlotVisibility(range, cumulativeEmissionsData) {
+            const [minVal, maxVal] = range;
+            const visibleScenarios = Object.keys(cumulativeEmissionsData)
+                .filter(key => cumulativeEmissionsData[key].totalEmissions >= minVal && cumulativeEmissionsData[key].totalEmissions <= maxVal)
+                .map(key => key);
+
+            // Assuming updatePlot function or similar to redraw the line plot
+            updatePlot(visibleScenarios);  // You may need to modify updatePlot to accept scenario filters
+        }
+
 
 
 
