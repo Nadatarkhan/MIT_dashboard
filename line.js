@@ -667,8 +667,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
         function updatePlot() {
             console.log("Updating plot with current filters:", filters);
 
@@ -790,11 +788,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const baselineToggle = document.getElementById('baselineToggle');
         let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
+        const baselineText = document.getElementById('baselineText'); // Get the text element
 
         baselineToggle.addEventListener('change', function() {
             toggleBaselineActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
+            if (toggleBaselineActive) {
+                baselineText.classList.add('purple-text');  // Turn text purple when toggle is active
+            } else {
+                baselineText.classList.remove('purple-text');  // Remove purple color when toggle is not active
+            }
         });
+
 
         const bestToggle = document.getElementById('best');
         let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
