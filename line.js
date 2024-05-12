@@ -629,6 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .default([d3.min(metricData), d3.max(metricData)])
                             .fill('#6b6b6b')
                             .on('onchange', val => {
+                                console.log("Slider values changed to:", val);  // Check what values are received
                                 updateLinePlotVisibility(val, cumulativeEmissionsData);
                             });
 
@@ -656,14 +657,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateLinePlotVisibility(range, cumulativeEmissionsData) {
             const [minVal, maxVal] = range;
+            console.log("Range from slider:", minVal, maxVal); // Ensure range values are correct
             const visibleScenarios = currentlyDisplayedScenarios.filter(scenario => {
                 const totalEmissions = cumulativeEmissionsData[scenario].totalEmissions;
                 return totalEmissions >= minVal && totalEmissions <= maxVal;
             });
 
-            console.log("Filtered visible scenarios:", visibleScenarios);
+            console.log("Filtered visible scenarios:", visibleScenarios.length); // Check the count of filtered scenarios
             updatePlot(visibleScenarios);
         }
+
 
 
 
