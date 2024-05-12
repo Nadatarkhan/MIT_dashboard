@@ -136,22 +136,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const concatenatedData = files[0].concat(files[1]);
 
         // Map and process the concatenated data
+        let cumulativeEmissions = {}; // Track cumulative emissions separately
+
         const emissionsData = concatenatedData.map(d => {
-            //console.log("Tech Schematic:", d.tech_schematic);  // Debugging line to see what is loaded
+            const emission = +d.Emissions / 1000;
+            const scenario = d.Scenario;
+
+            if (!cumulativeEmissions[scenario]) {
+                cumulativeEmissions[scenario] = { totalEmissions: 0, details: [] };
+            }
+            cumulativeEmissions[scenario].totalEmissions += emission;
+            cumulativeEmissions[scenario].details.push({
+                year: new Date(d.epw_year),
+                emission,
+                scenario,
+                tech_schematic: d.tech_schematic,
+                ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
+            });
+
             return {
                 year: new Date(d.epw_year),
-                emission: +d.Emissions / 1000,
-                scenario: d.Scenario,
-                tech_schematic: d.tech_schematic,  // Explicitly handling tech_schematic
+                emission,
+                scenario,
+                tech_schematic: d.tech_schematic,
                 ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
             };
-            //total cumulative emisisons per scenario
-        }).reduce((acc, d) => {
-            acc[d.scenario] = acc[d.scenario] || { totalEmissions: 0, details: [] };
-            acc[d.scenario].totalEmissions += d.emission;
-            acc[d.scenario].details.push(d);
-            return acc;
-        }, {});
+        });
 
         initFilters(); // Initializes the filters
 
