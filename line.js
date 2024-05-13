@@ -196,28 +196,27 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                const reduction = parseFloat(item.percentReduction);  // Directly use mapped 'percentReduction'
-
-                console.log(`Schematic: ${schematic}, Percent Reduction: ${reduction}`); // Logging the direct use of parsed reduction
+                const reduction = parseFloat(item.percentReduction);
 
                 if (!reductionsBySchematic[schematic]) {
-                    reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
+                    reductionsBySchematic[schematic] = { totalReduction: 0, count: 0 };
                 }
                 if (!isNaN(reduction)) {
-                    reductionsBySchematic[schematic].min = Math.min(reductionsBySchematic[schematic].min, reduction);
-                    reductionsBySchematic[schematic].max = Math.max(reductionsBySchematic[schematic].max, reduction);
+                    reductionsBySchematic[schematic].totalReduction += reduction;
+                    reductionsBySchematic[schematic].count += 1;
                 }
             });
 
-            // Clear the dropdown and populate with the percent reduction range
+            // Calculate average and update the dropdown
             dropdown.innerHTML = '';
             Object.keys(reductionsBySchematic).forEach(schematic => {
-                const { min, max } = reductionsBySchematic[schematic];
-                const optionText = min === Infinity ? "Data unavailable" :
-                    `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
+                const { totalReduction, count } = reductionsBySchematic[schematic];
+                const averageReduction = count > 0 ? (totalReduction / count) : 0;
+                const optionText = count === 0 ? "Data unavailable" :
+                    `${(averageReduction * 100).toFixed(2)}% average emission reduction`;
                 const option = document.createElement('option');
                 option.value = schematic;
-                option.textContent = optionText; // Use calculated range
+                option.textContent = optionText; // Use calculated average
                 dropdown.appendChild(option);
             });
 
