@@ -473,6 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+// Scenario 2
         const scenario2Toggle = document.getElementById('scenario2Toggle');
         const recorderText = document.getElementById('recorder');
         let isRecording = false;  // To track whether recording should happen
@@ -484,25 +485,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Start recording on the first activation
                 isRecording = true;
                 recordedOnce = true;
+                recorderText.classList.add('orange-text');  // Turn text orange
                 context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
-                recordedLines = [];  // Reset recorded lines
-                resetAllCheckboxes();  // Optional: Reset all other checkboxes if applicable
-            } else if (!this.checked) {
+                recordedLines = [];
+                resetAllCheckboxes();
+            } else if (isRecording && !this.checked) {
                 // Stop recording
                 isRecording = false;
-                drawRecordedLines(recordedLines);  // Draw recorded lines
-                updatePlot();  // Update the plot
-            }
-
-            // Set the orange text class based on the checkbox's state
-            recorderText.classList.toggle('orange-text', this.checked);
-
-            // Manage the visibility of recorded lines after recording has stopped
-            if (this.checked) {
+                recorderText.classList.remove('orange-text');  // Remove orange text when not active
                 drawRecordedLines(recordedLines);
-            } else {
-                context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
                 updatePlot();
+            } else {
+                // Toggle visibility of recorded lines after recording has stopped
+                if (this.checked) {
+                    recorderText.classList.add('orange-text');
+                    drawRecordedLines(recordedLines);
+                } else {
+                    recorderText.classList.remove('orange-text');
+                    context.clearRect(0, 0, containerWidth * dpi, containerHeight * dpi);
+                    updatePlot();
+                }
             }
         });
 
@@ -513,13 +515,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 context.beginPath();
                 context.moveTo(x(line.start.year), y(line.start.emission));
                 context.lineTo(x(line.end.year), y(line.end.emission));
-                context.strokeStyle = line.color;  // Ensure this is defined or default
-                context.lineWidth = line.lineWidth;  // Ensure this is defined or default
+                context.strokeStyle = line.color;  // Define or default this elsewhere
+                context.lineWidth = line.lineWidth;  // Define or default this elsewhere
                 context.stroke();
             });
             context.restore();
         }
-
 
 
 
@@ -778,12 +779,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const baselineToggle = document.getElementById('baselineToggle');
         const baselineText = document.getElementById('baselineHeading');
-        let toggleBaselineActive = baselineToggle.checked;  // Initialize the flag based on the initial state
 
         baselineToggle.addEventListener('change', function() {
-            toggleBaselineActive = this.checked;  // Update the flag
             updatePlot();  // Update the plot based on the new toggle state
-            baselineText.classList.toggle('purple-text', toggleBaselineActive);  // Toggle text color
+            baselineText.classList.toggle('purple-text', this.checked);  // Toggle text color immediately based on checked state
         });
 
         const bestToggle = document.getElementById('best');
