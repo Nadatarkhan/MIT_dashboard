@@ -779,10 +779,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const baselineToggle = document.getElementById('baselineToggle');
         const baselineText = document.getElementById('baselineHeading');
+        let toggleBaselineActive = baselineToggle.checked;  // Initialize the flag based on the initial state
 
         baselineToggle.addEventListener('change', function() {
+            toggleBaselineActive = this.checked;  // Update the flag
             updatePlot();  // Update the plot based on the new toggle state
-            baselineText.classList.toggle('purple-text', this.checked);  // Toggle text color immediately based on checked state
+            baselineText.classList.toggle('purple-text', toggleBaselineActive);  // Toggle text color
         });
 
         const bestToggle = document.getElementById('best');
