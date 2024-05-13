@@ -694,9 +694,6 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
         margin-bottom: 10px;  /* Adds vertical spacing between items */
     }
 
-    .header h1, .controls-title, .icon-label {
-        font-size: smaller;  // Reduce font size for better space management
-    }
 
     .controls, .toggle-wrapper, .pheasant-demure-button {
         width: 100%;  // Full width to make it easier to interact with on mobile
