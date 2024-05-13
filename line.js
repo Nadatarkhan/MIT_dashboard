@@ -782,16 +782,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const baselineText = document.getElementById('baselineHeading'); // Updated to target the h4 element
 
         baselineToggle.addEventListener('change', function() {
-            toggleBaselineActive = this.checked;
+            const toggleBaselineActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
-            if (toggleBaselineActive) {
-                baselineText.classList.add('purple-text');  // Turn text purple when toggle is active
-            } else {
-                baselineText.classList.remove('purple-text');  // Remove purple color when toggle is not active
-            }
+            baselineText.classList.toggle('purple-text', toggleBaselineActive);  // Simpler and cleaner
         });
-
-
 
         const bestToggle = document.getElementById('best');
         let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
