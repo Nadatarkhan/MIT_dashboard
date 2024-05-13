@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const { totalReduction, count } = reductionsBySchematic[schematic];
                 const averageReduction = count > 0 ? (totalReduction / count) : 0;
                 const optionText = count === 0 ? "Data unavailable" :
-                    `${(averageReduction * 100).toFixed(2)}% average emission reduction`;
+                    `${(averageReduction * 100).toFixed(0)}% average emission reduction`;
                 const option = document.createElement('option');
                 option.value = schematic;
                 option.textContent = optionText; // Use calculated average
