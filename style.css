@@ -697,7 +697,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 
 
 .baseline-heading {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     color: #333;
     margin-right: 10px;
@@ -708,7 +708,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 .best-practice-heading {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     color: #333;
     margin-right: 10px;
@@ -719,7 +719,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 .scenario-recorder-heading {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     color: #333;
     margin-right: 10px;
