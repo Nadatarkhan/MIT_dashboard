@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         const baselineToggle = document.getElementById('baselineToggle');
-        //let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
+        let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
         const baselineText = document.getElementById('baselineHeading'); // Updated to target the h4 element
 
         baselineToggle.addEventListener('change', function() {
@@ -786,7 +786,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePlot();  // Update the plot based on toggle state
             baselineText.classList.toggle('purple-text', toggleBaselineActive);  // Simpler and cleaner
         });
-
 
 
         const bestToggle = document.getElementById('best');
