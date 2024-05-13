@@ -24,53 +24,15 @@
                 <h1>Decarbonizing the MIT Campus</h1>
                 <div class="header-buttons">
                     <button onclick="window.open('https://web.mit.edu/SustainableDesignLab/projects/MITCampusDecarbonization/report/', '_blank')">Executive Summary</button>
-                    <button onclick="openTextPage()">About</button>
+                    <button onclick="openImage()" style="display: flex; align-items: center; padding: 5px;">
+                        <img src="images/about.png" alt="About" style="width: 50px; height: auto; margin-right: 5px;">
+                        About
+                    </button>
 
                     <script>
-                        function openTextPage() {
-                            // Open a new tab with a blank page
-                            var newTab = window.open("", "_blank");
-
-                            // Write the desired text into the new tab
-                            newTab.document.write("<p>This dashboard is the result of a seminar entitled MIT 4.s42 Decarbonizing the MIT Campus taught during spring 2024 at MIT. The seminar complemented the efforts of an institute-wide working group on the same topic and many members of the working group served as guest speakers in the seminar.\n" +
-                                "Seminar participants\n" +
-                                "Christoph Reinhart (Instructor, Architecture)\n" +
-                                "Akshata Atre (Architecture)\n" +
-                                "Elizabeth Bernhardt (Mechanical Engineering)\n" +
-                                "Meghan Blumstein (Civil and Environmental Engineering)\n" +
-                                "Ippolyti Dellatolas (Mechanical Engineering)\n" +
-                                "Kiley Feickert (TA, Architecture)\n" +
-                                "Emile Germonpre (Nuclear Science and Engineering)\n" +
-                                "Zoe Le Hong (Architecture)\n" +
-                                "Ali Irani (Architecture)\n" +
-                                "Yewon Ji (Architecture)\n" +
-                                "Nikita Klimenko (Architecture)\n" +
-                                "Amanda Kirkeby (Architecture)\n" +
-                                "Jazmin Mucino (Institute for Data Systems, and Society) \n" +
-                                "Sanjana Paul (Urban Studies and Planning)\n" +
-                                "Alison Maguire (Architecture)\n" +
-                                "Morgan Johnson Quamina (Architecture)\n" +
-                                "Ben Taube (Architecture)\n" +
-                                "Nada Tarkhan (Architecture)\n" +
-                                "Graham Turk (MIT Energy Initiative)\n" +
-                                "Ray Wang (Architecture)\n" +
-                                "Sam Wolk (Architecture)\n" +
-                                "" +
-                                "Guest speakers\n" +
-                                "Farhad Angizeh (Institute for Data Systems, and Society) \n" +
-                                "Jacopo Buongiorno (Nuclear Science and Engineering)\n" +
-                                "Siobhan Carr (Facilities)\n" +
-                                "Betar Galant (Mechanical Engineering) \n" +
-                                "Julie Newman (Office for Sustainability)\n" +
-                                "Pablo Martinez (MIT Energy Initiative)\n" +
-                                "Les Norford (Architecture)\n" +
-                                "Brad Olsen (Chemical Engineering)\n" +
-                                "Joe Paradiso (Media Lab)\n" +
-                                "Andy Sun (Sloan)  \n" +
-                                "Paul Woskov (Plasma Science and Fusion Center)\n" +
-                                "Siqi Zheng (Center for Real Estate)\n</p>");
-                            newTab.document.title = "Text Display"; // Setting the title of the new tab
-                            newTab.document.close(); // Finish writing to the new tab
+                        function openImage() {
+                            // Opening the image in a new tab
+                            window.open('images/about.png', '_blank');
                         }
                     </script>
                 </div>
