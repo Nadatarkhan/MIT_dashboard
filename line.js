@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                // Log the exact string being parsed
-                const rawReduction = item['Percent Reduction'];
+                // Make sure to use the exact field name as it appears in the data
+                const rawReduction = item['Percent Reduction'];  // This is case-sensitive and must match the CSV header exactly
                 console.log(`Raw Reduction Data: '${rawReduction}' for ${schematic}`); // Include quotation marks to detect spaces
 
                 const reductionString = (rawReduction || "").toString().replace(',', '.').trim();
@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     reductionsBySchematic[schematic].max = Math.max(reductionsBySchematic[schematic].max, reduction);
                 }
             });
+
 
             dropdown.innerHTML = '';
             Object.keys(reductionsBySchematic).forEach(schematic => {
