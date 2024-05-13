@@ -784,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
         baselineToggle.addEventListener('change', function() {
             toggleBaselineActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
-            baselineText.classList.toggle('purple-text', toggleBaselineActive);  // Simpler and cleaner
+            baselineText.classList.toggle('purple-text', this.checked);
         });
 
 
