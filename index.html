@@ -90,10 +90,11 @@
                             <div class="icon-row">
                                 <span class="icon-label">Grid Scenarios</span>
                                 <div class="icon-container-2" data-field="grid">
-                                    <img src="icons/10.png" alt="Future grid emissions">
+                                    <img src="icons/10.png" alt="Future grid emissions" title="Grid emission scenarios">
                                     <span class="icon-label">Future grid emissions</span>
                                     <div class="tooltip">Future grid emissions</div>
                                 </div>
+
                             </div>
                             <div class="controls">
                                 <h3 class="controls-title">Pre-set Scenarios</h3>
@@ -187,7 +188,9 @@
                 <div class="flex-container d-flex">
                     <div class="controls">
                         <h3 class="controls-title">Schematic Options</h3>
-                        <button class="pheasant-demure-button solid" onclick="tryUpdateDropdown()">Load Schematics from filters</button>
+                        <button class="pheasant-demure-button solid" onclick="tryUpdateDropdown()" title="Click to load schematics based on selected filters above">
+                            Load Schematics from filters
+                        </button>
                         <select class="pheasant-demure-button dropdown" id="techSchematicDropdown">
                             <!-- Options will dynamically populate here -->
                         </select>
