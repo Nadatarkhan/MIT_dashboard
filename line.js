@@ -710,12 +710,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Draw special scenarios if the baseline toggle is active
-            if (toggleBaselineActive) {
+            if (document.getElementById('baselineToggle').checked) {
                 drawSpecialScenarios(emissionsData);
             }
 
             // Draw best scenarios if the best toggle is active
-            if (toggleBestActive) {
+            if (document.getElementById('best').checked) {
                 drawBestScenarios(emissionsData);
             }
 
@@ -778,8 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         const baselineToggle = document.getElementById('baselineToggle');
-        let toggleBaselineActive = baselineToggle.checked;  // Control visibility of special scenario lines
-        const baselineText = document.getElementById('baselineHeading'); // Updated to target the h4 element
+        const baselineText = document.getElementById('baselineHeading'); // Ensure this is the correct ID
 
         baselineToggle.addEventListener('change', function() {
             const toggleBaselineActive = this.checked;
@@ -788,18 +787,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const bestToggle = document.getElementById('best');
-        let toggleBestActive = bestToggle.checked;  // Control visibility of best scenario lines
-        const bestPracticeText = document.getElementById('bestPracticeText'); // Get the text element
+        const bestPracticeText = document.getElementById('bestPracticeText'); // Ensure this is the correct ID
 
         bestToggle.addEventListener('change', function() {
-            toggleBestActive = this.checked;
+            const toggleBestActive = this.checked;
             updatePlot();  // Update the plot based on toggle state
-            if (toggleBestActive) {
-                bestPracticeText.classList.add('green-text');  // Turn text green when toggle is active
-            } else {
-                bestPracticeText.classList.remove('green-text');  // Remove green color when toggle is not active
-            }
+            bestPracticeText.classList.toggle('green-text', toggleBestActive);  // Simpler and cleaner
         });
+
 
 
 
