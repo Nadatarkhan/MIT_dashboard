@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ////Filter Code for Emissions slider//
         function initFilters(cumulativeEmissionsData) {
-            const container = document.getElementById('innovation_plot');
+            const container = document.getElementById('test');
             if (!container) {
                 console.error("Container for innovation plot not found");
                 return;
