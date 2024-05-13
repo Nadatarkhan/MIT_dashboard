@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // Collect all currently active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
@@ -190,10 +191,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                // Safeguard against undefined values
-                const reductionString = (item['Percent Reduction'] || "").toString().replace(',', '.').trim();
+                // Log the exact string being parsed
+                const rawReduction = item['Percent Reduction'];
+                console.log(`Raw Reduction Data: '${rawReduction}' for ${schematic}`); // Include quotation marks to detect spaces
+
+                const reductionString = (rawReduction || "").toString().replace(',', '.').trim();
                 const reduction = parseFloat(reductionString);
-                console.log(`Schematic: ${schematic}, Reduction: ${reduction}`); // Debugging line
+                console.log(`Schematic: ${schematic}, Parsed Reduction: ${reduction}`); // Shows parsed number
 
                 if (!reductionsBySchematic[schematic]) {
                     reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
@@ -203,8 +207,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     reductionsBySchematic[schematic].max = Math.max(reductionsBySchematic[schematic].max, reduction);
                 }
             });
-
-            console.log("Reductions by Schematic: ", reductionsBySchematic);
 
             dropdown.innerHTML = '';
             Object.keys(reductionsBySchematic).forEach(schematic => {
