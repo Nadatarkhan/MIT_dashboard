@@ -184,27 +184,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 return acc;
             }, {});
 
+            console.log("Active Filters: ", activeFilters);
+
             // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
+            console.log("Filtered Data: ", filteredData);
+
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                const reduction = parseFloat(item['Percent Reduction']); // Correct field name with space
+                const reduction = parseFloat(item['Percent Reduction']);
+                console.log(`Schematic: ${schematic}, Reduction: ${reduction}`); // Debugging line
+
                 if (!reductionsBySchematic[schematic]) {
                     reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
                 }
-                if (!isNaN(reduction)) {  // Ensure reduction is a valid number
-                    if (reduction < reductionsBySchematic[schematic].min) {
-                        reductionsBySchematic[schematic].min = reduction;
-                    }
-                    if (reduction > reductionsBySchematic[schematic].max) {
-                        reductionsBySchematic[schematic].max = reduction;
-                    }
+                if (!isNaN(reduction)) {
+                    reductionsBySchematic[schematic].min = Math.min(reductionsBySchematic[schematic].min, reduction);
+                    reductionsBySchematic[schematic].max = Math.max(reductionsBySchematic[schematic].max, reduction);
                 }
             });
+
+            console.log("Reductions by Schematic: ", reductionsBySchematic);
 
             // Clear the dropdown and populate with the percent reduction range
             dropdown.innerHTML = '';
