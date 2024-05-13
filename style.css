@@ -861,16 +861,28 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
+
     /* Position the tooltip text */
     position: absolute;
     z-index: 1;
     bottom: 100%;
     left: 50%;
     margin-left: -60px;
+
+    /* Set the font size for tooltip text */
+    font-size: 12px; /* Adjust the size as needed */
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
+.tooltip .tooltiptext {
+    transition: visibility 0.2s, opacity 0.2s linear;
+    opacity: 0;
+}
+
 .tooltip:hover .tooltiptext {
     visibility: visible;
+    opacity: 1;
 }
+
+
 
