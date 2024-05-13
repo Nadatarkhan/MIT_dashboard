@@ -17,7 +17,7 @@ body, html {
     flex-direction: row;
     overflow: hidden; /* Check if this needs adjustment */
     width: 100%; /* Ensure full width */
-    height: 55vh; /* Adjust based on your design */
+    height: 55vh;
 }
 
 .visual1 {
@@ -184,7 +184,7 @@ background-color: #f4f4f4; // Light background color for active state
 }
 
 .circle-radio:checked + .circle-visual {
-    background-color: #8c318b;  /* Change to your desired "selected" color */
+    background-color: #8c318b;
 }
 
 .controls-container label {

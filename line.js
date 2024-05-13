@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkbox.checked = false;
             });
             // Optionally reset the filters object entirely if needed
-            filters = {}; // This line can be adjusted based on how your filter logic is implemented
+            filters = {}; // This line can be adjusted based on how  filter logic is implemented
         }
 
 
@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .map(key => key);
 
             // Assuming updatePlot function or similar to redraw the line plot
-            updatePlot(visibleScenarios);  // You may need to modify updatePlot to accept scenario filters
+            updatePlot(visibleScenarios);  //
         }
 
 
