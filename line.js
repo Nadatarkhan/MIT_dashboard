@@ -742,9 +742,9 @@ document.addEventListener('DOMContentLoaded', function() {
             context.restore();
 
             // Redraw recorded lines if the lightbulb is on
-            if (lightBulbOn) {
-                drawRecordedLines(recordedLines);
-            }
+            //if (lightBulbOn) {
+                //drawRecordedLines(recordedLines);
+            //}
         }
 
 
