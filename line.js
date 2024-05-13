@@ -190,7 +190,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                const reductionString = item['Percent Reduction'].toString().replace(',', '.').trim(); // Replace comma and trim spaces
+                // Safeguard against undefined values
+                const reductionString = (item['Percent Reduction'] || "").toString().replace(',', '.').trim();
                 const reduction = parseFloat(reductionString);
                 console.log(`Schematic: ${schematic}, Reduction: ${reduction}`); // Debugging line
 
