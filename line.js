@@ -136,6 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const concatenatedData = files[0].concat(files[1]);
         let techSchematicReductions = {};
 
+        console.log("Concatenated Raw Data:", concatenatedData);
+
 
 
         // Map and process the concatenated data
@@ -191,8 +193,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                // Make sure to use the exact field name as it appears in the data
-                const rawReduction = item['Percent Reduction'];  // This is case-sensitive and must match the CSV header exactly
+
+                const rawReduction = item['Percent Reduction'];
                 console.log(`Raw Reduction Data: '${rawReduction}' for ${schematic}`); // Include quotation marks to detect spaces
 
                 const reductionString = (rawReduction || "").toString().replace(',', '.').trim();
