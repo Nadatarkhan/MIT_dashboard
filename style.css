@@ -704,7 +704,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 .baseline-heading.purple-text {
-    color: #b937b8;
+    color: #b937b8 !important;
 }
 
 .best-practice-heading {
@@ -715,7 +715,7 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
 }
 
 .best-practice-heading.green-text {
-    color: #23756b;
+    color: #23756b !important;
 }
 
 .scenario-recorder-heading {
