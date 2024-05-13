@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Process data to extract emissions details and calculate cumulative emissions
         const emissionsData = concatenatedData.map(d => {
             const emission = +d.Emissions / 1000; // Convert and normalize emission data
+            const percentReduction = parseFloat(d['Percent Reduction']);  // Ensure this name matches the CSV header exactly
             const scenario = d.Scenario;
 
             // Initialize scenario entry in cumulativeEmissions if not already present
@@ -160,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return {
                 year: new Date(d.epw_year),
                 emission,
+                percentReduction,  // Add percent reduction to the mapped data
                 scenario,
                 tech_schematic: d.tech_schematic,
                 ...fields.reduce((acc, field) => ({...acc, [field]: d[field]}), {})
@@ -186,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return acc;
             }, {});
 
+            // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
@@ -193,13 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
+                const reduction = parseFloat(item.percentReduction);  // Directly use mapped 'percentReduction'
 
-                const rawReduction = item['Percent Reduction'];
-                console.log(`Raw Reduction Data: '${rawReduction}' for ${schematic}`); // Include quotation marks to detect spaces
-
-                const reductionString = (rawReduction || "").toString().replace(',', '.').trim();
-                const reduction = parseFloat(reductionString);
-                console.log(`Schematic: ${schematic}, Parsed Reduction: ${reduction}`); // Shows parsed number
+                console.log(`Schematic: ${schematic}, Percent Reduction: ${reduction}`); // Logging the direct use of parsed reduction
 
                 if (!reductionsBySchematic[schematic]) {
                     reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
@@ -210,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-
+            // Clear the dropdown and populate with the percent reduction range
             dropdown.innerHTML = '';
             Object.keys(reductionsBySchematic).forEach(schematic => {
                 const { min, max } = reductionsBySchematic[schematic];
@@ -218,16 +217,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
                 const option = document.createElement('option');
                 option.value = schematic;
-                option.textContent = optionText;
+                option.textContent = optionText; // Use calculated range
                 dropdown.appendChild(option);
             });
 
+            // Update the image upon selecting a schematic
             dropdown.addEventListener('change', function() {
                 const selectedSchematic = dropdown.value;
                 techImage.src = `images/${selectedSchematic}.png`;
                 techImage.alt = selectedSchematic;
             });
         };
+
 
 
 
