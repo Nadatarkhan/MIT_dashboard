@@ -189,27 +189,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            // Extract unique tech_schematic values and calculate min/max percent reduction
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
+                const reduction = parseFloat(item['Percent Reduction']); // Correct field name with space
                 if (!reductionsBySchematic[schematic]) {
                     reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
                 }
-                const reduction = parseFloat(item.Percent_Reduction);
-                if (reduction < reductionsBySchematic[schematic].min) {
-                    reductionsBySchematic[schematic].min = reduction;
-                }
-                if (reduction > reductionsBySchematic[schematic].max) {
-                    reductionsBySchematic[schematic].max = reduction;
+                if (!isNaN(reduction)) {  // Ensure reduction is a valid number
+                    if (reduction < reductionsBySchematic[schematic].min) {
+                        reductionsBySchematic[schematic].min = reduction;
+                    }
+                    if (reduction > reductionsBySchematic[schematic].max) {
+                        reductionsBySchematic[schematic].max = reduction;
+                    }
                 }
             });
 
             // Clear the dropdown and populate with the percent reduction range
             dropdown.innerHTML = '';
-            Object.keys(reductionsBySchematic).forEach((schematic, index) => {
+            Object.keys(reductionsBySchematic).forEach(schematic => {
                 const { min, max } = reductionsBySchematic[schematic];
-                const optionText = `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
+                const optionText = min === Infinity ? "Data unavailable" :
+                    `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
                 const option = document.createElement('option');
                 option.value = schematic;
                 option.textContent = optionText; // Use calculated range
