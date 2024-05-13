@@ -178,25 +178,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Collect all currently active filters
             const activeFilters = Object.entries(filters).reduce((acc, [key, value]) => {
                 if (value.length > 0) acc[key] = value;
                 return acc;
             }, {});
 
-            console.log("Active Filters: ", activeFilters);
-
-            // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            console.log("Filtered Data: ", filteredData);
-
             let reductionsBySchematic = {};
             filteredData.forEach(item => {
                 const schematic = item.tech_schematic;
-                const reduction = parseFloat(item['Percent Reduction']);
+                const reductionString = item['Percent Reduction'].toString().replace(',', '.').trim(); // Replace comma and trim spaces
+                const reduction = parseFloat(reductionString);
                 console.log(`Schematic: ${schematic}, Reduction: ${reduction}`); // Debugging line
 
                 if (!reductionsBySchematic[schematic]) {
@@ -210,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log("Reductions by Schematic: ", reductionsBySchematic);
 
-            // Clear the dropdown and populate with the percent reduction range
             dropdown.innerHTML = '';
             Object.keys(reductionsBySchematic).forEach(schematic => {
                 const { min, max } = reductionsBySchematic[schematic];
@@ -218,11 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
                 const option = document.createElement('option');
                 option.value = schematic;
-                option.textContent = optionText; // Use calculated range
+                option.textContent = optionText;
                 dropdown.appendChild(option);
             });
 
-            // Update the image upon selecting a schematic
             dropdown.addEventListener('change', function() {
                 const selectedSchematic = dropdown.value;
                 techImage.src = `images/${selectedSchematic}.png`;
