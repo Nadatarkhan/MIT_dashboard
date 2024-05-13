@@ -134,6 +134,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Concatenate the data arrays from both files
         const concatenatedData = files[0].concat(files[1]);
+        let techSchematicReductions = {};
+
+
 
         // Map and process the concatenated data
         let cumulativeEmissions = {};
@@ -181,24 +184,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 return acc;
             }, {});
 
-            console.log("Filtered active filters", activeFilters);
-
             // Filter emissionsData based on active filters
             const filteredData = emissionsData.filter(item =>
                 Object.keys(activeFilters).every(field => activeFilters[field].includes(item[field]))
             );
 
-            console.log("Filtered data:", filteredData);
+            // Extract unique tech_schematic values and calculate min/max percent reduction
+            let reductionsBySchematic = {};
+            filteredData.forEach(item => {
+                const schematic = item.tech_schematic;
+                if (!reductionsBySchematic[schematic]) {
+                    reductionsBySchematic[schematic] = { min: Infinity, max: -Infinity };
+                }
+                const reduction = parseFloat(item.Percent_Reduction);
+                if (reduction < reductionsBySchematic[schematic].min) {
+                    reductionsBySchematic[schematic].min = reduction;
+                }
+                if (reduction > reductionsBySchematic[schematic].max) {
+                    reductionsBySchematic[schematic].max = reduction;
+                }
+            });
 
-            // Extract unique tech_schematic values from the filtered data
-            const techSchematics = Array.from(new Set(filteredData.map(item => item.tech_schematic)));
-
-            // Clear the dropdown and populate with indexes
+            // Clear the dropdown and populate with the percent reduction range
             dropdown.innerHTML = '';
-            techSchematics.forEach((schematic, index) => {
+            Object.keys(reductionsBySchematic).forEach((schematic, index) => {
+                const { min, max } = reductionsBySchematic[schematic];
+                const optionText = `${(min * 100).toFixed(2)}% - ${(max * 100).toFixed(2)}% reduction in Emissions`;
                 const option = document.createElement('option');
-                option.value = schematic; // You could use index + 1 if you want to start numbering from 1
-                option.textContent = index + 1; // Display just the index as the dropdown text
+                option.value = schematic;
+                option.textContent = optionText; // Use calculated range
                 dropdown.appendChild(option);
             });
 
@@ -209,6 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 techImage.alt = selectedSchematic;
             });
         };
+
 
 
         /*function modifyLabelName(field, value) {
