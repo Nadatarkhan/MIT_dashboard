@@ -694,16 +694,10 @@ border: 2px solid #888;  // Optional: adds a custom border on focus
         margin-bottom: 10px;  /* Adds vertical spacing between items */
     }
 
+    
 
-    .controls, .toggle-wrapper, .pheasant-demure-button {
-        width: 100%;  // Full width to make it easier to interact with on mobile
-    }
 
-    .icon-container, .icon-container-2 {
-        width: 100%;  // Icons take full width to enhance visibility and tap targets
-    }
 }
-
 
 
 .baseline-heading {
